@@ -5,7 +5,7 @@ const LinkToLogin = () => {
         <div className="text-sm text-center">
             <p className="text-gray-600">
                 Already have an account?{' '}
-                <a href="/login" className="text-indigo-600 hover:text-indigo-800">
+                <a href="/login" className="text-blue-600 hover:text-blue-800">
                     Login
                 </a>
             </p>
