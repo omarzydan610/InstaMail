@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import InputField from "../components/inputField";
 import LinkToSignup from "../components/linkToSignup";
 
-const LogIn = () => {
+const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -54,4 +54,4 @@ const LogIn = () => {
     );
 };
 
-export default LogIn;
+export default Login;
