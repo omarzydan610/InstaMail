@@ -16,9 +16,9 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-600 via-indigo-400 to-indigo-600">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white shadow-xl rounded-xl border border-indigo-200">
-        <h2 className="text-3xl font-extrabold text-center text-indigo-700">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r  from-blue-800 via-blue-400 to-blue-800">
+      <div className="w-full max-w-md py-6 px-8 space-y-1 bg-white shadow-xl rounded-xl border border-blue-200">
+        <h2 className="text-3xl font-extrabold text-center text-blue-700">
           Create New Account
         </h2>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -104,7 +104,7 @@ const Signup = () => {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200 ease-in-out transform hover:scale-105"
+              className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:scale-105"
             >
               Sign Up
             </button>
