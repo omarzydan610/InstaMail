@@ -1,11 +1,7 @@
-import React from 'react';
-import Signup from './pages/signup/signup';
+import React from "react";
+import Signup from "./pages/signup";
 function App() {
-  return (
-    <Signup/>
-  );
-};
-
+  return <Signup />;
+}
 
 export default App;
-
