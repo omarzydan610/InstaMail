@@ -1,7 +1,7 @@
 import React from "react";
-import Signup from "./pages/signup";
+import LogIn from "./pages/login";
 function App() {
-  return <Signup />;
+  return <LogIn />;
 }
 
 export default App;
