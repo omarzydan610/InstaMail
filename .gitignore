@@ -16,11 +16,6 @@ target/
 *.log
 *.env
 
-# Tailwind (if applicable)
-tailwind.config.js
-tailwind.css
-postcss.config.js
-
 # IDEs and OS
 *.iml
 .idea/
