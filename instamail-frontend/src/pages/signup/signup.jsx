@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
-import InputField from './components/inputField';
-import LinkToLogin from './components/linkToLogin';
+import React, { useState } from "react";
+import InputField from "../../components/inputField";
+import LinkToLogin from "../../components/linkToLogin";
 
 const Signup = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [secondName, setSecondName] = useState('');
-  const [username, setUsername] = useState('');
-  const [phoneNumber, setphoneNumber] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [secondName, setSecondName] = useState("");
+  const [username, setUsername] = useState("");
+  const [phoneNumber, setphoneNumber] = useState("");
 
   const handleSubmit = (e) => {
-    console.log("sign up")
+    console.log("sign up");
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-indigo-600 via-indigo-400 to-indigo-600">
       <div className="w-full max-w-md p-8 space-y-8 bg-white shadow-xl rounded-xl border border-indigo-200">
-        <h2 className="text-3xl font-extrabold text-center text-indigo-700">Create New Account</h2>
+        <h2 className="text-3xl font-extrabold text-center text-indigo-700">
+          Create New Account
+        </h2>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
-            
             {/* First and Second Name */}
             <div className="flex space-x-4">
               {/* First name*/}
@@ -33,7 +34,7 @@ const Signup = () => {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="First Name"
-                  />
+                />
               </div>
               {/* Second name*/}
               <div className="w-1/2">
