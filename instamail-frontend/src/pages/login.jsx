@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import InputField from "../components/inputField";
-import LinkToSignup from "../components/linkToSignup";
+import InputField from "../components/InputField";
+import LinkToSignup from "../components/LinkToLogin";
 
 const Login = () => {
     const [email, setEmail] = useState("");
