@@ -6,8 +6,8 @@ const LinkToSignup = () => {
       <p className="text-gray-600">
         Create a new account?{" "}
         <a
-          href="/signup"
-          className="text-blue-600 text-bold hover:text-blue-800"
+          href="/register"
+          className="text-blue-600 font-bold hover:text-blue-800"
         >
           signup
         </a>
