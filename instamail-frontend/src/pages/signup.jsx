@@ -25,7 +25,15 @@ const Signup = () => {
       setError("Passwords do not match.");
       return false;
     }
-    if (!email || !password || !confirmPassword || !firstName || !secondName || !username || !phoneNumber) {
+    if (
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !firstName ||
+      !secondName ||
+      !username ||
+      !phoneNumber
+    ) {
       setError("All fields are required.");
       return false;
     }
@@ -44,35 +52,38 @@ const Signup = () => {
 
     try {
       // Signup request
-      const response = await axios.post("https://localhost:8080/signup", {
-        firstName,
-        secondName,
-        username,
-        phoneNumber,
-        email,
-        password,
+      const response = await axios.post("http://localhost:8080/auth/signup", {
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: secondName,
+        username: username,
+        phoneNumber: phoneNumber,
       });
 
       if (response.status === 200) {
         console.log("Signup successful, now logging in...");
-        
-        // After successful signup, log the user in
-        const loginResponse = await axios.post("https://localhost:8080/login", {
-          email,
-          password,
-        });
-
-        if (loginResponse.status === 200) {
-          setToken(loginResponse.data.token); // Set token in the store
-          console.log("Login successful, token set:", loginResponse.data.token);
-        } else {
-          setError("Login failed after signup");
-        }
-      } else {
-        setError("Signup failed");
       }
+      //   // After successful signup, log the user in
+      //   const loginResponse = await axios.post("http://localhost:8080/auth/login", {
+      //     email,
+      //     password,
+      //   });
+
+      //   if (loginResponse.status === 200) {
+      //     setToken(loginResponse.data.token); // Set token in the store
+      //     console.log("Login successful, token set:", loginResponse.data.token);
+      //   } else {
+      //     setError("Login failed after signup");
+      //   }
+      // } else {
+      //   setError("Signup failed");
+      // }
     } catch (error) {
-      console.error("An error occurred:", error.response ? error.response.data.message : error.message);
+      console.error(
+        "An error occurred:",
+        error.response ? error.response.data.message : error.message
+      );
       setError("An error occurred during signup");
     } finally {
       setLoading(false);
@@ -171,7 +182,7 @@ const Signup = () => {
           <div>
             <button
               type="submit"
-              disabled={loading}  // Disable the button while loading
+              disabled={loading} // Disable the button while loading
               className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:scale-105"
             >
               {loading ? "Signing Up..." : "Sign Up"}
