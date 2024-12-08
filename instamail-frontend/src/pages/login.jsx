@@ -1,14 +1,32 @@
 import React, { useState } from "react";
 import InputField from "../components/InputField";
 import LinkToSignup from "../components/LinkToSignup";
+import useAuthStore from "../store/authStore";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const setToken = useAuthStore((state) => state.setToken);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("login");
+    
+    try {
+      const response = await axios.post('https://localhost:8080/login', {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        setToken(response.data.token);
+        console.log("Login successful, token set:", response.data.token);
+      } else {
+        console.error("Login failed");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error.response ? error.response.data.message : error.message);
+    }
   };
 
   return (
