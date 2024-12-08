@@ -21,21 +21,23 @@ const Home = () => {
       {/* Top Bar */}
       <TopBar toggleSidebar={toggleSidebar} />
 
-      {/* Main Content */}
-      <div className="flex flex-grow">
+      <div className="flex flex-grow overflow-hidden">
         {/* Sidebar */}
         <Sidebar
           isSidebarCollapsed={isSidebarCollapsed}
           activeCategory={activeCategory}
           onCategoryClick={handleCategoryClick}
+          className="h-full fixed z-10" // Fixed Sidebar
         />
 
         {/* Page Body */}
-        <PageBody activeCategory={activeCategory} />
+         {/* Make this scrollable */}
+          <PageBody activeCategory={activeCategory} />
+        
       </div>
 
       {/* Floating Button */}
-      <FloatingButton />
+      <FloatingButton className="fixed bottom-8 right-8 z-20" />
     </div>
   );
 };
