@@ -44,33 +44,33 @@ const Signup = () => {
 
     try {
       // Signup request
-      const response = await axios.post("https://localhost:8080/signup", {
-        firstName,
-        secondName,
-        username,
-        phoneNumber,
-        email,
-        password,
+      const response = await axios.post("http://localhost:8080/auth/signup", {
+        "email":email,
+        "password":password,
+        "firstName":firstName,
+        "lastName":secondName,
+        "username":username,
+        "phoneNumber":phoneNumber,
       });
 
       if (response.status === 200) {
         console.log("Signup successful, now logging in...");
-        
-        // After successful signup, log the user in
-        const loginResponse = await axios.post("https://localhost:8080/login", {
-          email,
-          password,
-        });
-
-        if (loginResponse.status === 200) {
-          setToken(loginResponse.data.token); // Set token in the store
-          console.log("Login successful, token set:", loginResponse.data.token);
-        } else {
-          setError("Login failed after signup");
-        }
-      } else {
-        setError("Signup failed");
       }
+      //   // After successful signup, log the user in
+      //   const loginResponse = await axios.post("http://localhost:8080/auth/login", {
+      //     email,
+      //     password,
+      //   });
+
+      //   if (loginResponse.status === 200) {
+      //     setToken(loginResponse.data.token); // Set token in the store
+      //     console.log("Login successful, token set:", loginResponse.data.token);
+      //   } else {
+      //     setError("Login failed after signup");
+      //   }
+      // } else {
+      //   setError("Signup failed");
+      // }
     } catch (error) {
       console.error("An error occurred:", error.response ? error.response.data.message : error.message);
       setError("An error occurred during signup");
