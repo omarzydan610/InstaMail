@@ -1,29 +1,25 @@
 package com.example.instamail_backend.model;
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity
+@Table(name = "contact_name")
 @Getter
 @Setter
-
-@Entity
-@Table(name = "users")
-public class User {
+public class ContactName {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    private String firstName;
-    private String lastName;
-    @Column(unique = true)
-    private String username;
-    @Column(unique = true)
-    private String email;
-    @Column(unique = true)
-    private String phoneNumber;
-    private String password;
+    private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false) // Foreign key to User
+    private User user;
 }
