@@ -46,7 +46,7 @@ public class AuthService {
         user.setUsername(signUpRequest.getUsername());
         user.setPhoneNumber(signUpRequest.getPhoneNumber());
         userRepository.save(user);
-
-        return new SignUpResponse("User registered successfully");
+        String token = jwtUtil.generateToken(user.getEmail());
+        return new SignUpResponse(token);
     }
 }

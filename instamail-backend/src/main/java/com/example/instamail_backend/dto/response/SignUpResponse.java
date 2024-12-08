@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class SignUpResponse {
-    private String message;
+    private String token;
 
-    public SignUpResponse(String message) {
-        this.message = message;
+    public SignUpResponse(String token) {
+        this.token = token;
     }
 }

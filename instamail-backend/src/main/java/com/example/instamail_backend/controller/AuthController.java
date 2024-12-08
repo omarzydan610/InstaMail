@@ -23,18 +23,17 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        System.out.println("omar");
         try {
             LoginResponse response = authService.login(loginRequest);
             return ResponseEntity.ok(response);
         } catch (RuntimeException ex) {
+            System.out.println(ex);
             return ResponseEntity.status(401).body(null);
         }
     }
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
-        System.out.println("omar");
         try {
             SignUpResponse response = authService.signUp(signUpRequest);
             return ResponseEntity.ok(response);
