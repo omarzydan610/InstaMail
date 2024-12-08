@@ -9,7 +9,7 @@ const TopBar = ({ toggleSidebar }) => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-blue-700 text-white px-4 py-3 relative">
+    <div className="flex items-center justify-between bg-blue-700 text-white px-4 py-3 relative ">
       <div
         className="cursor-pointer p-1 rounded-full hover:bg-blue-600"
         onClick={toggleSidebar}
