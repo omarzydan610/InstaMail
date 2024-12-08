@@ -21,16 +21,17 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        System.out.println("omar");
-        try {
-            LoginResponse response = authService.login(loginRequest);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException ex) {
-            return ResponseEntity.status(401).body(null);
-        }
-    }
+    // @PostMapping("/login")
+    // public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest
+    // loginRequest) {
+    // System.out.println("omar");
+    // try {
+    // LoginResponse response = authService.login(loginRequest);
+    // return ResponseEntity.ok(response);
+    // } catch (RuntimeException ex) {
+    // return ResponseEntity.status(401).body(null);
+    // }
+    // }
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
