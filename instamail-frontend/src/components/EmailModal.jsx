@@ -1,7 +1,7 @@
 import React from "react";
 
 const EmailModal = ({ email, onClose, onDelete }) => {
-  if (!email) return null; // Don't render anything if no email is passed
+  if (!email) return null; 
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
