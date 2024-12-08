@@ -8,7 +8,6 @@ const ProtectedRoute = ({ element: Page }) => {
     if (!token) {
         return <Navigate to="/login" />;
     }
-
     return <Page />;
 };
 
