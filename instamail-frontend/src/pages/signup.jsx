@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import InputField from "../components/InputField";
 import LinkToLogin from "../components/LinkToLogin";
+import axios from "axios";
+import useAuthStore from "../store/authStore";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -9,14 +11,76 @@ const Signup = () => {
   const [firstName, setFirstName] = useState("");
   const [secondName, setSecondName] = useState("");
   const [username, setUsername] = useState("");
-  const [phoneNumber, setphoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
-  const handleSubmit = (e) => {
-    console.log("sign up");
+  // Error state to handle validation messages
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const setToken = useAuthStore((state) => state.setToken);
+
+  // Validation for password match
+  const validateForm = () => {
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return false;
+    }
+    if (!email || !password || !confirmPassword || !firstName || !secondName || !username || !phoneNumber) {
+      setError("All fields are required.");
+      return false;
+    }
+    setError(""); // Clear previous errors
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return; // Stop submission if form is invalid
+    }
+
+    setLoading(true);
+
+    try {
+      // Signup request
+      const response = await axios.post("https://localhost:8080/signup", {
+        firstName,
+        secondName,
+        username,
+        phoneNumber,
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        console.log("Signup successful, now logging in...");
+        
+        // After successful signup, log the user in
+        const loginResponse = await axios.post("https://localhost:8080/login", {
+          email,
+          password,
+        });
+
+        if (loginResponse.status === 200) {
+          setToken(loginResponse.data.token); // Set token in the store
+          console.log("Login successful, token set:", loginResponse.data.token);
+        } else {
+          setError("Login failed after signup");
+        }
+      } else {
+        setError("Signup failed");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error.response ? error.response.data.message : error.message);
+      setError("An error occurred during signup");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r  from-blue-800 via-blue-400 to-blue-800">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-800 via-blue-400 to-blue-800">
       <div className="w-full max-w-md py-6 px-8 space-y-1 bg-white shadow-xl rounded-xl border border-blue-200">
         <h2 className="text-3xl font-extrabold text-center text-blue-700">
           Create New Account
@@ -25,7 +89,7 @@ const Signup = () => {
           <div className="rounded-md shadow-sm -space-y-px">
             {/* First and Second Name */}
             <div className="flex space-x-4">
-              {/* First name*/}
+              {/* First name */}
               <div className="w-1/2">
                 <InputField
                   label="First Name"
@@ -36,7 +100,7 @@ const Signup = () => {
                   placeholder="First Name"
                 />
               </div>
-              {/* Second name*/}
+              {/* Second name */}
               <div className="w-1/2">
                 <InputField
                   label="Second Name"
@@ -71,12 +135,12 @@ const Signup = () => {
 
             {/* Phone Number */}
             <InputField
-              label="Phone number"
+              label="Phone Number"
               id="phone-number"
               type="text"
               value={phoneNumber}
-              onChange={(e) => setphoneNumber(e.target.value)}
-              placeholder="phone number"
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder="Phone Number"
             />
 
             {/* Password */}
@@ -100,13 +164,17 @@ const Signup = () => {
             />
           </div>
 
+          {/* Display error message */}
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+
           {/* Submit Button */}
           <div>
             <button
               type="submit"
+              disabled={loading}  // Disable the button while loading
               className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:scale-105"
             >
-              Sign Up
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
           </div>
 
