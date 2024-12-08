@@ -1,7 +1,7 @@
 import React from "react";
 
 const EmailModal = ({ email, onClose, onDelete }) => {
-  if (!email) return null; 
+  if (!email) return null; // Don't render anything if no email is passed
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
@@ -13,13 +13,32 @@ const EmailModal = ({ email, onClose, onDelete }) => {
         >
           &times;
         </button>
-        
-        {/* Email Content */}
-        <h3 className="text-2xl font-semibold mb-2">{email.subject}</h3>
-        <p className="text-sm text-gray-500 mb-4">{email.sender}</p>
+
+        {/* Email Information */}
+        <div className="mb-4">
+          <div className="mt-2">
+            <span className="font-semibold">Subject: </span>
+            <span>{email.subject}</span>
+          </div>
+          
+          {/* From and To under Subject */}
+          <div className="justify-between ">
+            <div>
+              <span className="font-semibold">From: </span>
+              <span>{email.sender}</span>
+            </div>
+            <div>
+              <span className="font-semibold">To: </span>
+              <span>{email.reseaver}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Line separating Subject and Body */}
+        <hr className="border-t my-4 border-gray-300" />
 
         {/* Scrollable email body */}
-        <div className="email-body overflow-y-auto max-h-[70vh]">
+        <div className="email-body overflow-y-auto max-h-[60vh]">
           <p>{email.body}</p>
         </div>
 
