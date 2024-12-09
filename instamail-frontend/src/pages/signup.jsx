@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import InputField from "../components/InputField";
 import LinkToLogin from "../components/SignupPageComponents/LinkToLogin";
-import axios from "axios";
-import useAuthStore from "../store/authStore";
 import { useNavigate } from "react-router-dom";
-
-const Signup = () => {
+import AuthContext from "../context/AuthContext";
+const Signup = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,25 +15,12 @@ const Signup = () => {
   // Error state to handle validation messages
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const setToken = useAuthStore((state) => state.setToken);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   // Validation for password match
   const validateForm = () => {
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return false;
-    }
-    if (
-      !email ||
-      !password ||
-      !confirmPassword ||
-      !firstName ||
-      !secondName ||
-      !username ||
-      !phoneNumber
-    ) {
-      setError("All fields are required.");
+      setError("Error:Passwords do not match");
       return false;
     }
     setError(""); // Clear previous errors
@@ -49,46 +34,18 @@ const Signup = () => {
       return; // Stop submission if form is invalid
     }
 
-    setLoading(true);
-
-    try {
-      // Signup request
-      const response = await axios.post("http://localhost:8080/auth/signup", {
-        email: email,
-        password: password,
-        firstName: firstName,
-        lastName: secondName,
-        username: username,
-        phoneNumber: phoneNumber,
-      });
-
-      if (response.status === 200) {
-        console.log("Signup successful, now logging in...");
-        // After successful signup, log the user in
-        const loginResponse = await axios.post("http://localhost:8080/auth/login", {
-          email,
-          password,
-        });
-
-        if (loginResponse.status === 200) {
-          setToken(loginResponse.data.token); // Set token in the store
-          console.log("Login successful, token set:", loginResponse.data.token);
-          navigate("/");
-        } else {
-          setError("Login failed after signup");
-        }
-      } else {
-        setError("Signup failed");
-      }
-    } catch (error) {
-      console.error(
-        "An error occurred:",
-        error.response ? error.response.data.message : error.message
-      );
-      setError("An error occurred during signup");
-    } finally {
-      setLoading(false);
-    }
+    await AuthContext.signup(
+      email,
+      password,
+      firstName,
+      secondName,
+      username,
+      phoneNumber,
+      setLoading,
+      setError,
+      navigate,
+      setToken
+    );
   };
 
   return (
@@ -177,7 +134,9 @@ const Signup = () => {
           </div>
 
           {/* Display error message */}
-          {error && <div className="text-red-500 text-sm">{error}</div>}
+          {error && (
+            <div className="text-red-500 font-bold text-sm">{error}</div>
+          )}
 
           {/* Submit Button */}
           <div>
