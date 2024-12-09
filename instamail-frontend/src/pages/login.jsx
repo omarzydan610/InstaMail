@@ -1,25 +1,16 @@
 import React, { useState } from "react";
 import InputField from "../components/InputField";
 import LinkToSignup from "../components/LoginPageComponents/LinkToSignup";
-import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await AuthContext.login(
-      email,
-      password,
-      setLoading,
-      setError,
-      navigate
-      // setToken
-    );
+    await AuthContext.login(email, password, setLoading, setError);
   };
 
   return (

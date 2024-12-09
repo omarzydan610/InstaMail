@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 import InputField from "../components/InputField";
 import LinkToLogin from "../components/SignupPageComponents/LinkToLogin";
-import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
-const Signup = ({ setToken }) => {
+const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [secondName, setSecondName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
   // Error state to handle validation messages
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   // Validation for password match
   const validateForm = () => {
@@ -38,13 +36,11 @@ const Signup = ({ setToken }) => {
       email,
       password,
       firstName,
-      secondName,
+      lastName,
       username,
       phoneNumber,
       setLoading,
-      setError,
-      navigate,
-      setToken
+      setError
     );
   };
 
@@ -56,7 +52,7 @@ const Signup = ({ setToken }) => {
         </h2>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
-            {/* First and Second Name */}
+            {/* First and Last Name */}
             <div className="flex space-x-4">
               {/* First name */}
               <div className="w-1/2">
@@ -69,15 +65,15 @@ const Signup = ({ setToken }) => {
                   placeholder="First Name"
                 />
               </div>
-              {/* Second name */}
+              {/* Last name */}
               <div className="w-1/2">
                 <InputField
-                  label="Second Name"
-                  id="second-name"
+                  label="Last Name"
+                  id="last-name"
                   type="text"
-                  value={secondName}
-                  onChange={(e) => setSecondName(e.target.value)}
-                  placeholder="Second Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Last Name"
                 />
               </div>
             </div>
