@@ -19,7 +19,8 @@ class AuthContext {
     username,
     phoneNumber,
     setLoading,
-    setError
+    setError,
+    navigate
   ) => {
     setLoading(true);
 
@@ -36,7 +37,7 @@ class AuthContext {
       if (response.status === 200) {
         localStorage.setItem("authToken", response.data.token);
         console.log("Signup successful, token set:", response.data.token);
-        window.location.href = "/";
+        navigate("/");
       }
     } catch (error) {
       console.error(error.response?.data || error.message);
@@ -52,7 +53,7 @@ class AuthContext {
    * @param {string} password
    * @returns {Promise}
    */
-  static login = async (email, password, setLoading, setError) => {
+  static login = async (email, password, setLoading, setError,navigate) => {
     setLoading(true);
 
     try {
@@ -62,7 +63,7 @@ class AuthContext {
 
         localStorage.setItem("authToken", response.data.token);
         console.log("Login successful, token set:", response.data.token);
-        window.location.href = "/";
+        navigate("/");
       }
     } catch (error) {
       console.error(error.response.data || error.message);
