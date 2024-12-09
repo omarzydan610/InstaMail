@@ -6,23 +6,21 @@ class AuthContext {
    * @param {string} email
    * @param {string} password
    * @param {string} firstName
-   * @param {string} secondName
+   * @param {string} lastName
    * @param {string} username
    * @param {string} phoneNumber
    * @returns {Promise}
    */
-  static async signup(
+  static signup = async (
     email,
     password,
     firstName,
-    secondName,
+    lastName,
     username,
     phoneNumber,
     setLoading,
-    setError,
-    navigate
-    // setToken
-  ) {
+    setError
+  ) => {
     setLoading(true);
 
     try {
@@ -31,15 +29,14 @@ class AuthContext {
         email,
         password,
         firstName,
-        lastName: secondName,
+        lastName: lastName,
         username,
         phoneNumber,
       });
       if (response.status === 200) {
-        // setToken(response.data.token);
         localStorage.setItem("authToken", response.data.token);
         console.log("Signup successful, token set:", response.data.token);
-        navigate("/");
+        window.location.href = "/";
       }
     } catch (error) {
       console.error(error.response?.data || error.message);
@@ -47,7 +44,7 @@ class AuthContext {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   /**
    * Login method
@@ -55,24 +52,17 @@ class AuthContext {
    * @param {string} password
    * @returns {Promise}
    */
-  static async login(
-    email,
-    password,
-    setLoading,
-    setError,
-    navigate
-    // setToken
-  ) {
+  static login = async (email, password, setLoading, setError) => {
     setLoading(true);
 
     try {
-      // Login request
       const response = await api.post("/auth/login", { email, password });
       if (response.status === 200) {
-        // setToken(response.data.token);
+        console.log(response);
+
         localStorage.setItem("authToken", response.data.token);
         console.log("Login successful, token set:", response.data.token);
-        navigate("/");
+        window.location.href = "/";
       }
     } catch (error) {
       console.error(error.response.data || error.message);
@@ -80,8 +70,12 @@ class AuthContext {
     } finally {
       setLoading(false);
     }
-  }
-  
+  };
+
+  static signOut = () => {
+    localStorage.removeItem("authToken");
+    window.location.href = "/login";
+  };
 }
 
 export default AuthContext;

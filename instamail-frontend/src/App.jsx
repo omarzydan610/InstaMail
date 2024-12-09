@@ -1,11 +1,9 @@
-import React from "react";
+import { React, useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Signup from "./pages/signup";
 import Login from "./pages/login";
 import Home from "./pages/home";
-import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 
 function App() {
   const location = useLocation();

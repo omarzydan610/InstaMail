@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { FaBars } from "react-icons/fa";
-
+import AuthContext from "../../context/AuthContext";
 const TopBar = ({ toggleSidebar }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible);
+  };
+
+  const handleSignOut = () => {
+    AuthContext.signOut();
   };
 
   return (
@@ -40,7 +44,7 @@ const TopBar = ({ toggleSidebar }) => {
             <p className="text-sm text-gray-500">+123 456 7890</p>
             <button
               className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-              onClick={() => alert("Signed out")}
+              onClick={handleSignOut}
             >
               Sign Out
             </button>
