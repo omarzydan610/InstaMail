@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import InputField from "../components/InputField";
-import LinkToSignup from "../components/LinkToSignup";
+import LinkToSignup from "../components/LoginPageComponents/LinkToSignup";
 import useAuthStore from "../store/authStore";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";

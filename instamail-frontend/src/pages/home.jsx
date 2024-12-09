@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import TopBar from "../components/TopBar";
-import Sidebar from "../components/Sidebar";
-import PageBody from "../components/HomePageBody";
-import FloatingButton from "../components/FloatingButton";
+import TopBar from "../components/HomePageComponents/TopBar";
+import Sidebar from "../components/HomePageComponents/Sidebar";
+import PageBody from "../components/HomePageComponents/HomePageBody";
+import FloatingButton from "../components/HomePageComponents/FloatingButton";
 
 const Home = () => {
   const [activeCategory, setActiveCategory] = useState("Inbox");
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
@@ -31,9 +31,8 @@ const Home = () => {
         />
 
         {/* Page Body */}
-         {/* Make this scrollable */}
-          <PageBody activeCategory={activeCategory} />
-        
+        {/* Make this scrollable */}
+        <PageBody activeCategory={activeCategory} />
       </div>
 
       {/* Floating Button */}
