@@ -3,17 +3,19 @@ import InputField from "../components/InputField";
 import LinkToSignup from "../components/LinkToSignup";
 import useAuthStore from "../store/authStore";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const setToken = useAuthStore((state) => state.setToken);
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      const response = await axios.post('https://localhost:8080/login', {
+      const response = await axios.post('http://localhost:8080/auth/login', {
         email,
         password,
       });
@@ -21,6 +23,7 @@ const Login = () => {
       if (response.status === 200) {
         setToken(response.data.token);
         console.log("Login successful, token set:", response.data.token);
+        navigate("/");
       } else {
         console.error("Login failed");
       }
