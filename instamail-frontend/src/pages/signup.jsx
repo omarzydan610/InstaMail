@@ -3,6 +3,7 @@ import InputField from "../components/InputField";
 import LinkToLogin from "../components/LinkToLogin";
 import axios from "axios";
 import useAuthStore from "../store/authStore";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -16,8 +17,8 @@ const Signup = () => {
   // Error state to handle validation messages
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const setToken = useAuthStore((state) => state.setToken);
+  const navigate = useNavigate(); 
 
   // Validation for password match
   const validateForm = () => {
@@ -63,22 +64,22 @@ const Signup = () => {
 
       if (response.status === 200) {
         console.log("Signup successful, now logging in...");
-      }
-      //   // After successful signup, log the user in
-      //   const loginResponse = await axios.post("http://localhost:8080/auth/login", {
-      //     email,
-      //     password,
-      //   });
+        // After successful signup, log the user in
+        const loginResponse = await axios.post("http://localhost:8080/auth/login", {
+          email,
+          password,
+        });
 
-      //   if (loginResponse.status === 200) {
-      //     setToken(loginResponse.data.token); // Set token in the store
-      //     console.log("Login successful, token set:", loginResponse.data.token);
-      //   } else {
-      //     setError("Login failed after signup");
-      //   }
-      // } else {
-      //   setError("Signup failed");
-      // }
+        if (loginResponse.status === 200) {
+          setToken(loginResponse.data.token); // Set token in the store
+          console.log("Login successful, token set:", loginResponse.data.token);
+          navigate("/");
+        } else {
+          setError("Login failed after signup");
+        }
+      } else {
+        setError("Signup failed");
+      }
     } catch (error) {
       console.error(
         "An error occurred:",
