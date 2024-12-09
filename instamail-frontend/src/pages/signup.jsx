@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import InputField from "../components/InputField";
 import LinkToLogin from "../components/SignupPageComponents/LinkToLogin";
-import AuthContext from "../context/AuthContext";
+import AuthContext from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import UserService from "../services/UserService";
+import { useAppContext } from "../contexts/AppContext";
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,10 +13,11 @@ const Signup = () => {
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-
+  const navigate = useNavigate();
   // Error state to handle validation messages
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setusername, setuserEmail, setphoneNumber } = useAppContext();
 
   // Validation for password match
   const validateForm = () => {
@@ -40,7 +44,14 @@ const Signup = () => {
       username,
       phoneNumber,
       setLoading,
-      setError
+      setError,
+      navigate
+    );
+    await UserService.getUserFromToken(
+      localStorage.getItem("authToken"),
+      setusername,
+      setuserEmail,
+      setphoneNumber
     );
   };
 

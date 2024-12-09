@@ -14,18 +14,30 @@ public class JwtUtil {
 
     private final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Secure 256-bit key
 
+    // Generate a JWT token with the email as the subject
     public String generateToken(String email) {
         return Jwts.builder().setSubject(email).setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
                 .signWith(SECRET_KEY).compact();
     }
 
+    // Extract user (subject) from the token
     public String extractEmail(String token) {
         return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody().getSubject();
     }
 
+    // Check if the token is expired
     private boolean isTokenExpired(String token) {
         return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody().getExpiration()
                 .before(new Date());
+    }
+
+    // Validate the token
+    public boolean isTokenValid(String token) {
+        try {
+            return extractEmail(token) != null && !isTokenExpired(token);
+        } catch (Exception e) {
+            return false; // Invalid token
+        }
     }
 }

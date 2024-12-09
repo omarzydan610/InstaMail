@@ -1,16 +1,26 @@
 import React, { useState } from "react";
 import InputField from "../components/InputField";
 import LinkToSignup from "../components/LoginPageComponents/LinkToSignup";
-import AuthContext from "../context/AuthContext";
+import AuthContext from "../contexts/AuthContext";
+import UserService from "../services/UserService";
+import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../contexts/AppContext";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const navigate = useNavigate();
+  const { setusername, setuserEmail, setphoneNumber } = useAppContext();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await AuthContext.login(email, password, setLoading, setError);
+    await AuthContext.login(email, password, setLoading, setError, navigate);
+    await UserService.getUserFromToken(
+      localStorage.getItem("authToken"),
+      setusername,
+      setuserEmail,
+      setphoneNumber
+    );
   };
 
   return (
