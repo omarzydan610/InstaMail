@@ -1,35 +1,25 @@
 import React, { useState } from "react";
 import InputField from "../components/InputField";
 import LinkToSignup from "../components/LoginPageComponents/LinkToSignup";
-import useAuthStore from "../store/authStore";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import AuthContext from "../context/AuthContext";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const setToken = useAuthStore((state) => state.setToken);
-  const navigate = useNavigate(); 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    try {
-      const response = await axios.post('http://localhost:8080/auth/login', {
-        email,
-        password,
-      });
-
-      if (response.status === 200) {
-        setToken(response.data.token);
-        console.log("Login successful, token set:", response.data.token);
-        navigate("/");
-      } else {
-        console.error("Login failed");
-      }
-    } catch (error) {
-      console.error("An error occurred:", error.response ? error.response.data.message : error.message);
-    }
+    await AuthContext.login(
+      email,
+      password,
+      setLoading,
+      setError,
+      navigate
+      // setToken
+    );
   };
 
   return (
@@ -59,12 +49,18 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
           />
+
+          {/* Display error message */}
+          {error && (
+            <div className="text-red-500 font-bold text-sm">{error}</div>
+          )}
           <div>
             <button
               type="submit"
+              disabled={loading} // Disable the button while loading
               className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:scale-105"
             >
-              Log in
+              {loading ? "Loging in..." : "Log In"}
             </button>
           </div>
 

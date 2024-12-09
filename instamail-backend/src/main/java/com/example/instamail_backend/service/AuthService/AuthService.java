@@ -34,15 +34,33 @@ public class AuthService implements AuthServiceInterface {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new RuntimeException("Wrong Email or Password");
         }
-
         String token = jwtUtil.generateToken(user.getEmail());
         return new LoginResponse(token);
     }
 
     @Override
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
+        // Check if email already exists
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+            System.out.println("Email already exists");
+            throw new RuntimeException("Email already exists");
+        }
+
+        // Check if username already exists
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+            System.out.println("Username already exists");
+            throw new RuntimeException("Username already exists");
+        }
+
+        // Check if phone number already exists
+        if (userRepository.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
+            System.out.println("Phone number already exists");
+            throw new RuntimeException("Phone number already exists");
+        }
+
+        // Proceed with user creation
         User user = new User();
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
@@ -50,7 +68,14 @@ public class AuthService implements AuthServiceInterface {
         user.setLastName(signUpRequest.getLastName());
         user.setUsername(signUpRequest.getUsername());
         user.setPhoneNumber(signUpRequest.getPhoneNumber());
-        userRepository.save(user);
+
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException("An unexpected error occurred while saving the user");
+        }
+
         String token = jwtUtil.generateToken(user.getEmail());
         return new SignUpResponse(token);
     }

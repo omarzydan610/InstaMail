@@ -21,23 +21,23 @@ public class AuthController {
     private AuthServiceProxy authServiceProxy;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
         try {
             LoginResponse response = authServiceProxy.login(loginRequest); // Proxy method
             return ResponseEntity.ok(response);
         } catch (RuntimeException ex) {
             System.out.println(ex);
-            return ResponseEntity.status(401).body(null); // Unauthorized
+            return ResponseEntity.status(401).body(ex.getMessage()); // Unauthorized
         }
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<Object> signUp(@RequestBody SignUpRequest signUpRequest) {
         try {
             SignUpResponse response = authServiceProxy.signUp(signUpRequest); // Proxy method
             return ResponseEntity.ok(response);
         } catch (RuntimeException ex) {
-            return ResponseEntity.badRequest().body(new SignUpResponse(ex.getMessage()));
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 
