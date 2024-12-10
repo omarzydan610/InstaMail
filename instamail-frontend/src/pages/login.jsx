@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import InputField from "../components/InputField";
 import LinkToSignup from "../components/LoginPageComponents/LinkToSignup";
 import AuthContext from "../contexts/AuthContext";
