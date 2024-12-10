@@ -48,6 +48,9 @@ public class UserService {
     public void addContact(String token, Map<String, String> contact) {
         Long userId;
         try {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
             userId = jwtUtil.extractId(token);
         } catch (Exception e) {
             System.out.println(e);

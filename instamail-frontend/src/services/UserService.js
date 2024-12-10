@@ -16,6 +16,25 @@ class UserService {
     setuserEmail(response.data.email || "");
     setusername(response.data.username || "");
   }
+
+  static async addContact(contact) {
+    // Transform contact format
+    const transformedContact = {
+      name: contact.name,
+    };
+
+    // Add email fields dynamically
+    contact.emails.forEach((email, index) => {
+      transformedContact[`email${index + 1}`] = email;
+    });
+    console.log(transformedContact);
+
+    const token = localStorage.getItem("authToken");
+    const response = await api.post("/user/add-contact", transformedContact, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  }
 }
 
 export default UserService;
