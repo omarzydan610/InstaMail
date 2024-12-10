@@ -36,7 +36,7 @@ const Signup = () => {
       return; // Stop submission if form is invalid
     }
 
-    await AuthContext.signup(
+    const response = await AuthContext.signup(
       email,
       password,
       firstName,
@@ -47,12 +47,11 @@ const Signup = () => {
       setError,
       navigate
     );
-    await UserService.getUserFromToken(
-      localStorage.getItem("authToken"),
-      setusername,
-      setuserEmail,
-      setphoneNumber
-    );
+    if (response) {
+      setusername(response.username);
+      setuserEmail(response.email);
+      setphoneNumber(response.phoneNumber);
+    }
   };
 
   return (
