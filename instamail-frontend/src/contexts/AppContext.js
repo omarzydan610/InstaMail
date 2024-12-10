@@ -13,8 +13,11 @@ export const AppProvider = ({ children }) => {
   const [phoneNumber, setphoneNumber] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("authToken"));
   const [contacts, setContacts] = useState([
-    { name: "John Doe", email: "john@example.com",},
-    { name: "Jane Smith", email: "jane@example.com",},
+    {
+      name: "John Doe",
+      emails: ["john@example.com", "jane@example.com"],
+    },
+    { name: "Jane Smith", emails: ["jane@example.com"] },
   ]);
   const emails = [
     {

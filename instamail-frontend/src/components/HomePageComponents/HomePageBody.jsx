@@ -1,6 +1,7 @@
 import React from "react";
 import EmailList from "../EmailComponents/EmailList";
 import ContactsModal from "../ContactsComponents/ContactsModal";
+import FloatingButton from "./FloatingButton";
 
 const HomePageBody = ({
   activeCategory,
@@ -16,6 +17,7 @@ const HomePageBody = ({
         isOpen={isContactsModalOpen}
         onClose={closeContactsModal}
       />
+      <FloatingButton />
     </div>
   );
 };
