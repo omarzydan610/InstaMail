@@ -4,28 +4,30 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "contacts")
+@Table(name = "contacts", 
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"userId", "contactName"})
+    }
+)
 @Getter
 @Setter
-public class Contact { // Correct class name
+public class Contact {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Foreign key to ContactEmail
+    private Long contactId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false) // Foreign key to User
-    private User user;
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "contact_name_id", nullable = false) // Foreign key to ContactName
-    private ContactName contactName; // Assumes ContactName entity exists
+    private String contactName;
+
+    public Contact(Long userId, String contactName) {
+        this.userId = userId;
+        this.contactName = contactName;
+    }
 }
-
-

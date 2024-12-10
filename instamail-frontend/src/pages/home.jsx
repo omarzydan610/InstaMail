@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import TopBar from "../components/HomePageComponents/TopBar";
 import Sidebar from "../components/HomePageComponents/Sidebar";
-import PageBody from "../components/HomePageComponents/HomePageBody";
-import FloatingButton from "../components/HomePageComponents/FloatingButton";
+import HomePageBody from "../components/HomePageComponents/HomePageBody";
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const { token } = useAppContext();
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("Inbox");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+  const [isContactsModalOpen, setIsContactsModalOpen] = useState(false);
+  const openContactsModal = () => setIsContactsModalOpen(true);
 
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
@@ -17,8 +20,6 @@ const Home = () => {
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
-  const { token } = useAppContext();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) {
@@ -29,25 +30,22 @@ const Home = () => {
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Top Bar */}
       <TopBar toggleSidebar={toggleSidebar} />
 
       <div className="flex flex-grow overflow-hidden">
-        {/* Sidebar */}
         <Sidebar
           isSidebarCollapsed={isSidebarCollapsed}
           activeCategory={activeCategory}
           onCategoryClick={handleCategoryClick}
-          className="h-full fixed z-10" // Fixed Sidebar
+          openContactsModal={openContactsModal}
         />
 
-        {/* Page Body */}
-        {/* Make this scrollable */}
-        <PageBody activeCategory={activeCategory} />
+        <HomePageBody
+          activeCategory={activeCategory}
+          isContactsModalOpen={isContactsModalOpen}
+          setIsContactsModalOpen={setIsContactsModalOpen}
+        />
       </div>
-
-      {/* Floating Button */}
-      <FloatingButton className="fixed bottom-8 right-8 z-20" />
     </div>
   );
 };

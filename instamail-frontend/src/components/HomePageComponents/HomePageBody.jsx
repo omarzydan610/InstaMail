@@ -1,11 +1,23 @@
 import React from "react";
-import EmailList from "./EmailList";
+import EmailList from "../EmailComponents/EmailList";
+import ContactsModal from "../ContactsComponents/ContactsModal";
+import FloatingButton from "./FloatingButton";
 
-const HomePageBody = ({ activeCategory }) => {
+const HomePageBody = ({
+  activeCategory,
+  isContactsModalOpen,
+  setIsContactsModalOpen,
+}) => {
+  const closeContactsModal = () => setIsContactsModalOpen(false);
   return (
     <div className="flex-grow bg-white p-6 overflow-y-auto">
       <h2 className="text-2xl font-semibold mb-4">{activeCategory}</h2>
       <EmailList />
+      <ContactsModal
+        isOpen={isContactsModalOpen}
+        onClose={closeContactsModal}
+      />
+      <FloatingButton />
     </div>
   );
 };
