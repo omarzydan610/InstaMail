@@ -17,7 +17,7 @@ const Signup = () => {
   // Error state to handle validation messages
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setusername, setuserEmail, setphoneNumber } = useAppContext();
+  const { setusername, setuserEmail, setphoneNumber,setToken } = useAppContext();
 
   // Validation for password match
   const validateForm = () => {
@@ -36,7 +36,7 @@ const Signup = () => {
       return; // Stop submission if form is invalid
     }
 
-    await AuthContext.signup(
+    const response = await AuthContext.signup(
       email,
       password,
       firstName,
@@ -45,14 +45,14 @@ const Signup = () => {
       phoneNumber,
       setLoading,
       setError,
-      navigate
+      navigate,
+      setToken
     );
-    await UserService.getUserFromToken(
-      localStorage.getItem("authToken"),
-      setusername,
-      setuserEmail,
-      setphoneNumber
-    );
+    if (response) {
+      setusername(response.username);
+      setuserEmail(response.email);
+      setphoneNumber(response.phoneNumber);
+    }
   };
 
   return (

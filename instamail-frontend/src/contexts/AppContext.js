@@ -11,6 +11,7 @@ export const AppProvider = ({ children }) => {
   const [firstName, setfirstName] = useState(null);
   const [lastName, setlastName] = useState(null);
   const [phoneNumber, setphoneNumber] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("authToken"));
 
   // Combine the state into a single object
   const contextValue = {
@@ -24,6 +25,8 @@ export const AppProvider = ({ children }) => {
     setlastName,
     phoneNumber,
     setphoneNumber,
+    token,
+    setToken,
   };
 
   return (

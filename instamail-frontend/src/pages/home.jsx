@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TopBar from "../components/HomePageComponents/TopBar";
 import Sidebar from "../components/HomePageComponents/Sidebar";
 import PageBody from "../components/HomePageComponents/HomePageBody";
 import FloatingButton from "../components/HomePageComponents/FloatingButton";
+import { useAppContext } from "../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [activeCategory, setActiveCategory] = useState("Inbox");
@@ -15,6 +17,15 @@ const Home = () => {
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
+  const { token } = useAppContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      console.log();
+      navigate("/login");
+    }
+  }, [token, navigate]);
 
   return (
     <div className="h-screen flex flex-col">

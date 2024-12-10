@@ -37,7 +37,7 @@ public class AuthService implements AuthServiceInterface {
             throw new RuntimeException("Wrong Email or Password");
         }
         String token = jwtUtil.generateToken(user.getEmail());
-        return new LoginResponse(token);
+        return new LoginResponse(token,user);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class AuthService implements AuthServiceInterface {
         }
 
         String token = jwtUtil.generateToken(user.getEmail());
-        return new SignUpResponse(token);
+        return new SignUpResponse(token,user);
     }
 
     @Override

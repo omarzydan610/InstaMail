@@ -4,14 +4,14 @@ import AuthContext from "../../contexts/AuthContext";
 import { useAppContext } from "../../contexts/AppContext";
 const TopBar = ({ toggleSidebar }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const { username, userEmail, phoneNumber } = useAppContext();
+  const { username, userEmail, phoneNumber, setToken } = useAppContext();
 
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible);
   };
 
   const handleSignOut = () => {
-    AuthContext.signOut();
+    AuthContext.signOut(setToken);
   };
 
   return (
