@@ -36,8 +36,8 @@ public class AuthService implements AuthServiceInterface {
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new RuntimeException("Wrong Email or Password");
         }
-        String token = jwtUtil.generateToken(user.getEmail());
-        return new LoginResponse(token,user);
+        String token = jwtUtil.generateToken(user.getId());
+        return new LoginResponse(token, user);
     }
 
     @Override
@@ -76,8 +76,8 @@ public class AuthService implements AuthServiceInterface {
             throw new RuntimeException("An unexpected error occurred while saving the user");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail());
-        return new SignUpResponse(token,user);
+        String token = jwtUtil.generateToken(user.getId());
+        return new SignUpResponse(token, user);
     }
 
     @Override
