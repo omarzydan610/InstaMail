@@ -4,6 +4,7 @@ import {
   FaPaperPlane,
   FaDraftingCompass,
   FaTrashAlt,
+  FaAddressBook,
 } from "react-icons/fa";
 
 const categories = [
@@ -11,9 +12,15 @@ const categories = [
   { name: "Sent", icon: <FaPaperPlane /> },
   { name: "Drafts", icon: <FaDraftingCompass /> },
   { name: "Trash", icon: <FaTrashAlt /> },
+  { name: "Contacts", icon: <FaAddressBook />, isContacts: true }, // Add Contacts
 ];
 
-const Sidebar = ({ isSidebarCollapsed, activeCategory, onCategoryClick }) => {
+const Sidebar = ({
+  isSidebarCollapsed,
+  activeCategory,
+  onCategoryClick,
+  openContactsModal,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
@@ -24,6 +31,14 @@ const Sidebar = ({ isSidebarCollapsed, activeCategory, onCategoryClick }) => {
   const handleMouseLeave = () => {
     if (!isSidebarCollapsed) return;
     setIsHovered(false);
+  };
+
+  const handleCategoryClick = (category) => {
+    if (category.isContacts) {
+      openContactsModal(); // Open Contacts Modal
+    } else {
+      onCategoryClick(category.name); // Handle other categories
+    }
   };
 
   return (
@@ -41,7 +56,7 @@ const Sidebar = ({ isSidebarCollapsed, activeCategory, onCategoryClick }) => {
             className={`flex items-center space-x-2 cursor-pointer text-lg hover:bg-blue-100 py-3 pl-3 rounded-lg ${
               activeCategory === category.name ? "text-blue-600 font-bold" : ""
             }`}
-            onClick={() => onCategoryClick(category.name)}
+            onClick={() => handleCategoryClick(category)}
           >
             {category.icon}
             {(!isSidebarCollapsed || isHovered) && (

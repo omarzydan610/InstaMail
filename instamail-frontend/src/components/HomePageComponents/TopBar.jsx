@@ -36,6 +36,7 @@ const TopBar = ({ toggleSidebar }) => {
         <span
           className="p-3 rounded-lg hover:bg-blue-600"
           onClick={togglePopup}
+          style={{ userSelect: "none" }}
         >
           {username}
         </span>
