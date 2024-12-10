@@ -9,7 +9,7 @@ const EmailModal = ({ email, onClose, onDelete }) => {
         {/* Exit Button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-4 text-xl text-gray-500 rounded-full hover:bg-gray-200 px-1.5"
+          className="absolute top-1 right-2 text-xl text-gray-500 rounded-full hover:bg-gray-200 px-1.5"
         >
           &times;
         </button>
