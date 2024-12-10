@@ -5,6 +5,8 @@ import UserService from "../services/UserService";
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("authToken");
   const { setusername, setuserEmail, setphoneNumber } = useAppContext();
+  console.log(token);
+  
   if (token == null) {
     return <Navigate to="/login" />;
   } else {

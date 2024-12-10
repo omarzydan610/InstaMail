@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputField from "../components/InputField";
 import LinkToSignup from "../components/LoginPageComponents/LinkToSignup";
 import AuthContext from "../contexts/AuthContext";
@@ -10,7 +10,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { setusername, setuserEmail, setphoneNumber } = useAppContext();
+  const { setusername, setuserEmail, setphoneNumber, setToken } =
+    useAppContext();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await AuthContext.login(
@@ -18,7 +19,8 @@ const Login = () => {
       password,
       setLoading,
       setError,
-      navigate
+      navigate,
+      setToken
     );
     if (response) {
       setusername(response.username);

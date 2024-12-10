@@ -17,7 +17,7 @@ const Signup = () => {
   // Error state to handle validation messages
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setusername, setuserEmail, setphoneNumber } = useAppContext();
+  const { setusername, setuserEmail, setphoneNumber,setToken } = useAppContext();
 
   // Validation for password match
   const validateForm = () => {
@@ -45,7 +45,8 @@ const Signup = () => {
       phoneNumber,
       setLoading,
       setError,
-      navigate
+      navigate,
+      setToken
     );
     if (response) {
       setusername(response.username);
