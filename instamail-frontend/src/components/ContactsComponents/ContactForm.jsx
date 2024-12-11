@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoAdd, IoRemove } from "react-icons/io5";
 
 const ContactForm = ({ contact, onSubmit, onCancel }) => {
+  // Initialize emailFields based on whether contact exists and has emails
   const [emailFields, setEmailFields] = useState(
-    contact?.emails?.length 
-      ? contact.emails.map((_, index) => ({ 
-          id: index + 1, 
-          name: index === 0 ? 'email' : `email${index + 1}` 
+    contact?.emails?.length
+      ? contact.emails.map((_, index) => ({
+          id: index + 1,
+          name: index === 0 ? 'email' : `email${index + 1}`,
         }))
       : [{ id: 1, name: 'email' }]
   );
+
+  useEffect(() => {
+    if (contact?.emails) {
+      setEmailFields(
+        contact.emails.map((_, index) => ({
+          id: index + 1,
+          name: index === 0 ? 'email' : `email${index + 1}`,
+        }))
+      );
+    }
+  }, [contact]); // Re-run when contact is updated
 
   const addEmailField = () => {
     const newId = emailFields.length + 1;
@@ -19,10 +31,10 @@ const ContactForm = ({ contact, onSubmit, onCancel }) => {
   const removeEmailField = (idToRemove) => {
     if (emailFields.length > 1) {
       const updatedFields = emailFields
-        .filter(field => field.id !== idToRemove)
+        .filter((field) => field.id !== idToRemove)
         .map((field, index) => ({
           id: index + 1,
-          name: index === 0 ? 'email' : `email${index + 1}`
+          name: index === 0 ? 'email' : `email${index + 1}`,
         }));
       setEmailFields(updatedFields);
     }
@@ -77,9 +89,9 @@ const ContactForm = ({ contact, onSubmit, onCancel }) => {
         e.preventDefault();
         const formData = {
           name: e.target.name.value,
-          emails: emailFields.map(field => e.target[field.name].value).filter(Boolean)
+          emails: emailFields.map((field) => e.target[field.name].value).filter(Boolean),
         };
-        onSubmit(formData);
+        onSubmit(formData); // Pass formData to parent
       }}
       className="space-y-4"
     >
@@ -89,11 +101,11 @@ const ContactForm = ({ contact, onSubmit, onCancel }) => {
           type="text"
           required
           name="name"
-          defaultValue={contact?.name}
+          defaultValue={contact?.name || ''}
           className="w-full p-2 border rounded"
         />
       </div>
-      
+
       {renderEmailFields()}
 
       <div className="flex space-x-4">
@@ -102,9 +114,9 @@ const ContactForm = ({ contact, onSubmit, onCancel }) => {
           type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
-          Save
+          {contact ? "Update" : "Save"}
         </button>
-        
+
         {/* cancel button */}
         <button
           type="button"
@@ -118,4 +130,4 @@ const ContactForm = ({ contact, onSubmit, onCancel }) => {
   );
 };
 
-export default ContactForm; 
+export default ContactForm;
