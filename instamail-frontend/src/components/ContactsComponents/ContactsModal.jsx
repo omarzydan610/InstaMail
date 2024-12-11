@@ -16,8 +16,7 @@ const ContactsModal = ({ isOpen, onClose }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
+
 const handleSelectContact = (contact) => {
   console.log("Selected contact:", contact); // This logs the contact being passed in
   setSentContact(contact);
@@ -32,10 +31,7 @@ useEffect(() => {
 useEffect(() => {
   console.log("selectedContact updated:", selectedContact);
 }, [selectedContact]);
-
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
+ 
   useEffect(() => {
     const fetchContacts = async () => {
       try {
