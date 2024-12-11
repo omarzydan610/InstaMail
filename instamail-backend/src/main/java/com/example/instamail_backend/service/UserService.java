@@ -16,7 +16,7 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public User getUserByToken(String token) {
+    public Long getIdByToken(String token) {
         System.out.println(token);
         if (token.startsWith("Bearer ")) {
             token = token.substring(7);
@@ -25,13 +25,17 @@ public class UserService {
         try {
             Long Id = jwtUtil.extractId(token);
             System.out.println("Id: " + Id);
-            User user = userRepository.findById(Id).orElseThrow(() -> new RuntimeException("User not found"));
-            System.out.println(user);
-            return user;
+            return Id;
         } catch (Exception e) {
             System.out.println("Error : token is wrong or expired ");
             throw new RuntimeException("Invalid or expired token");
         }
     }
 
+    public User getUserByToken(String token) {
+        Long Id = getIdByToken(token);
+        User user = userRepository.findById(Id).orElseThrow(() -> new RuntimeException("User not found"));
+        System.out.println(user);
+        return user;
+    }
 }

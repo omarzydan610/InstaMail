@@ -10,11 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "contacts", 
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"userId", "contactName"})
-    }
-)
+@Table(name = "contacts", uniqueConstraints = { @UniqueConstraint(columnNames = { "userId", "contactName" }) })
 @Getter
 @Setter
 public class Contact {
@@ -25,6 +21,10 @@ public class Contact {
     private Long userId;
 
     private String contactName;
+
+    public Contact() {
+
+    }
 
     public Contact(Long userId, String contactName) {
         this.userId = userId;
