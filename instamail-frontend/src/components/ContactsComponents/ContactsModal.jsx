@@ -5,7 +5,7 @@ import ContactsList from "./ContactsList";
 import ContactDetails from "./ContactDetails";
 import ContactForm from "./ContactForm";
 import UserService from "../../services/UserService";
-import ContactServices from "../../services/ContactServices";
+import ContactServices from "../../services/ContactsService";
 
 const ContactsModal = ({ isOpen, onClose }) => {
   const { contacts, setContacts } = useAppContext();
