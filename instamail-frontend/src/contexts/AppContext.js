@@ -12,6 +12,7 @@ export const AppProvider = ({ children }) => {
   const [lastName, setlastName] = useState(null);
   const [phoneNumber, setphoneNumber] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("authToken"));
+  const [selectedContact, setSelectedContact] = useState(null);
   const [contacts, setContacts] = useState([
     {
       name: "John Doe",
@@ -109,6 +110,8 @@ export const AppProvider = ({ children }) => {
     contacts,
     setContacts,
     emails,
+    selectedContact,
+    setSelectedContact,
   };
 
   return (

@@ -1,17 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import { useAppContext } from "../../contexts/AppContext";
+import ContactServices from "../../services/ContactsService";
 
-const ContactDetails = ({ contact, onEdit, onDelete, onBack }) => {
+const ContactDetails = ({ selectedcontact, onEdit, onDelete, onBack }) => {
+  const [contact, setContact] = useState(null);
+  const [emails, setEmails] = useState([]);
+  const [error, setError] = useState(null);
+  
+
+  setContact(selectedcontact);
+  console.log(contact)
+  console.log(selectedcontact);
+
+  useEffect(() => {
+    const fetchContact = async () => {
+      if (selectedcontact && selectedcontact.contactId) {
+        try {
+          const contactData = await ContactServices.getEmails(selectedcontact.contactId);
+          setContact(contactData);
+          setEmails(contactData.emails || []);
+        } catch (error) {
+          setError("Failed to load contact details or emails");
+          console.error(error);
+        }
+      } else {
+        setError("Selected contact is invalid");
+      }
+    };
+
+    // Only fetch contact details if selectedcontact is valid
+    if (selectedcontact) {
+      fetchContact();
+    }else {}
+  }, [selectedcontact]);
+
+  const contactName = contact ? contact.contactName || 'Unnamed Contact' : 'Loading...';
+
   return (
     <div>
+      {error && <p className="text-red-500">{error}</p>}
       <div className="bg-gray-100 p-4 rounded shadow-md space-y-4">
-        <p><strong>Name:</strong> {contact.name}</p>
-        {contact.emails?.map((email, index) => (
-          <p key={index}>
-            <strong>{index === 0 ? 'Email' : `Email ${index + 1}`}:</strong> {email}
-          </p>
-        ))}
-
+        <p><strong>Name:</strong> {contactName}</p>
+        {emails.length > 0 ? (
+          emails.map((email, index) => (
+            <div key={index}>
+              <p>
+                <strong>{index === 0 ? 'Email' : `Email ${index + 1}`}:</strong> {email}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p>No emails found for this contact.</p>
+        )}
       </div>
+
       <div className="mt-4 flex space-x-4">
         <button
           onClick={onEdit}
@@ -36,4 +78,4 @@ const ContactDetails = ({ contact, onEdit, onDelete, onBack }) => {
   );
 };
 
-export default ContactDetails; 
+export default ContactDetails;
