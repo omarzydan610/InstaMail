@@ -1,6 +1,6 @@
 import React from "react";
 
-const inBoxEmailModal = ({ email, onClose, onDelete }) => {
+const InBoxEmailModal = ({ email, onClose, onDelete }) => {
   if (!email) return null; // Don't render anything if no email is passed
 
   return (
@@ -50,4 +50,4 @@ const inBoxEmailModal = ({ email, onClose, onDelete }) => {
   );
 };
 
-export default inBoxEmailModal;
+export default InBoxEmailModal;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const sentEmailModal = ({ email, onClose, onDelete }) => {
+const SentEmailModal = ({ email, onClose, onDelete }) => {
   if (!email) return null; // Don't render anything if no email is passed
 
   return (
@@ -50,4 +50,4 @@ const sentEmailModal = ({ email, onClose, onDelete }) => {
   );
 };
 
-export default sentEmailModal;
+export default SentEmailModal;
