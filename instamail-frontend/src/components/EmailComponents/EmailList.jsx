@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import EmailModal from "../EmailComponents/EmailModal";
 import sentEmailModal from "./sentEmailModal";
 import { useAppContext } from "../../contexts/AppContext";
+import inBoxEmailModal from "./inBoxEmailModal";
 const EmailList = (activeCategory) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
   const { emails } = useAppContext();
@@ -33,7 +34,7 @@ const EmailList = (activeCategory) => {
       {activeCategory === "sent" && selectedEmail && (
         <sentEmailModal email={selectedEmail} onClose={handleCloseModal} />)}
       {activeCategory === "inpox" && selectedEmail && (
-        <sentEmailModal email={selectedEmail} onClose={handleCloseModal} />)}
+        <inBoxEmailModal email={selectedEmail} onClose={handleCloseModal} />)}
       
     </div>
   );
