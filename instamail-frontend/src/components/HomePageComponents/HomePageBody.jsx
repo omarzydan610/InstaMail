@@ -12,7 +12,7 @@ const HomePageBody = ({
   return (
     <div className="flex-grow bg-white p-6 overflow-y-auto">
       <h2 className="text-2xl font-semibold mb-4">{activeCategory}</h2>
-      <EmailList />
+      <EmailList activeCategory/>
       <ContactsModal
         isOpen={isContactsModalOpen}
         onClose={closeContactsModal}

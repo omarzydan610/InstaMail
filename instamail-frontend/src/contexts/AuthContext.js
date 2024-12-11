@@ -1,16 +1,6 @@
 import api from "../services/api"; // Import your custom Axios instance
 
 class AuthContext {
-  /**
-   * Signup method
-   * @param {string} email
-   * @param {string} password
-   * @param {string} firstName
-   * @param {string} lastName
-   * @param {string} username
-   * @param {string} phoneNumber
-   * @returns {Promise}
-   */
   static signup = async (
     email,
     password,
@@ -51,12 +41,6 @@ class AuthContext {
     }
   };
 
-  /**
-   * Login method
-   * @param {string} email
-   * @param {string} password
-   * @returns {Promise}
-   */
   static login = async (
     email,
     password,
