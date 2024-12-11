@@ -23,17 +23,14 @@ class UserService {
       console.log("Failed to fetch user data:", error);
       localStorage.removeItem("authToken");
       setToken(null);
-      // throw error;
     }
   }
 
   static async addContact(contact) {
-    // Transform contact format
     const transformedContact = {
       name: contact.name,
     };
 
-    // Add email fields dynamically
     contact.emails.forEach((email, index) => {
       transformedContact[`email${index + 1}`] = email;
     });
@@ -45,6 +42,8 @@ class UserService {
     });
     return response.data;
   }
+
+  
 }
 
 export default UserService;

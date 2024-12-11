@@ -1,27 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import { IoPersonAdd } from "react-icons/io5";
 import ContactsList from "./ContactsList";
 import ContactDetails from "./ContactDetails";
 import ContactForm from "./ContactForm";
 import UserService from "../../services/UserService";
+import ContactServices from "../../services/ContactsService";
 
 const ContactsModal = ({ isOpen, onClose }) => {
-  const { contacts } = useAppContext();
+  const { contacts, setContacts } = useAppContext();
   const [selectedContact, setSelectedContact] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        setLoading(true);
+        const data = await ContactServices.getContacts();
+        setContacts(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchContacts();
+    }
+  }, [isOpen, setContacts]);
 
   if (!isOpen) return null;
 
-  const handleEdit = (updatedContact) => {
-    setSelectedContact(updatedContact);
-    setIsEditing(false);
+  const handleEdit = async (updatedContact) => {
+    try {
+      const editedContact = await ContactServices.editContact(selectedContact.id, updatedContact);
+      setContacts((prevContacts) =>
+        prevContacts.map((contact) =>
+          contact.id === selectedContact.id ? editedContact : contact
+        )
+      );
+      setIsEditing(false);
+      setSelectedContact(editedContact);
+    } catch (error) {
+      console.error("Failed to edit contact:", error);
+    }
   };
 
-  const handleDelete = () => {
-    onClose();
+  const handleDelete = async () => {
+    try {
+      await ContactServices.deleteContact(selectedContact.id);
+      setContacts((prevContacts) =>
+        prevContacts.filter((contact) => contact.id !== selectedContact.id)
+      );
+      setIsConfirmingDelete(false);
+      setSelectedContact(null);
+      onClose();
+    } catch (error) {
+      console.error("Failed to delete contact:", error);
+    }
   };
 
   const handleCloseModal = () => {
@@ -32,10 +73,14 @@ const ContactsModal = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  const handleCreate = (newContact) => {
-    UserService.addContact(newContact);
-    console.log(newContact);
-    setIsAdding(false);
+  const handleCreate = async (newContact) => {
+    try {
+      const createdContact = await UserService.addContact(newContact);
+      setContacts((prevContacts) => [...prevContacts, createdContact]);
+      setIsAdding(false);
+    } catch (error) {
+      console.error("Failed to add contact:", error);
+    }
   };
 
   return (
@@ -69,7 +114,11 @@ const ContactsModal = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {isAdding ? (
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : isAdding ? (
           <ContactForm
             onSubmit={handleCreate}
             onCancel={() => setIsAdding(false)}
