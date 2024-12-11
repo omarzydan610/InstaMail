@@ -5,6 +5,7 @@ import {
   FaDraftingCompass,
   FaTrashAlt,
   FaAddressBook,
+  FaFolderPlus,
 } from "react-icons/fa";
 
 const categories = [
@@ -13,6 +14,7 @@ const categories = [
   { name: "Drafts", icon: <FaDraftingCompass /> },
   { name: "Trash", icon: <FaTrashAlt /> },
   { name: "Contacts", icon: <FaAddressBook />, isContacts: true }, // Add Contacts
+  { name: "Add Folder", icon: <FaFolderPlus />, isAddFolder: true }, // Add Folder Button
 ];
 
 const Sidebar = ({
@@ -20,6 +22,7 @@ const Sidebar = ({
   activeCategory,
   onCategoryClick,
   openContactsModal,
+  onAddFolderClick, // Add this prop to handle folder creation
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -36,6 +39,8 @@ const Sidebar = ({
   const handleCategoryClick = (category) => {
     if (category.isContacts) {
       openContactsModal(); // Open Contacts Modal
+    } else if (category.isAddFolder) {
+      onAddFolderClick(); // Handle Add Folder Click
     } else {
       onCategoryClick(category.name); // Handle other categories
     }
