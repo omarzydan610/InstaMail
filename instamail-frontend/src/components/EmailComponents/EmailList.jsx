@@ -31,9 +31,9 @@ const EmailList = (activeCategory) => {
       ))}
 
       {/* Modals */}
-      {activeCategory === "sent" && selectedEmail && (
+      {activeCategory === "Sent" && selectedEmail && (
         <sentEmailModal email={selectedEmail} onClose={handleCloseModal} />)}
-      {activeCategory === "inpox" && selectedEmail && (
+      {activeCategory === "InBox" && selectedEmail && (
         <inBoxEmailModal email={selectedEmail} onClose={handleCloseModal} />)}
       
     </div>
