@@ -2,23 +2,23 @@ import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import ContactServices from "../../services/ContactsService";
 
-const ContactDetails = ({ selectedcontact, onEdit, onDelete, onBack }) => {
-  const [contact, setContact] = useState(null);
+const ContactDetails = ({ contact, onEdit, onDelete, onBack }) => {
+  // const [contact, setContact] = useState(null);
   const [emails, setEmails] = useState([]);
   const [error, setError] = useState(null);
   
 
-  setContact(selectedcontact);
-  console.log(contact)
-  console.log(selectedcontact);
+
+  console.log(contact);
 
   useEffect(() => {
     const fetchContact = async () => {
-      if (selectedcontact && selectedcontact.contactId) {
+      if (contact && contact.contactId) {
         try {
-          const contactData = await ContactServices.getEmails(selectedcontact.contactId);
-          setContact(contactData);
-          setEmails(contactData.emails || []);
+          const contactData = await ContactServices.getEmails(contact.contactId);
+          console.log(contactData);
+          
+          setEmails(contactData.map(item => item.email));
         } catch (error) {
           setError("Failed to load contact details or emails");
           console.error(error);
@@ -29,10 +29,12 @@ const ContactDetails = ({ selectedcontact, onEdit, onDelete, onBack }) => {
     };
 
     // Only fetch contact details if selectedcontact is valid
-    if (selectedcontact) {
+    if (contact) {
       fetchContact();
-    }else {}
-  }, [selectedcontact]);
+    }else {
+      console.log("no selected contact")
+    }
+  }, [contact]);
 
   const contactName = contact ? contact.contactName || 'Unnamed Contact' : 'Loading...';
 

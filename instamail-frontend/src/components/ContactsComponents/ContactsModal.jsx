@@ -18,9 +18,6 @@ const ContactsModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState(null);
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
 const handleSelectContact = (contact) => {
   console.log("Selected contact:", contact); // This logs the contact being passed in
   setSentContact(contact);
@@ -39,9 +36,6 @@ useEffect(() => {
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ 
   useEffect(() => {
     const fetchContacts = async () => {
       try {
@@ -54,8 +48,6 @@ useEffect(() => {
         setLoading(false);
       }
     };
-
-
     if (isOpen) {
       fetchContacts();
     }
@@ -64,11 +56,12 @@ useEffect(() => {
   if (!isOpen) return null;
 
   const handleEdit = async (updatedContact) => {
+    console.log(updatedContact)
     try {
-      const editedContact = await ContactServices.editContact(selectedContact.id, updatedContact);
+      const editedContact = await ContactServices.editContact(selectedContact.contactId, updatedContact);
       setContacts((prevContacts) =>
         prevContacts.map((contact) =>
-          contact.id === selectedContact.id ? editedContact : contact
+          contact.contactId === selectedContact.contactId ? editedContact : contact
         )
       );
       setIsEditing(false);
@@ -80,9 +73,9 @@ useEffect(() => {
 
   const handleDelete = async () => {
     try {
-      await ContactServices.deleteContact(selectedContact.id);
+      await ContactServices.deleteContact(selectedContact.contactId);
       setContacts((prevContacts) =>
-        prevContacts.filter((contact) => contact.id !== selectedContact.id)
+        prevContacts.filter((contact) => contact.contactId !== selectedContact.contactId)
       );
       setIsConfirmingDelete(false);
       setSelectedContact(null);
