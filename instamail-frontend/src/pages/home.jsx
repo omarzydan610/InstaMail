@@ -14,6 +14,7 @@ const Home = () => {
   const [isContactsModalOpen, setIsContactsModalOpen] = useState(false);
   const [isAddFolderModalOpen, setIsAddFolderModalOpen] = useState(false); // State for Add Folder Modal
   const [folderName, setFolderName] = useState("");
+  console.log(folderName);
 
   const openContactsModal = () => setIsContactsModalOpen(true);
 
@@ -52,7 +53,7 @@ const Home = () => {
 
       <div className="flex flex-grow overflow-hidden">
         <Sidebar
-          isSidebarCollapsed={false}
+          isSidebarCollapsed={isSidebarCollapsed}
           activeCategory={activeCategory}
           onCategoryClick={handleCategoryClick}
           openContactsModal={openContactsModal}
