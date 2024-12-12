@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,28 +19,52 @@ public class Mail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id", nullable = false) // Sender reference
-    private User sender;
-
-    @ManyToOne
-    @JoinColumn(name = "receiver_id", nullable = false) // Receiver reference
-    private User receiver;
+   
+    private String senderEmail;
+    private String receiverEmail;
 
     private String subject;
     private String content;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     private boolean isRead;
     private boolean isDraft;
-    private int priority;
 
-    private boolean isStarred;
-    private boolean isDeletedForSender;
-    private boolean isDeletedForReceiver;
+    private int senderPriority;
+    private int receiverPriority;
+
+    private boolean senderIsStarred;
+    private boolean receiverIsStarred;
+
+    private boolean senderIsDeleted;
+    private boolean receiverIsDeleted;
+
+    private long senderFolderId;
+    private long receiverFolderId;
 
     private LocalDateTime deletedAtSender;
     private LocalDateTime deletedAtReceiver;
+
+    public Mail() {
+
+    }
+
+    public Mail(String senderEmail, String receiverEmail, String subject, String content, int senderPriority,
+            int receiverPriority, long senderFolderId, long receiverFolderId, boolean senderIsStarred,
+            boolean receiverIsStarred, boolean senderIsDeleted, boolean receiverIsDeleted) {
+        this.senderEmail = senderEmail;
+        this.receiverEmail = receiverEmail;
+        this.subject = subject;
+        this.content = content;
+        this.senderPriority = senderPriority;
+        this.receiverPriority = receiverPriority;
+        this.senderFolderId = senderFolderId;
+        this.receiverFolderId = receiverFolderId;
+        this.senderIsStarred = senderIsStarred;
+        this.receiverIsStarred = receiverIsStarred;
+        this.senderIsDeleted = senderIsDeleted;
+        this.receiverIsDeleted = receiverIsDeleted;
+    }
 }
 
