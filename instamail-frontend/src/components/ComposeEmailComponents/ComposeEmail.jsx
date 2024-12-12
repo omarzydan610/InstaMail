@@ -5,8 +5,9 @@ import EmailForm from "./EmailForm";
 const ComposeEmail = ({ onClose, contacts }) => {
   const [showContacts, setShowContacts] = React.useState(false);
   const [selectedContact, setSelectedContact] = React.useState(null);
+  const [recipients, setRecipients] = React.useState([]);
+  const [error, setError] = React.useState("");
   const contactsRef = React.useRef(null);
-
 
   React.useEffect(() => {
     const handleClickOutside = (event) => {
@@ -29,7 +30,12 @@ const ComposeEmail = ({ onClose, contacts }) => {
     if (selectedContact && selectedContact.id === contact.id) {
       setSelectedContact(null);
     } else if (contact.emails.length === 1) {
-      document.getElementById("to").value = contact.emails[0].email;
+      if (!recipients.includes(contact.emails[0])) {
+        setRecipients((prev) => [...prev, contact.emails[0]]);
+        setError("");
+      } else {
+        setError("This email is already in the recipients list");
+      }
       setSelectedContact(null);
       setShowContacts(false);
     } else {
@@ -38,7 +44,12 @@ const ComposeEmail = ({ onClose, contacts }) => {
   };
 
   const handleEmailSelect = (email) => {
-    document.getElementById("to").value = email;
+    if (!recipients.includes(email)) {
+      setRecipients((prev) => [...prev, email]);
+      setError("");
+    } else {
+      setError("This email is already in the recipients list");
+    }
     setSelectedContact(null);
     setShowContacts(false);
   };
@@ -71,6 +82,10 @@ const ComposeEmail = ({ onClose, contacts }) => {
           setSelectedContact={setSelectedContact}
           handleSaveDraft={handleSaveDraft}
           onClose={onClose}
+          recipients={recipients}
+          setRecipients={setRecipients}
+          error={error}
+          setError={setError}
         >
           {showContacts && (
             <ContactsModal
