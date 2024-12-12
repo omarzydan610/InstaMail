@@ -59,7 +59,7 @@ const ContactForm = ({
               type="email"
               required
               name={field.name}
-              defaultValue={emails?.[field.id - 1]?.email || ""}
+              defaultValue={emails?.[field.id - 1] || ""}
               className="w-full p-2 border rounded"
             />
           </div>
