@@ -1,13 +1,30 @@
 import React, { useState } from "react";
 import ComposeEmail from "../ComposeEmailComponents/ComposeEmail";
-
+import { useAppContext } from "../../contexts/AppContext";
 const FloatingButton = () => {
   const [isComposeVisible, setComposeVisible] = useState(false);
 
-  const handleButtonClick = () => {
+  const [contactsList, setContactsList] = useState([]);
+  const { fetchContacts, fetchContactEmails } = useAppContext();
+  const handleButtonClick = async () => {
+    const contacts = await fetchContacts();
+    setContactsList([]);
+
+    const contactsWithEmails = await Promise.all(
+      contacts.map(async (contact, index) => {
+        const emails = await fetchContactEmails(contact);
+        return {
+          id: index + 1,
+          name: contact.contactName,
+          emails: emails,
+        };
+      })
+    );
+
+    setContactsList(contactsWithEmails);
     setComposeVisible(true);
   };
-
+  console.log("contactsxx", contactsList);
   const closeComposeEmail = () => {
     setComposeVisible(false);
   };
@@ -23,7 +40,9 @@ const FloatingButton = () => {
         </button>
       </div>
 
-      {isComposeVisible && <ComposeEmail onClose={closeComposeEmail} />}
+      {isComposeVisible && (
+        <ComposeEmail onClose={closeComposeEmail} contacts={contactsList} />
+      )}
     </div>
   );
 };

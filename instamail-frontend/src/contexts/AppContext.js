@@ -13,18 +13,33 @@ export const AppProvider = ({ children }) => {
   const [lastName, setlastName] = useState(null);
   const [phoneNumber, setphoneNumber] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("authToken"));
-  const [selectedContact, setSelectedContact] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [isFetalError, setIsFetalError] = useState(false);
+  const [selectedContactEmails, setSelectedContactEmails] = useState(null);
   const fetchContacts = async () => {
     try {
       const data = await ContactService.getContacts();
       setContacts(data);
+      return data;
     } catch (error) {
       console.error("Failed to fetch contacts:", error);
       setIsFetalError(true);
     }
   };
+
+  const fetchContactEmails = async (contact) => {
+    try {
+      const contactData = await ContactService.getEmails(contact.contactId);
+      const contactEmails = contactData.map((item) => item.email);
+      console.log("contactEmails", contactEmails);
+      setSelectedContactEmails(contactEmails);
+      return contactEmails;
+    } catch (error) {
+      console.error("Failed to fetch contact emails:", error);
+      return [];
+    }
+  };
+
   const emails = [
     {
       id: 1,
@@ -115,11 +130,12 @@ export const AppProvider = ({ children }) => {
     contacts,
     setContacts,
     emails,
-    selectedContact,
-    setSelectedContact,
     fetchContacts,
     isFetalError,
     setIsFetalError,
+    selectedContactEmails,
+    setSelectedContactEmails,
+    fetchContactEmails,
   };
 
   return (

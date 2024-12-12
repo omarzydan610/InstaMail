@@ -8,26 +8,29 @@ import ContactForm from "./ContactForm";
 import ContactService from "../../services/ContactsService";
 import { FiTrash2, FiArrowLeft } from "react-icons/fi";
 const ContactsModal = ({ isOpen, onClose }) => {
-  const { contacts, setContacts, fetchContacts, setIsFetalError } =
-    useAppContext();
+  const {
+    contacts,
+    setContacts,
+    fetchContacts,
+    setIsFetalError,
+    selectedContactEmails,
+    fetchContactEmails,
+  } = useAppContext();
   const [selectedContact, setSelectedContact] = useState(null);
-  const [sentContact, setSentContact] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedContactEmails, setSelectedContactEmails] = useState(null);
 
-  const handleSelectContact = (contact) => {
-    console.log("Selected contact:", contact); // This logs the contact being passed in
-    setSentContact(contact);
+  const handleSelectContact = async (contact) => {
+    console.log("Selected contact:", contact);
+    await fetchContactEmails(contact);
     setSelectedContact(contact);
   };
   const handleCancleAdding = () => {
     setIsAdding(false);
     setError(null);
     setIsEditing(false);
-    setSelectedContactEmails(null);
   };
 
   const toggleSortStrategy = () => {};
@@ -44,7 +47,6 @@ const ContactsModal = ({ isOpen, onClose }) => {
       fetchContacts();
       setSelectedContact(null);
       setIsEditing(false);
-      setSelectedContactEmails(null);
       fetchContacts();
     } catch (error) {
       console.error("Failed to edit contact:", error);
@@ -62,7 +64,6 @@ const ContactsModal = ({ isOpen, onClose }) => {
       );
       setIsConfirmingDelete(false);
       setSelectedContact(null);
-      setSelectedContactEmails(null);
       fetchContacts();
       setIsEditing(false);
     } catch (error) {
@@ -73,7 +74,6 @@ const ContactsModal = ({ isOpen, onClose }) => {
 
   const handleCloseModal = () => {
     setSelectedContact(null);
-    setSelectedContactEmails(null);
     setIsEditing(false);
     setIsConfirmingDelete(false);
     setIsAdding(false);
@@ -100,7 +100,7 @@ const ContactsModal = ({ isOpen, onClose }) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
         <div className="bg-white w-1/2 h-5/6 rounded-lg shadow-lg p-8 overflow-y-auto relative">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">
@@ -180,8 +180,8 @@ const ContactsModal = ({ isOpen, onClose }) => {
               </div>
             ) : (
               <ContactDetails
-                contact={sentContact}
-                setSelectedContactEmails={setSelectedContactEmails}
+                contact={selectedContact}
+                emails={selectedContactEmails}
                 onEdit={() => setIsEditing(true)}
                 onDelete={() => setIsConfirmingDelete(true)}
                 onBack={() => setSelectedContact(null)}
