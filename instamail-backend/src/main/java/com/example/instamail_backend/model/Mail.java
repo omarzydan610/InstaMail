@@ -50,21 +50,26 @@ public class Mail {
 
     }
 
-    public Mail(String senderEmail, String receiverEmail, String subject, String content, int senderPriority,
-            int receiverPriority, long senderFolderId, long receiverFolderId, boolean senderIsStarred,
-            boolean receiverIsStarred, boolean senderIsDeleted, boolean receiverIsDeleted) {
-        this.senderEmail = senderEmail;
+    public Mail( String receiverEmail, String subject, String content) {
+        this.senderEmail = null;
         this.receiverEmail = receiverEmail;
         this.subject = subject;
         this.content = content;
-        this.senderPriority = senderPriority;
-        this.receiverPriority = receiverPriority;
-        this.senderFolderId = senderFolderId;
-        this.receiverFolderId = receiverFolderId;
-        this.senderIsStarred = senderIsStarred;
-        this.receiverIsStarred = receiverIsStarred;
-        this.senderIsDeleted = senderIsDeleted;
-        this.receiverIsDeleted = receiverIsDeleted;
+        this.senderPriority = 0;
+        this.receiverPriority = 0;
+        this.senderFolderId = 0;
+        this.receiverFolderId = 0;
+        this.senderIsStarred = false;
+        this.receiverIsStarred = false;
+        this.senderIsDeleted = false;
+        this.receiverIsDeleted = false;
+        this.isRead = false;
+        this.isDraft = false;
+        this.createdAt = LocalDateTime.now();
+        this.deletedAtSender = LocalDateTime.now();
+        this.deletedAtReceiver = LocalDateTime.now();
+       
     }
 }
+
 

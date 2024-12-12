@@ -25,6 +25,7 @@ public class ContactsService {
     private ContactEmailRepository contactEmailRepository;
 
     public void addContact(String token, Map<String, String> contact) {
+        System.out.println(contact);
         long userId = userService.getIdByToken(token);
         String contactName = contact.get("name");
         Contact newContact = new Contact(userId, contactName);

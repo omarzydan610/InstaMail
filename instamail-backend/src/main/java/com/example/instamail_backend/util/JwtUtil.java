@@ -1,18 +1,20 @@
 package com.example.instamail_backend.util;
 
-import java.security.Key;
 import java.util.Date;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
+ private static final String SECRET = "instamail.com-omar-yousf-nawar-csed27-2024 ";
 
-    private final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Secure 256-bit key
+    private final SecretKey SECRET_KEY = new SecretKeySpec(SECRET.getBytes(),"HmacSHA256");
+// Secure 256-bit key
 
     // Generate a JWT token with the email as the subject
     public String generateToken(Long Id) {
