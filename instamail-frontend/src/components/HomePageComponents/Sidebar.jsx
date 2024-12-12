@@ -52,7 +52,7 @@ const Sidebar = ({
   return (
     <div
       className={`transition-all duration-300 ${
-        isSidebarCollapsed && !isHovered ? "w-12" : "w-1/5"
+        isSidebarCollapsed && !isHovered ? "w-12" : "w-1/6"
       } bg-gray-100 py-4`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
