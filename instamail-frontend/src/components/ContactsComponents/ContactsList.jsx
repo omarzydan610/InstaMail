@@ -1,6 +1,13 @@
-import React from 'react';
+import React from "react";
 
-const ContactsList = ({ contacts, onSelectContact, onAddContact }) => {
+const ContactsList = ({ contacts, onSelectContact }) => {
+  if (!contacts || contacts.length === 0) {
+    return (
+      <div className="p-4 text-gray-500 flex justify-center items-center mt-5 text-lg">
+        No contacts found
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -19,4 +26,4 @@ const ContactsList = ({ contacts, onSelectContact, onAddContact }) => {
   );
 };
 
-export default ContactsList; 
+export default ContactsList;

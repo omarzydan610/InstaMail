@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
+import ContactService from "../services/ContactsService";
 
 // Create the context
 const AppContext = createContext();
@@ -13,13 +14,17 @@ export const AppProvider = ({ children }) => {
   const [phoneNumber, setphoneNumber] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("authToken"));
   const [selectedContact, setSelectedContact] = useState(null);
-  const [contacts, setContacts] = useState([
-    {
-      name: "John Doe",
-      emails: ["john@example.com", "jane@example.com"],
-    },
-    { name: "Jane Smith", emails: ["jane@example.com"] },
-  ]);
+  const [contacts, setContacts] = useState([]);
+  const [isFetalError, setIsFetalError] = useState(false);
+  const fetchContacts = async () => {
+    try {
+      const data = await ContactService.getContacts();
+      setContacts(data);
+    } catch (error) {
+      console.error("Failed to fetch contacts:", error);
+      setIsFetalError(true);
+    }
+  };
   const emails = [
     {
       id: 1,
@@ -112,6 +117,9 @@ export const AppProvider = ({ children }) => {
     emails,
     selectedContact,
     setSelectedContact,
+    fetchContacts,
+    isFetalError,
+    setIsFetalError,
   };
 
   return (

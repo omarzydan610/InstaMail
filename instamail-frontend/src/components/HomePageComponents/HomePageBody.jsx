@@ -2,6 +2,7 @@ import React from "react";
 import EmailList from "../EmailComponents/EmailList";
 import ContactsModal from "../ContactsComponents/ContactsModal";
 import FloatingButton from "./FloatingButton";
+import ErrorMessage from "../ErrorMessage";
 
 const HomePageBody = ({
   activeCategory,
@@ -12,12 +13,13 @@ const HomePageBody = ({
   return (
     <div className="flex-grow bg-white p-6 overflow-y-auto">
       <h2 className="text-2xl font-semibold mb-4">{activeCategory}</h2>
-      <EmailList activeCategory={activeCategory}/>
+      <EmailList activeCategory={activeCategory} />
       <ContactsModal
         isOpen={isContactsModalOpen}
         onClose={closeContactsModal}
       />
       <FloatingButton />
+      <ErrorMessage />
     </div>
   );
 };
