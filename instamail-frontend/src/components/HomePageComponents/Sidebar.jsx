@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAppContext } from "../../contexts/AppContext";
 import {
   FaInbox,
   FaPaperPlane,
@@ -25,6 +26,7 @@ const Sidebar = ({
   onAddFolderClick, // Add this prop to handle folder creation
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { fetchContacts } = useAppContext();
 
   const handleMouseEnter = () => {
     if (!isSidebarCollapsed) return;
@@ -38,6 +40,7 @@ const Sidebar = ({
 
   const handleCategoryClick = (category) => {
     if (category.isContacts) {
+      fetchContacts();
       openContactsModal(); // Open Contacts Modal
     } else if (category.isAddFolder) {
       onAddFolderClick(); // Handle Add Folder Click

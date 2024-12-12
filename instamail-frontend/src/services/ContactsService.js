@@ -1,7 +1,23 @@
 import api from "./api";
 
-class ContactServices {
-  // Fetch all contacts
+class ContactService {
+  static async addContact(contact) {
+    const transformedContact = {
+      name: contact.name,
+    };
+
+    contact.emails.forEach((email, index) => {
+      transformedContact[`email${index + 1}`] = email;
+    });
+    console.log(transformedContact);
+
+    const token = localStorage.getItem("authToken");
+    const response = await api.post("/add-contact", transformedContact, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  }
+
   static async getContacts() {
     const token = localStorage.getItem("authToken");
     try {
@@ -47,11 +63,23 @@ class ContactServices {
 
   // Edit a contact's information
   static async editContact(contactId, updatedContact) {
+    const transformedContact = {
+      name: updatedContact.name,
+    };
+    updatedContact.emails.forEach((email, index) => {
+      transformedContact[`email${index + 1}`] = email;
+    });
+    console.log(transformedContact);
     const token = localStorage.getItem("authToken");
+
     try {
-      const response = await api.put(`/update-contact/${contactId}`, updatedContact, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await api.put(
+        `/update-contact/${contactId}`,
+        transformedContact,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Failed to edit contact:", error);
@@ -60,18 +88,6 @@ class ContactServices {
   }
 
   // Add a new contact
-  static async addContact(newContact) {
-    const token = localStorage.getItem("authToken");
-    try {
-      const response = await api.post("/add-contact", newContact, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Failed to add contact:", error);
-      throw error;
-    }
-  }
 }
 
-export default ContactServices;
+export default ContactService;

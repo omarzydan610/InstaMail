@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
+import ContactService from "../../services/ContactsService";
 import { useAppContext } from "../../contexts/AppContext";
-import ContactServices from "../../services/ContactsService";
-
 const ContactDetails = ({ contact, onEdit, onDelete, onBack }) => {
   // const [contact, setContact] = useState(null);
   const [emails, setEmails] = useState([]);
   const [error, setError] = useState(null);
-  
-
+  const { setIsFetalError } = useAppContext();
 
   console.log(contact);
 
@@ -15,13 +13,13 @@ const ContactDetails = ({ contact, onEdit, onDelete, onBack }) => {
     const fetchContact = async () => {
       if (contact && contact.contactId) {
         try {
-          const contactData = await ContactServices.getEmails(contact.contactId);
+          const contactData = await ContactService.getEmails(contact.contactId);
           console.log(contactData);
-          
-          setEmails(contactData.map(item => item.email));
+          setEmails(contactData.map((item) => item.email));
         } catch (error) {
           setError("Failed to load contact details or emails");
           console.error(error);
+          setIsFetalError(true);
         }
       } else {
         setError("Selected contact is invalid");
@@ -31,23 +29,28 @@ const ContactDetails = ({ contact, onEdit, onDelete, onBack }) => {
     // Only fetch contact details if selectedcontact is valid
     if (contact) {
       fetchContact();
-    }else {
-      console.log("no selected contact")
+    } else {
+      console.log("no selected contact");
     }
-  }, [contact]);
+  }, [contact, setIsFetalError]);
 
-  const contactName = contact ? contact.contactName || 'Unnamed Contact' : 'Loading...';
+  const contactName = contact
+    ? contact.contactName || "Unnamed Contact"
+    : "Loading...";
 
   return (
     <div>
       {error && <p className="text-red-500">{error}</p>}
       <div className="bg-gray-100 p-4 rounded shadow-md space-y-4">
-        <p><strong>Name:</strong> {contactName}</p>
+        <p>
+          <strong>Name:</strong> {contactName}
+        </p>
         {emails.length > 0 ? (
           emails.map((email, index) => (
             <div key={index}>
               <p>
-                <strong>{index === 0 ? 'Email' : `Email ${index + 1}`}:</strong> {email}
+                <strong>{index === 0 ? "Email" : `Email ${index + 1}`}:</strong>{" "}
+                {email}
               </p>
             </div>
           ))
