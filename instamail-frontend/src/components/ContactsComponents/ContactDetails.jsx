@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from "react";
+import { FiEdit } from "react-icons/fi";
+import { FiTrash2 } from "react-icons/fi";
+import { FiArrowLeft } from "react-icons/fi";
 import ContactService from "../../services/ContactsService";
 import { useAppContext } from "../../contexts/AppContext";
-const ContactDetails = ({ contact, onEdit, onDelete, onBack }) => {
+const ContactDetails = ({
+  contact,
+  onEdit,
+  onDelete,
+  onBack,
+  setSelectedContactEmails,
+}) => {
   // const [contact, setContact] = useState(null);
   const [emails, setEmails] = useState([]);
   const [error, setError] = useState(null);
   const { setIsFetalError } = useAppContext();
-
-  console.log(contact);
 
   useEffect(() => {
     const fetchContact = async () => {
       if (contact && contact.contactId) {
         try {
           const contactData = await ContactService.getEmails(contact.contactId);
+          setSelectedContactEmails(contactData);
           console.log(contactData);
           setEmails(contactData.map((item) => item.email));
         } catch (error) {
@@ -32,7 +40,7 @@ const ContactDetails = ({ contact, onEdit, onDelete, onBack }) => {
     } else {
       console.log("no selected contact");
     }
-  }, [contact, setIsFetalError]);
+  }, [contact, setIsFetalError, setSelectedContactEmails]);
 
   const contactName = contact
     ? contact.contactName || "Unnamed Contact"
@@ -59,24 +67,24 @@ const ContactDetails = ({ contact, onEdit, onDelete, onBack }) => {
         )}
       </div>
 
-      <div className="mt-4 flex space-x-4">
+      <div className="mt-4 flex justify-between">
         <button
           onClick={onEdit}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-2"
         >
-          Edit
+          <FiEdit /> Edit
         </button>
         <button
           onClick={onDelete}
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center gap-2"
         >
-          Delete
+          <FiTrash2 /> Delete
         </button>
         <button
           onClick={onBack}
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 flex items-center gap-2"
         >
-          Back to Contacts
+          <FiArrowLeft /> Back to Contacts
         </button>
       </div>
     </div>

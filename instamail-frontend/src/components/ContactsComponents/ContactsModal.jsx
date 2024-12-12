@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import { IoPersonAdd } from "react-icons/io5";
+import { BsArrowDownUp } from "react-icons/bs";
 import ContactsList from "./ContactsList";
 import ContactDetails from "./ContactDetails";
 import ContactForm from "./ContactForm";
 import ContactService from "../../services/ContactsService";
-import ErrorMessage from "../ErrorMessage";
-
+import { FiTrash2, FiArrowLeft } from "react-icons/fi";
 const ContactsModal = ({ isOpen, onClose }) => {
   const { contacts, setContacts, fetchContacts, setIsFetalError } =
     useAppContext();
@@ -16,12 +16,21 @@ const ContactsModal = ({ isOpen, onClose }) => {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedContactEmails, setSelectedContactEmails] = useState(null);
 
   const handleSelectContact = (contact) => {
     console.log("Selected contact:", contact); // This logs the contact being passed in
     setSentContact(contact);
     setSelectedContact(contact);
   };
+  const handleCancleAdding = () => {
+    setIsAdding(false);
+    setError(null);
+    setIsEditing(false);
+    setSelectedContactEmails(null);
+  };
+
+  const toggleSortStrategy = () => {};
 
   if (!isOpen) return null;
 
@@ -35,6 +44,7 @@ const ContactsModal = ({ isOpen, onClose }) => {
       fetchContacts();
       setSelectedContact(null);
       setIsEditing(false);
+      setSelectedContactEmails(null);
       fetchContacts();
     } catch (error) {
       console.error("Failed to edit contact:", error);
@@ -52,6 +62,7 @@ const ContactsModal = ({ isOpen, onClose }) => {
       );
       setIsConfirmingDelete(false);
       setSelectedContact(null);
+      setSelectedContactEmails(null);
       fetchContacts();
       setIsEditing(false);
     } catch (error) {
@@ -62,9 +73,11 @@ const ContactsModal = ({ isOpen, onClose }) => {
 
   const handleCloseModal = () => {
     setSelectedContact(null);
+    setSelectedContactEmails(null);
     setIsEditing(false);
     setIsConfirmingDelete(false);
     setIsAdding(false);
+    setError(null);
     onClose();
   };
 
@@ -75,14 +88,18 @@ const ContactsModal = ({ isOpen, onClose }) => {
       setIsAdding(false);
       fetchContacts();
     } catch (error) {
-      console.error("Failed to add contact:", error);
-      setIsFetalError(true);
+      if (error.response.data === "Contact already exists") {
+        console.log(error.response.data);
+        setError("Contact with the same name already exists");
+      } else {
+        console.error("Failed to add contact:", error);
+        setIsFetalError(true);
+      }
     }
   };
 
   return (
     <>
-      {error && <ErrorMessage message={error} onClose={() => setError(null)} />}
       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
         <div className="bg-white w-1/2 h-5/6 rounded-lg shadow-lg p-8 overflow-y-auto relative">
           <div className="flex justify-between items-center mb-4">
@@ -97,12 +114,21 @@ const ContactsModal = ({ isOpen, onClose }) => {
             </h2>
             <div className="flex items-center gap-4">
               {!isAdding && !selectedContact && (
-                <button
-                  onClick={() => setIsAdding(true)}
-                  className="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2"
-                >
-                  <IoPersonAdd className="text-xl" />
-                </button>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={toggleSortStrategy}
+                    className="px-1.5 py-1.5 text-gray-700 hover:bg-gray-200 flex items-center gap-2 rounded-full"
+                    title="Sort contacts"
+                  >
+                    <BsArrowDownUp className="text-xl" />
+                  </button>
+                  <button
+                    onClick={() => setIsAdding(true)}
+                    className="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2"
+                  >
+                    <IoPersonAdd className="text-xl" />
+                  </button>
+                </div>
               )}
               <button
                 onClick={handleCloseModal}
@@ -116,14 +142,19 @@ const ContactsModal = ({ isOpen, onClose }) => {
           {isAdding ? (
             <ContactForm
               onSubmit={handleCreate}
-              onCancel={() => setIsAdding(false)}
+              onCancel={handleCancleAdding}
+              error={error}
+              setError={setError}
             />
           ) : selectedContact ? (
             isEditing ? (
               <ContactForm
                 contact={selectedContact}
+                emails={selectedContactEmails}
                 onSubmit={handleEdit}
-                onCancel={() => setIsEditing(false)}
+                onCancel={handleCancleAdding}
+                error={error}
+                setError={setError}
               />
             ) : isConfirmingDelete ? (
               <div className="text-center">
@@ -133,14 +164,16 @@ const ContactsModal = ({ isOpen, onClose }) => {
                 <div className="flex justify-center space-x-4">
                   <button
                     onClick={handleDelete}
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center gap-2"
                   >
+                    <FiTrash2 />
                     Delete
                   </button>
                   <button
                     onClick={() => setIsConfirmingDelete(false)}
-                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 flex items-center gap-2"
                   >
+                    <FiArrowLeft />
                     Cancel
                   </button>
                 </div>
@@ -148,6 +181,7 @@ const ContactsModal = ({ isOpen, onClose }) => {
             ) : (
               <ContactDetails
                 contact={sentContact}
+                setSelectedContactEmails={setSelectedContactEmails}
                 onEdit={() => setIsEditing(true)}
                 onDelete={() => setIsConfirmingDelete(true)}
                 onBack={() => setSelectedContact(null)}
@@ -156,7 +190,8 @@ const ContactsModal = ({ isOpen, onClose }) => {
           ) : (
             <ContactsList
               contacts={contacts}
-              onSelectContact={handleSelectContact}          />
+              onSelectContact={handleSelectContact}
+            />
           )}
         </div>
       </div>
