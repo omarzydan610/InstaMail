@@ -10,12 +10,28 @@ import ContactServices from "../../services/ContactsService";
 const ContactsModal = ({ isOpen, onClose }) => {
   const { contacts, setContacts } = useAppContext();
   const [selectedContact, setSelectedContact] = useState(null);
+  const [sentContact, setSentContact] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+const handleSelectContact = (contact) => {
+  console.log("Selected contact:", contact); // This logs the contact being passed in
+  setSentContact(contact);
+  setSelectedContact(contact);
+};
+
+// Optionally, use useEffect to track when sentContact or selectedContact changes
+useEffect(() => {
+  console.log("sentContact updated:", sentContact);
+}, [sentContact]);
+
+useEffect(() => {
+  console.log("selectedContact updated:", selectedContact);
+}, [selectedContact]);
+ 
   useEffect(() => {
     const fetchContacts = async () => {
       try {
@@ -28,7 +44,6 @@ const ContactsModal = ({ isOpen, onClose }) => {
         setLoading(false);
       }
     };
-
     if (isOpen) {
       fetchContacts();
     }
@@ -37,11 +52,12 @@ const ContactsModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleEdit = async (updatedContact) => {
+    console.log(updatedContact)
     try {
-      const editedContact = await ContactServices.editContact(selectedContact.id, updatedContact);
+      const editedContact = await ContactServices.editContact(selectedContact.contactId, updatedContact);
       setContacts((prevContacts) =>
         prevContacts.map((contact) =>
-          contact.id === selectedContact.id ? editedContact : contact
+          contact.contactId === selectedContact.contactId ? editedContact : contact
         )
       );
       setIsEditing(false);
@@ -53,9 +69,9 @@ const ContactsModal = ({ isOpen, onClose }) => {
 
   const handleDelete = async () => {
     try {
-      await ContactServices.deleteContact(selectedContact.id);
+      await ContactServices.deleteContact(selectedContact.contactId);
       setContacts((prevContacts) =>
-        prevContacts.filter((contact) => contact.id !== selectedContact.id)
+        prevContacts.filter((contact) => contact.contactId !== selectedContact.contactId)
       );
       setIsConfirmingDelete(false);
       setSelectedContact(null);
@@ -152,7 +168,7 @@ const ContactsModal = ({ isOpen, onClose }) => {
             </div>
           ) : (
             <ContactDetails
-              contact={selectedContact}
+              contact={sentContact}
               onEdit={() => setIsEditing(true)}
               onDelete={() => setIsConfirmingDelete(true)}
               onBack={() => setSelectedContact(null)}
@@ -161,7 +177,7 @@ const ContactsModal = ({ isOpen, onClose }) => {
         ) : (
           <ContactsList
             contacts={contacts}
-            onSelectContact={setSelectedContact}
+            onSelectContact={handleSelectContact}
             onAddContact={() => setIsAdding(true)}
           />
         )}

@@ -65,7 +65,7 @@ public class ContactsContorller {
     @PutMapping("/update-contact/{contactId}")
     public ResponseEntity<?> updateContact(@RequestHeader("Authorization") String token, @PathVariable Long contactId,
             @RequestBody Map<String, String> contact) {
-        try {
+                try {
             contactsService.updateContact(token, contactId, contact);
             return ResponseEntity.ok("Contact updated");
         } catch (RuntimeException ex) {
