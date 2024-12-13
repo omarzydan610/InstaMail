@@ -34,11 +34,11 @@ public class Mail {
     private int senderPriority;
     private int receiverPriority;
 
-    private boolean senderIsStarred;
-    private boolean receiverIsStarred;
+    private boolean isSenderStarred;
+    private boolean isReceiverStarred;
 
-    private boolean senderIsDeleted;
-    private boolean receiverIsDeleted;
+    private boolean isSenderDeleted;
+    private boolean isReceiverDeleted;
 
     private long senderFolderId;
     private long receiverFolderId;
@@ -59,10 +59,10 @@ public class Mail {
         this.receiverPriority = 0;
         this.senderFolderId = 0;
         this.receiverFolderId = 0;
-        this.senderIsStarred = false;
-        this.receiverIsStarred = false;
-        this.senderIsDeleted = false;
-        this.receiverIsDeleted = false;
+        this.isSenderStarred = false;
+        this.isReceiverStarred = false;
+        this.isSenderDeleted = false;
+        this.isReceiverDeleted = false;
         this.isRead = false;
         this.isDraft = false;
         this.createdAt = LocalDateTime.now();
@@ -70,6 +70,41 @@ public class Mail {
         this.deletedAtReceiver = LocalDateTime.now();
        
     }
+    public boolean getIsDraft(){
+        return this.isDraft;
+    }
+    public boolean getIsSenderDeleted(){
+        return this.isSenderDeleted;
+    }
+    public boolean getIsReceiverDeleted(){
+        return this.isReceiverDeleted;
+    }   
+    public boolean getIsSenderStarred(){
+        return this.isSenderStarred;
+    }
+    public boolean getIsReceiverStarred(){
+        return this.isReceiverStarred;
+    }
+    public void setIsDraft(boolean isDraft){
+        this.isDraft = isDraft;
+    }
+    public void setIsSenderDeleted(boolean isSenderDeleted){
+        this.isSenderDeleted = isSenderDeleted;
+    }
+    public void setIsReceiverDeleted(boolean isReceiverDeleted){
+        this.isReceiverDeleted = isReceiverDeleted;
+    }
+    public void setIsSenderStarred(boolean isSenderStarred){
+        this.isSenderStarred = isSenderStarred;
+    }
+    public void setIsReceiverStarred(boolean isReceiverStarred){
+        this.isReceiverStarred = isReceiverStarred;
+    }
+    public void setIsRead(boolean isRead){
+        this.isRead = isRead;
+    }
+   
+
 }
 
 

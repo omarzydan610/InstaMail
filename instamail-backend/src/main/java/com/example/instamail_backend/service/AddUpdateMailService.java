@@ -27,45 +27,71 @@ public class AddUpdateMailService {
         mailRepository.save(mail);
         return true;
     }
-    public void deletedAtSender(long mailId, String email) {
+    public String senderOrReceiverDelete(long mailId, String token) {
+        long userId = userService.getIdByToken(token);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
-        if (mail.getSenderEmail().equals(email)) {
-            mail.setSenderIsDeleted(true);
-            mailRepository.save(mail);
+        if (mail.getSenderEmail().equals(user.getEmail())) {
+            mailRepository.deleteMailBySenderId(mailId);
+            return "Mail deleted successfully";
+        } else if (mail.getReceiverEmail().equals(user.getEmail())) {
+            mailRepository.deleteMailByReceiverId(mailId);    
+            return "Mail deleted successfully";
         } else {
             throw new RuntimeException("Mail not found");
         }
+       
+    }
+   
+    public void updateMailPrioritySenderorReceiver(long mailId, int priority, String token) {
+        long userId = userService.getIdByToken(token);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        mailRepository.updateMailPrioritySender(mailId, priority, user.getEmail());
+        mailRepository.updateMailPriorityReceiver(mailId, priority, user.getEmail());
     }
 
-    public void deletedAtReceiver(long mailId, String email) {
+    public void updateMailStarredSenderorReceiver(long mailId, boolean isStarred, String token) {
+        long userId = userService.getIdByToken(token);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
-        if (mail.getReceiverEmail().equals(email)) {
-            mail.setReceiverIsDeleted(true);
-            mailRepository.save(mail);
+        if (mail.getSenderEmail().equals(user.getEmail())) {
+            mail.setIsSenderStarred(isStarred);
+        } else if (mail.getReceiverEmail().equals(user.getEmail())) {
+            mail.setIsReceiverStarred(isStarred);
         } else {
             throw new RuntimeException("Mail not found");
         }
-    }
-    public void updateMailPrioritySender(long mailId, int priority) {
-        Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
-        mail.setSenderPriority(priority);
         mailRepository.save(mail);
     }
-    public void updateMailPriorityReceiver(long mailId, int priority) {
+    public void updateMailReadSenderorReceiver(long mailId, boolean isRead, String token) {
+        long userId = userService.getIdByToken(token);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
-        mail.setReceiverPriority(priority);
+        if (mail.getReceiverEmail().equals(user.getEmail())) {
+            mail.setIsRead(isRead); 
+        } else {
+            throw new RuntimeException("Mail not found");
+        }
         mailRepository.save(mail);
     }
+    public void starMail(long mailId, boolean isStarred, String token) {
+        long userId = userService.getIdByToken(token);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        mailRepository.starMailSender(mailId, isStarred, user.getEmail());
+        mailRepository.starMailReceiver(mailId, isStarred, user.getEmail());
+    }
+    public void draftMail(long mailId, boolean isDrafted, String token) {
+        long userId = userService.getIdByToken(token);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        mailRepository.draftMailSender(mailId, isDrafted, user.getEmail());
+    }
+    public void readMail(long mailId, boolean isRead, String token) {
+        long userId = userService.getIdByToken(token);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        mailRepository.readMailReceiver(mailId, isRead, user.getEmail());
+    }
+   
+    
 
-    public void updateMailStarredSender(long mailId, boolean isStarred) {
-        Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
-        mail.setSenderIsStarred(isStarred);
-        mailRepository.save(mail);
-    }
-
-    public void updateMailStarredReceiver(long mailId, boolean isStarred) {
-        Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
-        mail.setReceiverIsStarred(isStarred);
-        mailRepository.save(mail);
-    }
+    
 }
