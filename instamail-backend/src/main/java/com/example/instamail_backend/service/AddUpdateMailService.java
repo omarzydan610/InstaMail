@@ -27,15 +27,15 @@ public class AddUpdateMailService {
         mailRepository.save(mail);
         return true;
     }
-    public String senderOrReceiverDelete(long mailId, String token) {
+    public String senderOrReceiverDelete(long mailId, boolean isDeleted, String token) {
         long userId = userService.getIdByToken(token);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
         if (mail.getSenderEmail().equals(user.getEmail())) {
-            mailRepository.deleteMailBySenderId(mailId);
+            mailRepository.deleteMailBySenderId(mailId, isDeleted);
             return "Mail deleted successfully";
         } else if (mail.getReceiverEmail().equals(user.getEmail())) {
-            mailRepository.deleteMailByReceiverId(mailId);    
+            mailRepository.deleteMailByReceiverId(mailId, isDeleted);    
             return "Mail deleted successfully";
         } else {
             throw new RuntimeException("Mail not found");
@@ -76,6 +76,7 @@ public class AddUpdateMailService {
     }
     public void starMail(long mailId, boolean isStarred, String token) {
         long userId = userService.getIdByToken(token);
+        System.out.println(userId + " isStarred " + isStarred);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mailRepository.starMailSender(mailId, isStarred, user.getEmail());
         mailRepository.starMailReceiver(mailId, isStarred, user.getEmail());

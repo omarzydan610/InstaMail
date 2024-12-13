@@ -48,8 +48,10 @@ public class MailController {
         return ResponseEntity.ok(getMailServer.getMails(token, "drafted"));
     }
     @PutMapping("/{mailId}/star")
-    public String starMail(@RequestHeader("Authorization") String token, @PathVariable long mailId, @RequestBody boolean isStarred) {
+    public String starMail(@RequestHeader("Authorization") String token, @PathVariable long mailId, @RequestBody String isStarredString) {
         //TODO: process PUT request
+        System.out.println(isStarredString+" isStarredString"+isStarredString.equals("true"));
+        boolean isStarred = isStarredString.equals("true");
         addUpdateMailService.starMail(mailId, isStarred, token);
         return "success";
         
@@ -62,15 +64,17 @@ public class MailController {
         
     }
     @PutMapping("/{mailId}/read")
-    public String readMail(@RequestHeader("Authorization") String token, @PathVariable long mailId, @RequestBody boolean isRead) {
+    public String readMail(@RequestHeader("Authorization") String token, @PathVariable long mailId, @RequestBody String isReadString) {
         //TODO: process PUT request
+        boolean isRead = isReadString.equals("true");
         addUpdateMailService.readMail(mailId, isRead, token);
         return "success";
         
     }
     @PutMapping("/{mailId}/draft")
-    public String draftMail(@RequestHeader("Authorization") String token, @PathVariable long mailId, @RequestBody boolean isDrafted) {
+    public String draftMail(@RequestHeader("Authorization") String token, @PathVariable long mailId, @RequestBody String isDraftedString) {
         //TODO: process PUT request
+        boolean isDrafted = isDraftedString.equals("true");
         addUpdateMailService.draftMail(mailId, isDrafted, token);
         return "success";
         
@@ -85,8 +89,9 @@ public class MailController {
     }
 
     @DeleteMapping("/{mailId}/delete-mail")
-    public ResponseEntity<?> deleteMail(@RequestHeader("Authorization") String token, @PathVariable long mailId){
-        return ResponseEntity.ok(addUpdateMailService.senderOrReceiverDelete(mailId, token));
+    public ResponseEntity<?> deleteMail(@RequestHeader("Authorization") String token, @PathVariable long mailId , @RequestBody String isSenderDeleted){
+      boolean isDeleted = isSenderDeleted.equals("true");
+        return ResponseEntity.ok(addUpdateMailService.senderOrReceiverDelete(mailId, isDeleted, token));
     }
 
 }

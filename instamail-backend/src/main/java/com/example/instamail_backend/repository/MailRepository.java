@@ -26,12 +26,12 @@ public interface MailRepository extends JpaRepository<Mail, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Mail m SET m.isSenderDeleted = true WHERE m.id = :mailId") 
-    public void deleteMailBySenderId(@Param("mailId") long mailId);
+    @Query("UPDATE Mail m SET m.isSenderDeleted = :isDeleted WHERE m.id = :mailId") 
+    public void deleteMailBySenderId(@Param("mailId") long mailId, @Param("isDeleted") boolean isDeleted);
     @Modifying
     @Transactional
-    @Query("UPDATE Mail m SET m.isReceiverDeleted = true WHERE m.id = :mailId")
-    public void deleteMailByReceiverId(@Param("mailId") long mailId);
+    @Query("UPDATE Mail m SET m.isReceiverDeleted = :isDeleted WHERE m.id = :mailId")
+    public void deleteMailByReceiverId(@Param("mailId") long mailId, @Param("isDeleted") boolean isDeleted);
     @Modifying
     @Transactional
     @Query("UPDATE Mail m SET m.isSenderStarred = :isStarred WHERE m.id = :mailId AND m.senderEmail = :senderEmail")
