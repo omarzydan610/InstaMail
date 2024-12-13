@@ -67,8 +67,9 @@ public class AddUpdateMailService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mail.setSenderEmail(user.getEmail());
         mail.setIsDraft(true);
+        long mailId = mailRepository.save(mail).getId();
         mailRepository.save(mail);
-        System.out.println(mail.getIsDraft());
+        System.out.println("isDraft: " + mailRepository.findById(mailId).get().getIsDraft());
         return true;
     }
 

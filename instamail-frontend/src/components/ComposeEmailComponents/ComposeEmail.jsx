@@ -58,8 +58,8 @@ const ComposeEmail = ({ onClose, contacts }) => {
     "w-full px-4 py-3 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-500";
 
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center  z-50">
-      <div className="bg-white rounded-lg shadow-lg w-3/4 max-w-4xl p-8 relative">
+    <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn">
+      <div className="bg-white/95 dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-3xl h-[95vh] overflow-hidden relative border border-gray-200 dark:border-gray-700 animate-slideUp">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Compose Email</h2>
           <button

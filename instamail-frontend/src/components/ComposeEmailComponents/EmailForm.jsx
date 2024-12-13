@@ -96,109 +96,111 @@ const EmailForm = ({
   return (
     <form
       ref={formRef}
-      className="h-[500px] overflow-y-auto px-2"
+      className="h-[93%] flex flex-col justify-between px-2"
       onSubmit={(e) => {
         e.preventDefault();
       }}
     >
-      <div className="mb-2">
-        <label htmlFor="to" className="block text-xs font-medium">
-          To
-        </label>
-        <div className="flex flex-col">
-          <div className="flex flex-wrap gap-1 p-1 border rounded-lg mb-1">
-            {recipients.map((email, index) => (
-              <span
-                key={index}
-                className="bg-blue-100 px-2 py-1 rounded-full text-sm flex items-center"
-              >
-                {email}
+      <div className="flex-1 overflow-y-auto">
+        <div className="mb-2">
+          <label htmlFor="to" className="block text-xs font-medium">
+            To
+          </label>
+          <div className="flex flex-col">
+            <div className="flex flex-wrap gap-1 p-1 border rounded-lg mb-1">
+              {recipients.map((email, index) => (
+                <span
+                  key={index}
+                  className="bg-blue-100 px-2 py-1 rounded-full text-sm flex items-center"
+                >
+                  {email}
+                  <button
+                    type="button"
+                    onClick={() => removeRecipient(index)}
+                    className="ml-1 text-gray-500 hover:text-red-500"
+                  >
+                    <FaTimes size={12} />
+                  </button>
+                </span>
+              ))}
+              <div className="flex items-center flex-grow">
+                <input
+                  id="to"
+                  type="email"
+                  value={currentEmail}
+                  onChange={(e) => {
+                    setCurrentEmail(e.target.value);
+                    setError("");
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleAddRecipient(e);
+                    }
+                  }}
+                  className={`${inputStyles} flex-grow border-none focus:ring-0 ${
+                    error ? "border-red-500" : ""
+                  }`}
+                  placeholder="Enter email addresses"
+                />
                 <button
                   type="button"
-                  onClick={() => removeRecipient(index)}
-                  className="ml-1 text-gray-500 hover:text-red-500"
+                  onClick={() => {
+                    setShowContacts(!showContacts);
+                    if (showContacts) {
+                      setSelectedContact(null);
+                    }
+                  }}
+                  className="ml-1 p-1 text-blue-500 hover:text-blue-600"
+                  title="Select from contacts"
                 >
-                  <FaTimes size={12} />
+                  <FaUserFriends size={16} />
                 </button>
-              </span>
-            ))}
-            <div className="flex items-center flex-grow">
-              <input
-                id="to"
-                type="email"
-                value={currentEmail}
-                onChange={(e) => {
-                  setCurrentEmail(e.target.value);
-                  setError("");
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleAddRecipient(e);
-                  }
-                }}
-                className={`${inputStyles} flex-grow border-none focus:ring-0 ${
-                  error ? "border-red-500" : ""
-                }`}
-                placeholder="Enter email addresses"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setShowContacts(!showContacts);
-                  if (showContacts) {
-                    setSelectedContact(null);
-                  }
-                }}
-                className="ml-1 p-1 text-blue-500 hover:text-blue-600"
-                title="Select from contacts"
-              >
-                <FaUserFriends size={16} />
-              </button>
+              </div>
             </div>
           </div>
+          {children}
         </div>
-        {children}
-      </div>
 
-      <div className="mb-2">
-        <label htmlFor="subject" className="block text-xs font-medium">
-          Subject
-        </label>
-        <input
-          id="subject"
-          type="text"
-          required
-          className={inputStyles}
-          placeholder="Subject"
-          onChange={(e) => {
-            setSubject(e.target.value);
-          }}
+        <div className="mb-2">
+          <label htmlFor="subject" className="block text-xs font-medium">
+            Subject
+          </label>
+          <input
+            id="subject"
+            type="text"
+            required
+            className={inputStyles}
+            placeholder="Subject"
+            onChange={(e) => {
+              setSubject(e.target.value);
+            }}
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="body" className="block text-xs font-medium">
+            Body
+          </label>
+          <textarea
+            id="body"
+            required
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 resize-none"
+            placeholder="Write your message here"
+            rows="8"
+            onChange={(e) => {
+              setBody(e.target.value);
+            }}
+          />
+        </div>
+
+        <AttachmentsSection
+          attachments={attachments}
+          handleFileChange={handleFileChange}
+          handleRemoveAttachment={handleRemoveAttachment}
         />
       </div>
 
-      <div className="mb-4">
-        <label htmlFor="body" className="block text-xs font-medium">
-          Body
-        </label>
-        <textarea
-          id="body"
-          required
-          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 resize-none"
-          placeholder="Write your message here"
-          rows="8"
-          onChange={(e) => {
-            setBody(e.target.value);
-          }}
-        />
-      </div>
-
-      <AttachmentsSection
-        attachments={attachments}
-        handleFileChange={handleFileChange}
-        handleRemoveAttachment={handleRemoveAttachment}
-      />
-
-      <div className="sticky bottom-0 bg-white pt-2 border-t">
+      <div className="mt-auto pt-4">
         {error && (
           <div className="text-red-500 text-sm mb-2 text-center">{error}</div>
         )}

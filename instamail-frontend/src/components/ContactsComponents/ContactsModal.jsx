@@ -100,8 +100,8 @@ const ContactsModal = ({ isOpen, onClose }) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
-        <div className="bg-white w-1/2 h-5/6 rounded-lg shadow-lg p-8 overflow-y-auto relative">
+      <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn">
+        <div className="bg-white/95 dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-3xl h-[85vh] overflow-hidden relative border border-gray-200 dark:border-gray-700 animate-slideUp">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">
               {isAdding
