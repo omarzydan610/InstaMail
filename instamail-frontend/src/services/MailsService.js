@@ -30,6 +30,15 @@ class MailsService {
     console.log("response", response);
     return response.data;
   }
+
+  static async getMails(type, start, size) {
+    const token = localStorage.getItem("authToken");
+    const response = await api.get(`/get-mails/${type}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      params: { start: start, size: size },
+    });
+    return response.data;
+  }
 }
 
 export default MailsService;

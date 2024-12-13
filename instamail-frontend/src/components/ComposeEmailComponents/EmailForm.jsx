@@ -65,12 +65,11 @@ const EmailForm = ({
       subject: subject,
       body: body,
     };
-    await MailsService.addMail(mail, false);
     if (recipients.length === 0) {
-      setError("Please add at least one recipient");
-      return;
+        setError("Please add at least one recipient");
+        return;
     }
-
+    await MailsService.addMail(mail, false);
     setError("");
     console.log(`Sending email to: ${recipients.join(", ")}`);
     onClose();
@@ -82,12 +81,11 @@ const EmailForm = ({
       subject: subject,
       body: body,
     };
-    await MailsService.addMail(mail, true);
     if (recipients.length === 0) {
       setError("Please add at least one recipient");
       return;
     }
-
+    await MailsService.addMail(mail, true);
     setError("");
     console.log(`Draft saved for: ${recipients.join(", ")}`);
     onClose();

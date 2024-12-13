@@ -1,6 +1,5 @@
 package com.example.instamail_backend.controller;
 
-
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.instamail_backend.service.MailsService.AddUpdateMailService;
@@ -51,29 +51,34 @@ public class MailController {
     }
 
     @GetMapping("/get-mails/inbox")
-    public ResponseEntity<?> getReceivedMails(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> getReceivedMails(@RequestHeader("Authorization") String token,
+            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
         System.out.println("inbox");
-        return ResponseEntity.ok(getMailService.getMails(token, "inbox"));
+        return ResponseEntity.ok(getMailService.getMails(token, "inbox", start, size));
     }
 
     @GetMapping("/get-mails/sent")
-    public ResponseEntity<?> getSentMails(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(getMailService.getMails(token, "sent"));
+    public ResponseEntity<?> getSentMails(@RequestHeader("Authorization") String token,
+            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
+        return ResponseEntity.ok(getMailService.getMails(token, "sent", start, size));
     }
 
     @GetMapping("/get-mails/deleted")
-    public ResponseEntity<?> getDeletedMails(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(getMailService.getMails(token, "deleted"));
+    public ResponseEntity<?> getDeletedMails(@RequestHeader("Authorization") String token,
+            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
+        return ResponseEntity.ok(getMailService.getMails(token, "deleted", start, size));
     }
 
     @GetMapping("/get-mails/drafted")
-    public ResponseEntity<?> getDraftedMails(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(getMailService.getMails(token, "drafted"));
+    public ResponseEntity<?> getDraftedMails(@RequestHeader("Authorization") String token,
+            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
+        return ResponseEntity.ok(getMailService.getMails(token, "drafted", start, size));
     }
 
     @GetMapping("/get-mails/starred")
-    public ResponseEntity<?> getStarredMails(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(getMailService.getMails(token, "starred"));
+    public ResponseEntity<?> getStarredMails(@RequestHeader("Authorization") String token,
+            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
+        return ResponseEntity.ok(getMailService.getMails(token, "starred", start, size));
     }
 
     @PutMapping("/{mailId}/star")

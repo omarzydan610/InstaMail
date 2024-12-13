@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import ContactService from "../services/ContactsService";
-
+import MailsService from "../services/MailsService";
 // Create the context
 const AppContext = createContext();
 
@@ -39,79 +39,42 @@ export const AppProvider = ({ children }) => {
       return [];
     }
   };
+  const [emails, setEmails] = useState([]);
 
-  const emails = [
-    {
-      id: 1,
-      subject: "Meeting Tomorrow",
-      sender: "joe@InstaMail.com",
-      receiver: "omar@InstaMail.com",
-      body: "Don't forget about the meeting tomorrow.",
-    },
-    {
-      id: 2,
-      subject: "Project Update",
-      sender: "omar@InstaMail.com",
-      receiver: "abdo@InstaMail.com",
-      body: "The project is on track. Let's catch up soon.",
-    },
-    {
-      id: 3,
-      subject: "quize",
-      sender: "abdo@InstaMail.com",
-      receiver: "omar@InstaMail.com",
-      body: "did you study?",
-    },
-    {
-      id: 4,
-      subject: "quize",
-      sender: "abdo@InstaMail.com",
-      receiver: "omar@InstaMail.com",
-      body: "did youa;efmv;ka;kljkhjkb kg hjkg khjghkhj ewngflaknelknglandmlngfaemnglknalekng,mdsnglkjsebnrg\neakjbfkajebfkjabekgfjbva ebwf study?",
-    },
-    {
-      id: 5,
-      subject: "quize",
-      sender: "abdo@InstaMail.com",
-      receiver: "omar@InstaMail.com",
-      body: "did you study?",
-    },
-    {
-      id: 6,
-      subject: "quize",
-      sender: "abdo@InstaMail.com",
-      receiver: "omar@InstaMail.com",
-      body: "did you study?",
-    },
-    {
-      id: 7,
-      subject: "quize",
-      sender: "abdo@InstaMail.com",
-      receiver: "omar@InstaMail.com",
-      body: "did you study?",
-    },
-    {
-      id: 8,
-      subject: "quize",
-      sender: "abdo@InstaMail.com",
-      receiver: "omar@InstaMail.com",
-      body: "did you study?",
-    },
-    {
-      id: 9,
-      subject: "quize",
-      sender: "abdo@InstaMail.com",
-      receiver: "omar@InstaMail.com",
-      body: "did you study?",
-    },
-    {
-      id: 10,
-      subject: "quize",
-      sender: "abdo@InstaMail.com",
-      receiver: "omar@InstaMail.com",
-      body: "did you study?",
-    },
-  ];
+  useEffect(() => {
+    if (username) {
+      fetchEmails("inbox", 0, 6, true);
+    }
+  }, [username]);
+
+  const fetchEmails = async (type, start, size, clear) => {
+    type = type.toLowerCase();
+    switch (type) {
+      case "inbox":
+        type = "inbox";
+        break;
+      case "sent":
+        type = "sent";
+        break;
+      case "drafts":
+        type = "drafted";
+        break;
+      case "starred":
+        type = "starred";
+        break;
+      default:
+        type = "deleted";
+        break;
+    }
+    console.log("fetchEmails", type, start, size, clear);
+    const emails = await MailsService.getMails(type, start, size);
+    console.log("emails", emails);
+    if (clear) {
+      setEmails([]);
+    }
+    setEmails((prevEmails) => [...prevEmails, ...emails]);
+    return emails;
+  };
 
   // Combine the state into a single object
   const contextValue = {
@@ -136,6 +99,7 @@ export const AppProvider = ({ children }) => {
     selectedContactEmails,
     setSelectedContactEmails,
     fetchContactEmails,
+    fetchEmails,
   };
 
   return (
