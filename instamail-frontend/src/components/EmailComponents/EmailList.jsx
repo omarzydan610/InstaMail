@@ -1,11 +1,31 @@
-import React, { useState } from "react";
-import EmailModal from "../EmailComponents/EmailModal";
-import SentEmailModal from "./sentEmailModal";
+import React, { useState, useEffect, act } from "react";
 import { useAppContext } from "../../contexts/AppContext";
-import InBoxEmailModal from "./inBoxEmailModal";
-const EmailList = ({activeCategory}) => {
+import NormalEmailModal from "./NormalEmailModal";
+import DraftedEmailModal from "./DraftedEmailModal";
+import TrashEmailModal from "./TrashEmailModal";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
+const EmailList = ({ activeCategory }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
-  const { emails } = useAppContext();
+  const { emails, fetchEmails } = useAppContext();
+  const [currentPage, setCurrentPage] = useState(1);
+  const emailsPerPage = 5;
+
+  // Add new state variables for pagination
+  const IndexOfLastEmail = currentPage * emailsPerPage;
+  const IndexOfFirstEmail = IndexOfLastEmail - emailsPerPage;
+  const [currentEmails, setCurrentEmails] = useState(
+    emails.slice(IndexOfFirstEmail, IndexOfLastEmail)
+  );
+  const [totalPages, setTotalPages] = useState(0);
+  useEffect(() => {
+    setCurrentEmails(emails.slice(IndexOfFirstEmail, IndexOfLastEmail));
+    setTotalPages(Math.ceil(emails.length / emailsPerPage));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emails, currentPage]);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory]);
 
   const handleEmailClick = (email) => {
     setSelectedEmail(email);
@@ -14,33 +34,115 @@ const EmailList = ({activeCategory}) => {
   const handleCloseModal = () => {
     setSelectedEmail(null);
   };
+  const nextPage = () => {
+    console.log("currentPage", currentPage);
+    fetchEmails(activeCategory, currentPage * 5 + 1, emailsPerPage, false);
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   let emailModal = null;
   if (activeCategory === "Sent" && selectedEmail) {
-    emailModal = <SentEmailModal email={selectedEmail} onClose={handleCloseModal} />;
-  }else if(activeCategory === "Inbox" && selectedEmail){
-    emailModal = <InBoxEmailModal email={selectedEmail} onClose={handleCloseModal} />
+    emailModal = (
+      <NormalEmailModal email={selectedEmail} onClose={handleCloseModal} />
+    );
+  } else if (activeCategory === "Inbox" && selectedEmail) {
+    emailModal = (
+      <NormalEmailModal email={selectedEmail} onClose={handleCloseModal} />
+    );
+  } else if (activeCategory === "Drafts" && selectedEmail) {
+    emailModal = (
+      <DraftedEmailModal email={selectedEmail} onClose={handleCloseModal} />
+    );
+  } else if (activeCategory === "Trash" && selectedEmail) {
+    emailModal = (
+      <TrashEmailModal email={selectedEmail} onClose={handleCloseModal} />
+    );
+  } else if (activeCategory === "Starred" && selectedEmail) {
+    emailModal = (
+      <NormalEmailModal email={selectedEmail} onClose={handleCloseModal} />
+    );
   }
 
   return (
-    <div>
-      {emails.map((email) => (
-        <div
-          key={email.id}
-          className="email-item border-b p-4 hover:bg-gray-100 cursor-pointer"
-          onClick={() => handleEmailClick(email)}
-        >
-          <div className="flex justify-between">
-            <h6 className="text-lg font-semibold">{email.subject}</h6>
+    <div className="flex flex-col h-full">
+      {/* Email List */}
+      <div>
+        {currentEmails.length > 0 ? (
+          currentEmails.map((email) => (
+            <div
+              key={email.id}
+              className="email-item border-b p-4 hover:bg-gray-100 cursor-pointer"
+              onClick={() => handleEmailClick(email)}
+            >
+              <div className="flex justify-between items-center">
+                {activeCategory === "Inbox" ? (
+                  <>
+                    <h6 className="text-lg font-semibold text-green-600">
+                      {email.sender}
+                    </h6>
+                    <span className="text-sm text-gray-500">
+                      {formatDate(email.date)}
+                    </span>
+                  </>
+                ) : (
+                  (activeCategory === "Sent" ||
+                    activeCategory === "Drafts") && (
+                    <>
+                      <h6 className="text-lg font-semibold text-red-600">
+                        {email.receiver}
+                      </h6>
+                      <span className="text-sm text-gray-500">
+                        {formatDate(email.date)}
+                      </span>
+                    </>
+                  )
+                )}
+              </div>
+              <p className="text-gray-700 mt-1">{email.subject}</p>
+            </div>
+          ))
+        ) : (
+          <div className="flex justify-center items-center h-40">
+            <p className="text-gray-500 text-lg">No emails to display</p>
           </div>
-          <h3 className="text-lg text-gray-500">{email.sender}</h3>
+        )}
+      </div>
+
+      {/* Pagination Controls - Only show if there are emails */}
+      {currentEmails.length > 0 && (
+        <div className="flex justify-center items-center gap-2 pyt-2 mt-10">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="p-2 rounded bg-blue-500 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            <FaChevronLeft size={14} />
+          </button>
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={nextPage}
+            disabled={currentPage === totalPages}
+            className="p-2 rounded bg-blue-500 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            <FaChevronRight size={14} />
+          </button>
         </div>
-      ))}
+      )}
 
       {/* Modals */}
-      
       {emailModal}
-      
     </div>
   );
 };

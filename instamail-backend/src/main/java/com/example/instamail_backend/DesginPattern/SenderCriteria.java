@@ -17,7 +17,8 @@ public class SenderCriteria implements Criteria {
     public List<Mail> meetCriteria(List<Mail> mails) {
         List<Mail> senderMails = new ArrayList<>();
         for (Mail mail : mails) {
-            if (mail.getSenderEmail().equals(senderEmail) && mail.getIsSenderDeleted() == false && mail.getIsSenderStarred() == false) {
+            if (mail.getSenderEmail().equals(senderEmail) && mail.getIsSenderDeleted() == false
+                    && mail.getIsSenderStarred() == false && mail.getIsDraft() == false) {
                 senderMails.add(mail);
             }
         }

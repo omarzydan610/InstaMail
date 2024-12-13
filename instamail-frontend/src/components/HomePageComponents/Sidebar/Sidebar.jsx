@@ -13,10 +13,10 @@ const Sidebar = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState({});
-  const { fetchContacts } = useAppContext();
+  const { fetchContacts, fetchEmails } = useAppContext();
 
-  const otherCategories = CATEGORIES.filter(cat => !cat.isContacts);
-  const contactsCategory = CATEGORIES.find(cat => cat.isContacts);
+  const otherCategories = CATEGORIES.filter((cat) => !cat.isContacts);
+  const contactsCategory = CATEGORIES.find((cat) => cat.isContacts);
 
   // Mock folders - replace with your actual folders data
   const folders = [
@@ -25,7 +25,7 @@ const Sidebar = ({
   ];
 
   const toggleFolder = (folderId) => {
-    setExpandedFolders(prev => ({
+    setExpandedFolders((prev) => ({
       ...prev,
       [folderId]: !prev[folderId],
     }));
@@ -47,6 +47,15 @@ const Sidebar = ({
       openContactsModal();
     } else {
       onCategoryClick(category.name);
+      if (
+        category.name === "Inbox" ||
+        category.name === "Sent" ||
+        category.name === "Drafts" ||
+        category.name === "Starred" ||
+        category.name === "Trash"
+      ) {
+        fetchEmails(category.name, 0, 6, true);
+      }
     }
   };
 
@@ -100,4 +109,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar; 
+export default Sidebar;

@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 public class Contact {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Foreign key to ContactEmail
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long contactId;
 
     private Long userId;

@@ -19,7 +19,6 @@ public class Mail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-   
     private String senderEmail;
     private String receiverEmail;
 
@@ -28,20 +27,20 @@ public class Mail {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    private boolean isRead;
-    private boolean isDraft;
+    private Boolean isRead;
+    private Boolean isDraft;
 
-    private int senderPriority;
-    private int receiverPriority;
+    private Integer senderPriority;
+    private Integer receiverPriority;
 
-    private boolean isSenderStarred;
-    private boolean isReceiverStarred;
+    private Boolean isSenderStarred;
+    private Boolean isReceiverStarred;
 
-    private boolean isSenderDeleted;
-    private boolean isReceiverDeleted;
+    private Boolean isSenderDeleted;
+    private Boolean isReceiverDeleted;
 
-    private long senderFolderId;
-    private long receiverFolderId;
+    private Long senderFolderId;
+    private Long receiverFolderId;
 
     private LocalDateTime deletedAtSender;
     private LocalDateTime deletedAtReceiver;
@@ -50,15 +49,15 @@ public class Mail {
 
     }
 
-    public Mail( String receiverEmail, String subject, String content) {
+    public Mail(String receiverEmail, String subject, String content) {
         this.senderEmail = null;
         this.receiverEmail = receiverEmail;
         this.subject = subject;
         this.content = content;
         this.senderPriority = 0;
         this.receiverPriority = 0;
-        this.senderFolderId = 0;
-        this.receiverFolderId = 0;
+        this.senderFolderId = 0L;
+        this.receiverFolderId = 0L;
         this.isSenderStarred = false;
         this.isReceiverStarred = false;
         this.isSenderDeleted = false;
@@ -66,45 +65,8 @@ public class Mail {
         this.isRead = false;
         this.isDraft = false;
         this.createdAt = LocalDateTime.now();
-        this.deletedAtSender = LocalDateTime.now();
-        this.deletedAtReceiver = LocalDateTime.now();
-       
+        this.deletedAtSender = null;
+        this.deletedAtReceiver = null;
     }
-    public boolean getIsDraft(){
-        return this.isDraft;
-    }
-    public boolean getIsSenderDeleted(){
-        return this.isSenderDeleted;
-    }
-    public boolean getIsReceiverDeleted(){
-        return this.isReceiverDeleted;
-    }   
-    public boolean getIsSenderStarred(){
-        return this.isSenderStarred;
-    }
-    public boolean getIsReceiverStarred(){
-        return this.isReceiverStarred;
-    }
-    public void setIsDraft(boolean isDraft){
-        this.isDraft = isDraft;
-    }
-    public void setIsSenderDeleted(boolean isSenderDeleted){
-        this.isSenderDeleted = isSenderDeleted;
-    }
-    public void setIsReceiverDeleted(boolean isReceiverDeleted){
-        this.isReceiverDeleted = isReceiverDeleted;
-    }
-    public void setIsSenderStarred(boolean isSenderStarred){
-        this.isSenderStarred = isSenderStarred;
-    }
-    public void setIsReceiverStarred(boolean isReceiverStarred){
-        this.isReceiverStarred = isReceiverStarred;
-    }
-    public void setIsRead(boolean isRead){
-        this.isRead = isRead;
-    }
-   
 
 }
-
-
