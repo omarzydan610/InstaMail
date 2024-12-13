@@ -16,6 +16,7 @@ const HomePageBody = ({
     activeCategory !== "Sent" &&
     activeCategory !== "Drafts" &&
     activeCategory !== "Trash" &&
+    activeCategory !== "Starred" &&
     activeCategory !== "Folders";
 
   const closeContactsModal = () => setIsContactsModalOpen(false);

@@ -54,11 +54,6 @@ const ComposeEmail = ({ onClose, contacts }) => {
     setShowContacts(false);
   };
 
-  const handleSaveDraft = () => {
-    alert("Email saved as draft!");
-    onClose();
-  };
-
   const inputStyles =
     "w-full px-4 py-3 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-500";
 
@@ -80,7 +75,6 @@ const ComposeEmail = ({ onClose, contacts }) => {
           showContacts={showContacts}
           setShowContacts={setShowContacts}
           setSelectedContact={setSelectedContact}
-          handleSaveDraft={handleSaveDraft}
           onClose={onClose}
           recipients={recipients}
           setRecipients={setRecipients}

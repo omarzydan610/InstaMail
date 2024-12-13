@@ -24,7 +24,6 @@ const FloatingButton = () => {
     setContactsList(contactsWithEmails);
     setComposeVisible(true);
   };
-  console.log("contactsxx", contactsList);
   const closeComposeEmail = () => {
     setComposeVisible(false);
   };

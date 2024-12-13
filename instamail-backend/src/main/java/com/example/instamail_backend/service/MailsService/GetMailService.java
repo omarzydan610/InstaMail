@@ -1,4 +1,4 @@
-package com.example.instamail_backend.service;
+package com.example.instamail_backend.service.MailsService;
 
 import java.util.List;
 
@@ -14,10 +14,11 @@ import com.example.instamail_backend.model.Mail;
 import com.example.instamail_backend.model.User;
 import com.example.instamail_backend.repository.MailRepository;
 import com.example.instamail_backend.repository.UserRepository;
+import com.example.instamail_backend.service.UserService;
 
 
 @Service
-public class GetMailServer {
+public class GetMailService {
 
     @Autowired
     private MailRepository mailRepository;
@@ -29,11 +30,6 @@ public class GetMailServer {
    private UserRepository userRepository;
    
    
-
-
-
-
-
 
    public List<Mail> getMails(String token, String type){
     long userId = userService.getIdByToken(token);

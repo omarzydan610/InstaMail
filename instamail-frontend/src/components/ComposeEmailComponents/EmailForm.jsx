@@ -2,13 +2,12 @@ import React from "react";
 import { FaSave, FaPaperPlane, FaTimes, FaUserFriends } from "react-icons/fa";
 import ActionButton from "./Button";
 import AttachmentsSection from "./AttachmentsComponents/AttachmentsSection";
-
+import MailsService from "../../services/MailsService";
 const EmailForm = ({
   inputStyles,
   showContacts,
   setShowContacts,
   setSelectedContact,
-  handleSaveDraft,
   onClose,
   recipients,
   setRecipients,
@@ -19,7 +18,6 @@ const EmailForm = ({
   const [currentEmail, setCurrentEmail] = React.useState("");
   const [attachments, setAttachments] = React.useState([]);
   const formRef = React.useRef(null);
-
   const handleAddRecipient = (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,6 +35,8 @@ const EmailForm = ({
       setError("Please enter a valid email address");
     }
   };
+  const [subject, setSubject] = React.useState("");
+  const [body, setBody] = React.useState("");
 
   const removeRecipient = (index) => {
     setRecipients((prev) => prev.filter((_, i) => i !== index));
@@ -59,26 +59,47 @@ const EmailForm = ({
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Recipients:", recipients);
-    console.log("Subject:", e.target.subject.value);
-    console.log("Body:", e.target.body.value);
-
+  const handleSend = async () => {
+    const mail = {
+      Recipients: recipients,
+      subject: subject,
+      body: body,
+    };
+    await MailsService.addMail(mail, false);
     if (recipients.length === 0) {
-      alert("Please add at least one recipient");
+      setError("Please add at least one recipient");
       return;
     }
 
-    // Replace the alert with your actual email sending logic
-    alert(`Sending email to: ${recipients.join(", ")}`);
+    setError("");
+    console.log(`Sending email to: ${recipients.join(", ")}`);
+    onClose();
+  };
+
+  const handleDraft = async () => {
+    const mail = {
+      Recipients: recipients,
+      subject: subject,
+      body: body,
+    };
+    await MailsService.addMail(mail, true);
+    if (recipients.length === 0) {
+      setError("Please add at least one recipient");
+      return;
+    }
+
+    setError("");
+    console.log(`Draft saved for: ${recipients.join(", ")}`);
+    onClose();
   };
 
   return (
     <form
       ref={formRef}
       className="h-[500px] overflow-y-auto px-2"
-      onSubmit={handleSubmit}
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
     >
       <div className="mb-2">
         <label htmlFor="to" className="block text-xs font-medium">
@@ -135,11 +156,6 @@ const EmailForm = ({
               </button>
             </div>
           </div>
-          {error && (
-            <div className="text-red-500 text-sm mt-1 ml-1">
-              {error}
-            </div>
-          )}
         </div>
         {children}
       </div>
@@ -151,8 +167,12 @@ const EmailForm = ({
         <input
           id="subject"
           type="text"
+          required
           className={inputStyles}
           placeholder="Subject"
+          onChange={(e) => {
+            setSubject(e.target.value);
+          }}
         />
       </div>
 
@@ -162,9 +182,13 @@ const EmailForm = ({
         </label>
         <textarea
           id="body"
+          required
           className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 resize-none"
           placeholder="Write your message here"
           rows="8"
+          onChange={(e) => {
+            setBody(e.target.value);
+          }}
         />
       </div>
 
@@ -175,10 +199,13 @@ const EmailForm = ({
       />
 
       <div className="sticky bottom-0 bg-white pt-2 border-t">
+        {error && (
+          <div className="text-red-500 text-sm mb-2 text-center">{error}</div>
+        )}
         <div className="flex justify-end space-x-2">
           <ActionButton
             type="button"
-            onClick={handleSaveDraft}
+            onClick={handleDraft}
             label="Save as Draft"
             icon={FaSave}
             bgColor="bg-green-500"
@@ -193,7 +220,8 @@ const EmailForm = ({
             hoverColor="bg-red-600"
           />
           <ActionButton
-            type="submit"
+            type="button"
+            onClick={handleSend}
             label="Send"
             icon={FaPaperPlane}
             bgColor="bg-blue-500"
