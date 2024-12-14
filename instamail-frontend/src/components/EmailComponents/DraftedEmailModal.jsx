@@ -1,13 +1,15 @@
 import React from "react";
-import { useAppContext } from "../../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
+import MailsService from "../../services/MailsService";
 
-const DraftedEmailModal = ({ email, onClose }) => {
-  const { moveEmailToTrash } = useAppContext();
+const DraftedEmailModal = ({ email, onClose, setEmails }) => {
   const navigate = useNavigate();
 
   const handleDelete = () => {
-    moveEmailToTrash(email.id);
+    MailsService.deleteDraft(email.id);
+    setEmails((prevEmails) =>
+      prevEmails.filter((prevEmail) => prevEmail.id !== email.id)
+    );
     onClose();
   };
 

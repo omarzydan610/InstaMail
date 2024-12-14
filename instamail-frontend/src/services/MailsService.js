@@ -42,7 +42,6 @@ class MailsService {
 
   static async toggleStar(id) {
     const token = localStorage.getItem("authToken");
-    console.log(token);
     const response = await api.put(
       `/toggle-star/${id}`,
       {},
@@ -50,6 +49,30 @@ class MailsService {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
+    return response.data;
+  }
+
+  static async toggleDeletion(id) {
+    const token = localStorage.getItem("authToken");
+    const response = await api.delete(`/toggle-deletion/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  }
+
+  static async deletePermanently(id) {
+    const token = localStorage.getItem("authToken");
+    const response = await api.delete(`/delete-permanently/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  }
+
+  static async deleteDraft(id) {
+    const token = localStorage.getItem("authToken");
+    const response = await api.delete(`/delete-draft/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return response.data;
   }
 }

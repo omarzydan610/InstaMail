@@ -15,7 +15,7 @@ public class DraftedCriteria implements Criteria {
     public List<Mail> meetCriteria(List<Mail> mails) {
         List<Mail> draftedMails = new ArrayList<>();
         for (Mail mail : mails) {
-            if (mail.getSenderEmail().equals(email) && mail.getIsDraft() && mail.getIsSenderDeleted() == false) {
+            if (mail.getSenderEmail().equals(email) && mail.getIsDraft() && mail.getIsSenderDeleted() == 0) {
                 draftedMails.add(mail);
             }
         }

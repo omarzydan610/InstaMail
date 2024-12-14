@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import { IoPersonAdd } from "react-icons/io5";
-import { BsArrowDownUp } from "react-icons/bs";
 import ContactsList from "./ContactsList";
 import ContactDetails from "./ContactDetails";
 import ContactForm from "./ContactForm";
@@ -32,8 +31,6 @@ const ContactsModal = ({ isOpen, onClose }) => {
     setError(null);
     setIsEditing(false);
   };
-
-  const toggleSortStrategy = () => {};
 
   if (!isOpen) return null;
 
@@ -115,13 +112,6 @@ const ContactsModal = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-4">
               {!isAdding && !selectedContact && (
                 <div className="flex items-center gap-4">
-                  <button
-                    onClick={toggleSortStrategy}
-                    className="px-1.5 py-1.5 text-gray-700 hover:bg-gray-200 flex items-center gap-2 rounded-full"
-                    title="Sort contacts"
-                  >
-                    <BsArrowDownUp className="text-xl" />
-                  </button>
                   <button
                     onClick={() => setIsAdding(true)}
                     className="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2"
