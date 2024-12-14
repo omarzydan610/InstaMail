@@ -7,7 +7,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const EmailList = ({ activeCategory }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
-  const { emails, fetchEmails } = useAppContext();
+  const { emails, setEmails, fetchEmails } = useAppContext();
   const [currentPage, setCurrentPage] = useState(1);
   const emailsPerPage = 5;
 
@@ -36,6 +36,10 @@ const EmailList = ({ activeCategory }) => {
   };
   const nextPage = () => {
     console.log("currentPage", currentPage);
+    if (emails.length > 5 * currentPage + 1) {
+      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+      return;
+    }
     fetchEmails(activeCategory, currentPage * 5 + 1, emailsPerPage, false);
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
@@ -53,23 +57,44 @@ const EmailList = ({ activeCategory }) => {
   let emailModal = null;
   if (activeCategory === "Sent" && selectedEmail) {
     emailModal = (
-      <NormalEmailModal email={selectedEmail} onClose={handleCloseModal} />
+      <NormalEmailModal
+        email={selectedEmail}
+        onClose={handleCloseModal}
+        setEmails={setEmails}
+      />
     );
   } else if (activeCategory === "Inbox" && selectedEmail) {
     emailModal = (
-      <NormalEmailModal email={selectedEmail} onClose={handleCloseModal} />
+      <NormalEmailModal
+        email={selectedEmail}
+        onClose={handleCloseModal}
+        setEmails={setEmails}
+      />
     );
   } else if (activeCategory === "Drafts" && selectedEmail) {
     emailModal = (
-      <DraftedEmailModal email={selectedEmail} onClose={handleCloseModal} />
+      <DraftedEmailModal
+        email={selectedEmail}
+        onClose={handleCloseModal}
+        setEmails={setEmails}
+      />
     );
   } else if (activeCategory === "Trash" && selectedEmail) {
     emailModal = (
-      <TrashEmailModal email={selectedEmail} onClose={handleCloseModal} />
+      <TrashEmailModal
+        email={selectedEmail}
+        onClose={handleCloseModal}
+        setEmails={setEmails}
+      />
     );
   } else if (activeCategory === "Starred" && selectedEmail) {
     emailModal = (
-      <NormalEmailModal email={selectedEmail} onClose={handleCloseModal} />
+      <NormalEmailModal
+        email={selectedEmail}
+        onClose={handleCloseModal}
+        setEmails={setEmails}
+        activeCategory={activeCategory}
+      />
     );
   }
 
@@ -88,10 +113,10 @@ const EmailList = ({ activeCategory }) => {
                 {activeCategory === "Inbox" ? (
                   <>
                     <h6 className="text-lg font-semibold text-green-600">
-                      {email.sender}
+                      {email.senderEmail}
                     </h6>
                     <span className="text-sm text-gray-500">
-                      {formatDate(email.date)}
+                      {formatDate(email.createdAt)}
                     </span>
                   </>
                 ) : (
@@ -99,10 +124,10 @@ const EmailList = ({ activeCategory }) => {
                     activeCategory === "Drafts") && (
                     <>
                       <h6 className="text-lg font-semibold text-red-600">
-                        {email.receiver}
+                        {email.receiverEmail}
                       </h6>
                       <span className="text-sm text-gray-500">
-                        {formatDate(email.date)}
+                        {formatDate(email.createdAt)}
                       </span>
                     </>
                   )

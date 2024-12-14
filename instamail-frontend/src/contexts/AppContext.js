@@ -93,6 +93,7 @@ export const AppProvider = ({ children }) => {
     contacts,
     setContacts,
     emails,
+    setEmails,
     fetchContacts,
     isFetalError,
     setIsFetalError,

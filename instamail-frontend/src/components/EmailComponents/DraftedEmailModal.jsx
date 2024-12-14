@@ -47,14 +47,14 @@ const DraftedEmailModal = ({ email, onClose }) => {
               <div className="flex items-center gap-2">
                 <span className="font-medium">To:</span>
                 <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
-                  {email.receiver || "No recipient"}
+                  {email.receiverEmail || "No recipient"}
                 </span>
               </div>
             </div>
           </div>
 
           <div className="email-body overflow-y-auto max-h-[50vh] pr-4 text-gray-700 dark:text-gray-300 leading-relaxed">
-            <p className="whitespace-pre-wrap">{email.body || "No content"}</p>
+            <p className="whitespace-pre-wrap">{email.content || "No content"}</p>
           </div>
         </div>
 
