@@ -36,8 +36,8 @@ public class Mail {
     private Boolean isSenderStarred;
     private Boolean isReceiverStarred;
 
-    private Boolean isSenderDeleted;
-    private Boolean isReceiverDeleted;
+    private Integer isSenderDeleted;
+    private Integer isReceiverDeleted;
 
     private Long senderFolderId;
     private Long receiverFolderId;
@@ -60,8 +60,8 @@ public class Mail {
         this.receiverFolderId = 0L;
         this.isSenderStarred = false;
         this.isReceiverStarred = false;
-        this.isSenderDeleted = false;
-        this.isReceiverDeleted = false;
+        this.isSenderDeleted = 0;
+        this.isReceiverDeleted = 0;
         this.isRead = false;
         this.isDraft = false;
         this.createdAt = LocalDateTime.now();

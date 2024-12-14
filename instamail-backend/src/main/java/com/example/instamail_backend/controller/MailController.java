@@ -83,9 +83,22 @@ public class MailController {
 
     @PutMapping("/toggle-star/{mailId}")
     public ResponseEntity<?> starMail(@RequestHeader("Authorization") String token, @PathVariable long mailId) {
-        System.out.println("starMail");
-        ;
         return ResponseEntity.ok(addUpdateMailService.toggleStarMail(mailId, token));
+    }
+
+    @DeleteMapping("/toggle-deletion/{mailId}")
+    public ResponseEntity<?> toggleDeletion(@RequestHeader("Authorization") String token, @PathVariable long mailId) {
+        return ResponseEntity.ok(addUpdateMailService.toggleDeletion(mailId, token));
+    }
+
+    @DeleteMapping("/delete-permanently/{mailId}")
+    public ResponseEntity<?> deletePermanently(@RequestHeader("Authorization") String token, @PathVariable long mailId) {
+        return ResponseEntity.ok(addUpdateMailService.deleteMailPermanently(mailId, token));
+    }
+
+    @DeleteMapping("/delete-draft/{mailId}")
+    public ResponseEntity<?> deleteDraft(@RequestHeader("Authorization") String token, @PathVariable long mailId) {
+        return ResponseEntity.ok(addUpdateMailService.deleteDraft(mailId, token));
     }
 
     @PutMapping("/{mailId}/priority")
@@ -120,12 +133,5 @@ public class MailController {
     // public ResponseEntity<?> getAttachments(@PathVariable long mailId){
     // return ResponseEntity.ok(getMailServer.getAttachments(mailId));
     // }
-
-    @DeleteMapping("/{mailId}/delete-mail")
-    public ResponseEntity<?> deleteMail(@RequestHeader("Authorization") String token, @PathVariable long mailId,
-            @RequestBody String isSenderDeleted) {
-        boolean isDeleted = isSenderDeleted.equals("true");
-        return ResponseEntity.ok(addUpdateMailService.senderOrReceiverDelete(mailId, isDeleted, token));
-    }
 
 }

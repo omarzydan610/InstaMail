@@ -15,7 +15,7 @@ public class StarredCriteria implements Criteria {
     public List<Mail> meetCriteria(List<Mail> mails) {
         List<Mail> starredMails = new ArrayList<>();
         for (Mail mail : mails) {
-            if (mail.getSenderEmail().equals(email) && mail.getIsSenderStarred()&& !mail.getIsSenderDeleted() || mail.getReceiverEmail().equals(email) && mail.getIsReceiverStarred()&& !mail.getIsReceiverDeleted()) {
+            if (mail.getSenderEmail().equals(email) && mail.getIsSenderStarred()&& mail.getIsSenderDeleted() == 0 || mail.getReceiverEmail().equals(email) && mail.getIsReceiverStarred()&& mail.getIsReceiverDeleted() == 0) {
                 starredMails.add(mail);
             }
         }

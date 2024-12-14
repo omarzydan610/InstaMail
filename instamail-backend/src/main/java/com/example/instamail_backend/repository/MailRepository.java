@@ -18,20 +18,12 @@ public interface MailRepository extends JpaRepository<Mail, Long> {
 
     public List<Mail> findByReceiverEmail(String receiverEmail);
 
-    public List<Mail> findBySenderEmailAndIsSenderDeleted(String senderEmail, boolean isSenderDeleted);
+    public List<Mail> findBySenderEmailAndIsSenderDeleted(String senderEmail, Integer isSenderDeleted);
 
     public List<Mail> findBySenderEmailOrReceiverEmail(String senderEmail, String receiverEmail);
 
-    public List<Mail> findByReceiverEmailAndIsReceiverDeleted(String receiverEmail, boolean isReceiverDeleted);
+    public List<Mail> findByReceiverEmailAndIsReceiverDeleted(String receiverEmail, Integer isReceiverDeleted);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE Mail m SET m.isSenderDeleted = :isDeleted WHERE m.id = :mailId") 
-    public void deleteMailBySenderId(@Param("mailId") long mailId, @Param("isDeleted") boolean isDeleted);
-    @Modifying
-    @Transactional
-    @Query("UPDATE Mail m SET m.isReceiverDeleted = :isDeleted WHERE m.id = :mailId")
-    public void deleteMailByReceiverId(@Param("mailId") long mailId, @Param("isDeleted") boolean isDeleted);
     @Modifying
     @Transactional
     @Query("UPDATE Mail m SET m.isSenderStarred = :isStarred WHERE m.id = :mailId AND m.senderEmail = :senderEmail")

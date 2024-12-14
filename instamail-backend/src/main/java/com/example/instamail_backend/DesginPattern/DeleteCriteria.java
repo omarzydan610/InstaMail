@@ -16,7 +16,7 @@ public class DeleteCriteria implements Criteria {
     public List<Mail> meetCriteria(List<Mail> mails) {
         List<Mail> deletedMails = new ArrayList<>();
         for (Mail mail : mails) {
-            if (mail.getSenderEmail().equals(email) && mail.getIsSenderDeleted() || mail.getReceiverEmail().equals(email) && mail.getIsReceiverDeleted()) {
+            if (mail.getSenderEmail().equals(email) && mail.getIsSenderDeleted() == 1 || mail.getReceiverEmail().equals(email) && mail.getIsReceiverDeleted() == 1) {
                 deletedMails.add(mail);
             }
         }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, act } from "react";
+import React, { useState, useEffect,} from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import NormalEmailModal from "./NormalEmailModal";
 import DraftedEmailModal from "./DraftedEmailModal";

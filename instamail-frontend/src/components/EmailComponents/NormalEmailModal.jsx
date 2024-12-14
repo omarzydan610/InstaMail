@@ -3,10 +3,13 @@ import { useAppContext } from "../../contexts/AppContext";
 import MailsService from "../../services/MailsService";
 
 const NormalEmailModal = ({ email, onClose, setEmails, activeCategory }) => {
-  const { moveEmailToTrash, userEmail, fetchEmails } = useAppContext();
+  const { userEmail, fetchEmails } = useAppContext();
 
   const handleDelete = () => {
-    moveEmailToTrash(email.id);
+    MailsService.toggleDeletion(email.id);
+    setEmails((prevEmails) =>
+      prevEmails.filter((prevEmail) => prevEmail.id !== email.id)
+    );
     onClose();
   };
   const [isStarred, setIsStarred] = useState(
