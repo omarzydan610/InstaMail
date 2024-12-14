@@ -81,15 +81,11 @@ public class MailController {
         return ResponseEntity.ok(getMailService.getMails(token, "starred", start, size));
     }
 
-    @PutMapping("/{mailId}/star")
-    public String starMail(@RequestHeader("Authorization") String token, @PathVariable long mailId,
-            @RequestBody String isStarredString) {
-        // TODO: process PUT request
-        System.out.println(isStarredString + " isStarredString" + isStarredString.equals("true"));
-        boolean isStarred = isStarredString.equals("true");
-        addUpdateMailService.starMail(mailId, isStarred, token);
-        return "success";
-
+    @PutMapping("/toggle-star/{mailId}")
+    public ResponseEntity<?> starMail(@RequestHeader("Authorization") String token, @PathVariable long mailId) {
+        System.out.println("starMail");
+        ;
+        return ResponseEntity.ok(addUpdateMailService.toggleStarMail(mailId, token));
     }
 
     @PutMapping("/{mailId}/priority")

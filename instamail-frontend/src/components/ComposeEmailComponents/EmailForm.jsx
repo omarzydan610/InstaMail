@@ -65,10 +65,21 @@ const EmailForm = ({
       subject: subject,
       body: body,
     };
+
+    // Validation checks
     if (recipients.length === 0) {
-        setError("Please add at least one recipient");
-        return;
+      setError("Please add at least one recipient");
+      return;
     }
+    if (!subject.trim()) {
+      setError("Please add a subject");
+      return;
+    }
+    if (!body.trim()) {
+      setError("Please add email content");
+      return;
+    }
+
     await MailsService.addMail(mail, false);
     setError("");
     console.log(`Sending email to: ${recipients.join(", ")}`);
@@ -81,14 +92,33 @@ const EmailForm = ({
       subject: subject,
       body: body,
     };
+
+    // Validation checks
     if (recipients.length === 0) {
       setError("Please add at least one recipient");
       return;
     }
+    if (!subject.trim()) {
+      setError("Please add a subject");
+      return;
+    }
+    if (!body.trim()) {
+      setError("Please add email content");
+      return;
+    }
+
     await MailsService.addMail(mail, true);
     setError("");
     console.log(`Draft saved for: ${recipients.join(", ")}`);
     onClose();
+  };
+
+  const Submit = (type) => {
+    if (type === "draft") {
+      return handleDraft;
+    } else {
+      return handleSend;
+    }
   };
 
   return (
@@ -204,12 +234,12 @@ const EmailForm = ({
         )}
         <div className="flex justify-end space-x-2">
           <ActionButton
-            type="button"
-            onClick={handleDraft}
+            type="submit"
+            onClick={Submit("draft")}
             label="Save as Draft"
             icon={FaSave}
-            bgColor="bg-green-500"
-            hoverColor="bg-green-600"
+            bgColor="bg-yellow-500"
+            hoverColor="bg-yellow-600"
           />
           <ActionButton
             type="button"
@@ -220,8 +250,8 @@ const EmailForm = ({
             hoverColor="bg-red-600"
           />
           <ActionButton
-            type="button"
-            onClick={handleSend}
+            type="submit"
+            onClick={Submit("send")}
             label="Send"
             icon={FaPaperPlane}
             bgColor="bg-blue-500"
