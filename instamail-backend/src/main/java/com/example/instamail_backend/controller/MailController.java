@@ -101,31 +101,16 @@ public class MailController {
         return ResponseEntity.ok(addUpdateMailService.deleteDraft(mailId, token));
     }
 
+    @PutMapping("/mark-as-read/{mailId}")
+    public ResponseEntity<?> markAsRead(@RequestHeader("Authorization") String token, @PathVariable long mailId) {
+        return ResponseEntity.ok(addUpdateMailService.markAsRead(mailId, token));
+    }
+
     @PutMapping("/{mailId}/priority")
     public String updateMailPriority(@RequestHeader("Authorization") String token, @PathVariable long mailId,
             @RequestBody int priority) {
         // TODO: process PUT request
         addUpdateMailService.updateMailPrioritySenderorReceiver(mailId, priority, token);
-        return "success";
-
-    }
-
-    @PutMapping("/{mailId}/read")
-    public String readMail(@RequestHeader("Authorization") String token, @PathVariable long mailId,
-            @RequestBody String isReadString) {
-        // TODO: process PUT request
-        boolean isRead = isReadString.equals("true");
-        addUpdateMailService.readMail(mailId, isRead, token);
-        return "success";
-
-    }
-
-    @PutMapping("/{mailId}/draft")
-    public String draftMail(@RequestHeader("Authorization") String token, @PathVariable long mailId,
-            @RequestBody String isDraftedString) {
-        // TODO: process PUT request
-        boolean isDrafted = isDraftedString.equals("true");
-        addUpdateMailService.draftMail(mailId, isDrafted, token);
         return "success";
 
     }

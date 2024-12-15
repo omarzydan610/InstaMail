@@ -155,35 +155,23 @@ public class AddUpdateMailService {
         return true;
     }
 
+    public Boolean markAsRead(long mailId, String token) {
+        try {
+            userService.getIdByToken(token);
+        } catch (Exception e) {
+            throw new RuntimeException("Wrong or Expired Token");
+        }
+        Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
+        mail.setIsRead(true);
+        mailRepository.save(mail);
+        return true;
+    }
+
     public void updateMailPrioritySenderorReceiver(long mailId, int priority, String token) {
         long userId = userService.getIdByToken(token);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mailRepository.updateMailPrioritySender(mailId, priority, user.getEmail());
         mailRepository.updateMailPriorityReceiver(mailId, priority, user.getEmail());
-    }
-
-    public void updateMailReadSenderorReceiver(long mailId, boolean isRead, String token) {
-        long userId = userService.getIdByToken(token);
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
-        if (mail.getReceiverEmail().equals(user.getEmail())) {
-            mail.setIsRead(isRead);
-        } else {
-            throw new RuntimeException("Mail not found");
-        }
-        mailRepository.save(mail);
-    }
-
-    public void draftMail(long mailId, boolean isDrafted, String token) {
-        long userId = userService.getIdByToken(token);
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        mailRepository.draftMailSender(mailId, isDrafted, user.getEmail());
-    }
-
-    public void readMail(long mailId, boolean isRead, String token) {
-        long userId = userService.getIdByToken(token);
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        mailRepository.readMailReceiver(mailId, isRead, user.getEmail());
     }
 
 }

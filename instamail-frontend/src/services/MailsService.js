@@ -75,6 +75,18 @@ class MailsService {
     });
     return response.data;
   }
+
+  static async markAsRead(id) {
+    const token = localStorage.getItem("authToken");
+    const response = await api.put(
+      `/mark-as-read/${id}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return response.data;
+  }
 }
 
 export default MailsService;
