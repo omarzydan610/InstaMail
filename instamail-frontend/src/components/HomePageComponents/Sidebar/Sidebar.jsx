@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useAppContext } from "../../../contexts/AppContext";
 import CategoryItem from "./CategoryItem";
 import FolderList from "./FolderList";
 import { CATEGORIES } from "./constants";
-import { AppProvider } from "../../../contexts/AppContext";
 
 const Sidebar = ({
   isSidebarCollapsed,
@@ -15,11 +14,9 @@ const Sidebar = ({
   const [isHovered, setIsHovered] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState({});
   const { fetchContacts, fetchEmails } = useAppContext();
-  const { fetchFolders, folders, setFolders } = useAppContext();
+  const { folders } = useAppContext();
   const otherCategories = CATEGORIES.filter((cat) => !cat.isContacts);
   const contactsCategory = CATEGORIES.find((cat) => cat.isContacts);
-
-
 
   const toggleFolder = (folderId) => {
     setExpandedFolders((prev) => ({
@@ -55,6 +52,12 @@ const Sidebar = ({
       }
     }
   };
+  const isCategoryActive = (categoryName) => {
+    if (typeof activeCategory === "object") {
+      return false;
+    }
+    return activeCategory === categoryName;
+  };
 
   return (
     <div
@@ -69,7 +72,7 @@ const Sidebar = ({
           <React.Fragment key={category.name}>
             <CategoryItem
               category={category}
-              isActive={activeCategory === category.name}
+              isActive={isCategoryActive(category.name)}
               isCollapsed={isSidebarCollapsed}
               isHovered={isHovered}
               onClick={() =>
@@ -96,7 +99,7 @@ const Sidebar = ({
       <ul>
         <CategoryItem
           category={contactsCategory}
-          isActive={activeCategory === contactsCategory.name}
+          isActive={isCategoryActive(contactsCategory.name)}
           isCollapsed={isSidebarCollapsed}
           isHovered={isHovered}
           onClick={() => handleCategoryClick(contactsCategory)}

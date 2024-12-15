@@ -1,9 +1,35 @@
-import api from './api'; // Assuming you have an api configuration file
+import api from "./api"; // Assuming you have an api configuration file
 
 class FolderService {
-  static async deleteFolder(folderName) {
+  static async createFolder(folderName) {
     const token = localStorage.getItem("authToken");
-    const response = await api.delete(`/folders/${folderName}`, {
+    console.log(folderName);
+    console.log(token);
+    const response = await api.post(
+      "/create-folder",
+      {
+        name: folderName,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return response.data;
+  }
+
+  static async getFolders() {
+    console.log("getFolders");
+    const token = localStorage.getItem("authToken");
+    const response = await api.get("/get-folders", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(response.data);
+    return response.data;
+  }
+
+  static async deleteFolder(folderId) {
+    const token = localStorage.getItem("authToken");
+    const response = await api.delete(`/delete-folder/${folderId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -11,29 +37,7 @@ class FolderService {
 
   static async getFolder() {
     const token = localStorage.getItem("authToken");
-    const response = await api.get('/folder', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
-  }
-
-  static async getFolders() {
-    console.log("getFolders");
-    const token = localStorage.getItem("authToken");
-    const response = await api.get('/get-folders', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    console.log(response.data);
-    return response.data;
-  }
-
-  static async createFolder(folderName) {
-    const token = localStorage.getItem("authToken");
-    console.log(folderName)
-    console.log(token)
-    const response = await api.post('/create-folder', {
-      name : folderName,
-    }, {
+    const response = await api.get("/folder", {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -55,7 +59,6 @@ class FolderService {
     });
     return response.data;
   }
-
 }
 
 export default FolderService;

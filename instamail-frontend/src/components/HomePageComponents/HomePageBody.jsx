@@ -5,15 +5,17 @@ import FloatingButton from "./FloatingButton";
 import ErrorMessage from "../ErrorMessage";
 import { FaTrash } from "react-icons/fa";
 import AddFolderModal from "../userFolders/AddFolderModal";
-
+import FolderService from "../../services/folderService";
+import { useAppContext } from "../../contexts/AppContext";
 const HomePageBody = ({
   activeCategory,
   isContactsModalOpen,
   setIsContactsModalOpen,
-  onDeleteFolder,
   isAddFolderModalOpen,
   setIsAddFolderModalOpen,
+  setActiveCategory,
 }) => {
+  const { fetchFolders } = useAppContext();
   const isFolder =
     activeCategory !== "Inbox" &&
     activeCategory !== "Sent" &&
@@ -36,13 +38,26 @@ const HomePageBody = ({
     setFolderName(name);
     closeAddFolderModal();
   };
+  const getCategoryName = () => {
+    if (typeof activeCategory === "object") {
+      return activeCategory.name;
+    }
+    return activeCategory;
+  };
+
+  const handleDeleteFolder = async (folderName) => {
+    setActiveCategory("Inbox");
+    await FolderService.deleteFolder(activeCategory.id);
+
+    fetchFolders();
+  };
   return (
     <div className="flex-1 p-4">
       <div className="flex items-center justify-between mb-4 mx-4">
-        <h2 className="text-2xl font-semibold">{activeCategory}</h2>
+        <h2 className="text-2xl font-semibold">{getCategoryName()}</h2>
         {isFolder && (
           <button
-            onClick={() => onDeleteFolder(activeCategory)}
+            onClick={() => handleDeleteFolder(activeCategory)}
             className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded-md transition-colors duration-200 ease-in-out flex items-center gap-2"
             title="Delete folder"
           >
