@@ -65,6 +65,7 @@ const NormalEmailModal = ({
   };
 
   const handleDelete = async () => {
+    console.log(email.id);
     await MailsService.toggleDeletion(email.id);
     setEmails((prevEmails) =>
       prevEmails.filter((prevEmail) => prevEmail.id !== email.id)
@@ -177,12 +178,12 @@ const NormalEmailModal = ({
             </svg>
             <span>Delete Email</span>
           </button>
-          {/* Move to Folder Button */}
+          {/* put in Folder Button */}
           <button
             onClick={() => setShowFolderModal(true)} // Show the folder modal
             className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
-            Move to Folder
+            put in Folder
           </button>
 
         </div>
