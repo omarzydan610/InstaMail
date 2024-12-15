@@ -39,9 +39,10 @@ class FolderService {
     return response.data;
   }
 
-  static async putMailInFolder(folderName, mailData) {
+  static async moveMailToFolder(mailId, folderId) {
     const token = localStorage.getItem("authToken");
-    const response = await api.post(`/folders/${folderName}/mails`, mailData, {
+    const body = { folderId };
+    const response = await api.put(`/change-folder/${mailId}`, body, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
