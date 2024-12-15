@@ -3,6 +3,7 @@ import { FaSave, FaPaperPlane, FaTimes, FaUserFriends } from "react-icons/fa";
 import ActionButton from "./Button";
 import AttachmentsSection from "./AttachmentsComponents/AttachmentsSection";
 import MailsService from "../../services/MailsService";
+
 const EmailForm = ({
   inputStyles,
   showContacts,
@@ -18,6 +19,9 @@ const EmailForm = ({
   const [currentEmail, setCurrentEmail] = React.useState("");
   const [attachments, setAttachments] = React.useState([]);
   const formRef = React.useRef(null);
+  const [subject, setSubject] = React.useState("");
+  const [body, setBody] = React.useState("");
+
   const handleAddRecipient = (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,8 +39,6 @@ const EmailForm = ({
       setError("Please enter a valid email address");
     }
   };
-  const [subject, setSubject] = React.useState("");
-  const [body, setBody] = React.useState("");
 
   const removeRecipient = (index) => {
     setRecipients((prev) => prev.filter((_, i) => i !== index));
@@ -59,13 +61,17 @@ const EmailForm = ({
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSend = async () => {
+  const sendEmailToRecipient = async (recipient, isDraft) => {
     const mail = {
-      Recipients: recipients,
+      Recipients: [recipient],
       subject: subject,
       body: body,
     };
 
+    await MailsService.addMail(mail, isDraft);
+  };
+
+  const handleSend = async () => {
     // Validation checks
     if (recipients.length === 0) {
       setError("Please add at least one recipient");
@@ -80,19 +86,16 @@ const EmailForm = ({
       return;
     }
 
-    await MailsService.addMail(mail, false);
+    for (const recipient of recipients) {
+      await sendEmailToRecipient(recipient, false);
+      console.log(`Sending email to: ${recipient}`);
+    }
+
     setError("");
-    console.log(`Sending email to: ${recipients.join(", ")}`);
     onClose();
   };
 
   const handleDraft = async () => {
-    const mail = {
-      Recipients: recipients,
-      subject: subject,
-      body: body,
-    };
-
     // Validation checks
     if (recipients.length === 0) {
       setError("Please add at least one recipient");
@@ -107,9 +110,12 @@ const EmailForm = ({
       return;
     }
 
-    await MailsService.addMail(mail, true);
+    for (const recipient of recipients) {
+      await sendEmailToRecipient(recipient, true);
+      console.log(`Draft saved for: ${recipient}`);
+    }
+
     setError("");
-    console.log(`Draft saved for: ${recipients.join(", ")}`);
     onClose();
   };
 
@@ -235,7 +241,7 @@ const EmailForm = ({
         <div className="flex justify-end space-x-2">
           <ActionButton
             type="submit"
-            onClick={Submit("draft")}
+            onClick={handleDraft}
             label="Save as Draft"
             icon={FaSave}
             bgColor="bg-yellow-500"
@@ -251,7 +257,7 @@ const EmailForm = ({
           />
           <ActionButton
             type="submit"
-            onClick={Submit("send")}
+            onClick={handleSend}
             label="Send"
             icon={FaPaperPlane}
             bgColor="bg-blue-500"

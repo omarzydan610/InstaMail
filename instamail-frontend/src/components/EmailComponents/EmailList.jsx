@@ -9,7 +9,6 @@ import MailsService from "../../services/MailsService";
 const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
   const { emails, setEmails, fetchEmails } = useAppContext();
-
   const emailsPerPage = 5;
   const IndexOfLastEmail = currentPage * emailsPerPage;
   const IndexOfFirstEmail = IndexOfLastEmail - emailsPerPage;
@@ -17,6 +16,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     emails.slice(IndexOfFirstEmail, IndexOfLastEmail)
   );
   const [totalPages, setTotalPages] = useState(0);
+
   useEffect(() => {
     setCurrentEmails(emails.slice(IndexOfFirstEmail, IndexOfLastEmail));
     setTotalPages(Math.ceil(emails.length / emailsPerPage));
