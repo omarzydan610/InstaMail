@@ -35,7 +35,10 @@ public class FoldersService {
     public List<Mail> getMailsByFolderId(String token, Long folderId) {
         Long userId = userService.getIdByToken(token);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        return mailsRepository.findByFolderIdSender(folderId, user.getEmail());
+        List<Mail> mails = mailsRepository.findByFolderIdSender(folderId, user.getEmail());
+        List<Mail> mails2 = mailsRepository.findByFolderIdReceiver(folderId, user.getEmail());
+        mails.addAll(mails2);
+        return mails;
     }
     public Folders createFolder(String token, Map<String, String> request) {
         Long userId = userService.getIdByToken(token);
