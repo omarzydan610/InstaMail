@@ -40,7 +40,7 @@ public class FoldersController {
     public List<Folders> getFolders(@RequestHeader("Authorization") String token) {
         return foldersService.getFoldersByUserId(token);
     }
-    @PutMapping("/update-folder/{folderId}")
+    @PutMapping("/update-folder-name/{folderId}")
     public String updateFolder(@RequestHeader("Authorization") String token, @PathVariable Long folderId, @RequestBody String folderName) {
         foldersService.updateFolder(token, folderId, folderName);
         return "success";
