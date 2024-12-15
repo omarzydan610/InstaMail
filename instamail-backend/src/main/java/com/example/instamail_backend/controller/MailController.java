@@ -118,7 +118,7 @@ public class MailController {
     // public ResponseEntity<?> getAttachments(@PathVariable long mailId){
     // return ResponseEntity.ok(getMailServer.getAttachments(mailId));
     // }
-    @PutMapping("/update-folder/{mailId}")
+    @PutMapping("/change-folder/{mailId}")
     public String updateMailFolderId(@RequestHeader("Authorization") String token, @PathVariable long mailId, @RequestBody Long folderId) {
         //TODO: process PUT request
         addUpdateMailService.updateMailFolderId(mailId, folderId, token);
