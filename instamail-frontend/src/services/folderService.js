@@ -18,10 +18,12 @@ class FolderService {
   }
 
   static async getFolders() {
+    console.log("getFolders");
     const token = localStorage.getItem("authToken");
-    const response = await api.get('/folders', {
+    const response = await api.get('/get-folders', {
       headers: { Authorization: `Bearer ${token}` },
     });
+    console.log(response.data);
     return response.data;
   }
 

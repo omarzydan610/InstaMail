@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../../contexts/AppContext";
 import CategoryItem from "./CategoryItem";
 import FolderList from "./FolderList";
 import { CATEGORIES } from "./constants";
+import { AppProvider } from "../../../contexts/AppContext";
 
 const Sidebar = ({
   isSidebarCollapsed,
@@ -14,15 +15,11 @@ const Sidebar = ({
   const [isHovered, setIsHovered] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState({});
   const { fetchContacts, fetchEmails } = useAppContext();
-
+  const { fetchFolders, folders, setFolders } = useAppContext();
   const otherCategories = CATEGORIES.filter((cat) => !cat.isContacts);
   const contactsCategory = CATEGORIES.find((cat) => cat.isContacts);
 
-  // Mock folders - replace with your actual folders data
-  const folders = [
-    { id: 1, name: "Personal" },
-    { id: 2, name: "Work" },
-  ];
+
 
   const toggleFolder = (folderId) => {
     setExpandedFolders((prev) => ({
