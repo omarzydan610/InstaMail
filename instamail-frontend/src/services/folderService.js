@@ -35,11 +35,13 @@ class FolderService {
     return response.data;
   }
 
-  static async getFolder() {
+  static async getMailsByFolderId(folderId) {
+    console.log(folderId);
     const token = localStorage.getItem("authToken");
-    const response = await api.get("/folder", {
+    const response = await api.get(`/get-folders-mails/${folderId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    console.log(response.data);
     return response.data;
   }
 

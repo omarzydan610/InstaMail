@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useAppContext } from "../../contexts/AppContext";
+import { AppProvider, useAppContext } from "../../contexts/AppContext";
 import NormalEmailModal from "./NormalEmailModal";
 import DraftedEmailModal from "./DraftedEmailModal";
 import TrashEmailModal from "./TrashEmailModal";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import MailsService from "../../services/MailsService";
+import FolderService from "../../services/folderService";
 
 const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
@@ -17,19 +18,28 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     emails.slice(IndexOfFirstEmail, IndexOfLastEmail)
   );
   const [totalPages, setTotalPages] = useState(0);
+
   useEffect(() => {
     setCurrentEmails(emails.slice(IndexOfFirstEmail, IndexOfLastEmail));
     setTotalPages(Math.ceil(emails.length / emailsPerPage));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emails, currentPage]);
+
   useEffect(() => {
     setCurrentPage(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (activeCategory.id) {
+      fetchEmailsForCategory(activeCategory.id);
+      
+    }
   }, [activeCategory]);
+
+  const fetchEmailsForCategory = async (categoryId) => {
+    console.log("nice");
+    const emails = await FolderService.getMailsByFolderId(categoryId);
+    setEmails(emails);
+  };
 
   const handleEmailClick = async (email) => {
     if (activeCategory === "Inbox" && !email.isRead) {
-      console.log(email.isRead);
       setEmails((prevEmails) =>
         prevEmails.map((prevEmail) =>
           prevEmail.id === email.id ? { ...prevEmail, isRead: true } : prevEmail
@@ -43,8 +53,8 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const handleCloseModal = () => {
     setSelectedEmail(null);
   };
+
   const nextPage = () => {
-    console.log("currentPage", currentPage);
     if (emails.length > 5 * currentPage + 1) {
       setCurrentPage((prev) => Math.min(prev + 1, totalPages));
       return;
@@ -107,6 +117,15 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         activeCategory={activeCategory}
+        setCurrentPage={setCurrentPage}
+      />
+    );
+  } else if (activeCategory.id && selectedEmail) {
+    emailModal = (
+      <NormalEmailModal
+        email={selectedEmail}
+        onClose={handleCloseModal}
+        setEmails={setEmails}
         setCurrentPage={setCurrentPage}
       />
     );
