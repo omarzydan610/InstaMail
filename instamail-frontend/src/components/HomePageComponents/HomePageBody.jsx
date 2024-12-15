@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import EmailList from "../EmailComponents/EmailList";
 import ContactsModal from "../ContactsComponents/ContactsModal";
 import FloatingButton from "./FloatingButton";
 import ErrorMessage from "../ErrorMessage";
 import { FaTrash } from "react-icons/fa";
+import AddFolderModal from "../userFolders/AddFolderModal";
 
 const HomePageBody = ({
   activeCategory,
   isContactsModalOpen,
   setIsContactsModalOpen,
   onDeleteFolder,
+  isAddFolderModalOpen,
+  setIsAddFolderModalOpen,
 }) => {
   const isFolder =
     activeCategory !== "Inbox" &&
@@ -20,6 +23,19 @@ const HomePageBody = ({
     activeCategory !== "Folders";
 
   const closeContactsModal = () => setIsContactsModalOpen(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [folderName, setFolderName] = useState("");
+  console.log(folderName);
+
+  const closeAddFolderModal = () => {
+    setIsAddFolderModalOpen(false); // Close Add Folder Modal
+  };
+
+  const handleSaveFolder = (name) => {
+    setFolderName(name);
+    closeAddFolderModal();
+  };
   return (
     <div className="flex-1 p-4">
       <div className="flex items-center justify-between mb-4 mx-4">
@@ -35,12 +51,24 @@ const HomePageBody = ({
           </button>
         )}
       </div>
-      <EmailList activeCategory={activeCategory} />
+      <EmailList
+        activeCategory={activeCategory}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
       <ContactsModal
         isOpen={isContactsModalOpen}
         onClose={closeContactsModal}
       />
-      <FloatingButton />
+      <AddFolderModal
+        isOpen={isAddFolderModalOpen}
+        onClose={closeAddFolderModal}
+        onSave={handleSaveFolder}
+      />
+      <FloatingButton
+        activeCategory={activeCategory}
+        setCurrentPage={setCurrentPage}
+      />
       <ErrorMessage />
     </div>
   );

@@ -1,14 +1,14 @@
-import React, { useState, useEffect,} from "react";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import NormalEmailModal from "./NormalEmailModal";
 import DraftedEmailModal from "./DraftedEmailModal";
 import TrashEmailModal from "./TrashEmailModal";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const EmailList = ({ activeCategory }) => {
+const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
   const { emails, setEmails, fetchEmails } = useAppContext();
-  const [currentPage, setCurrentPage] = useState(1);
+
   const emailsPerPage = 5;
 
   // Add new state variables for pagination
@@ -25,6 +25,7 @@ const EmailList = ({ activeCategory }) => {
   }, [emails, currentPage]);
   useEffect(() => {
     setCurrentPage(1);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory]);
 
   const handleEmailClick = (email) => {
@@ -61,6 +62,7 @@ const EmailList = ({ activeCategory }) => {
         email={selectedEmail}
         onClose={handleCloseModal}
         setEmails={setEmails}
+        setCurrentPage={setCurrentPage}
       />
     );
   } else if (activeCategory === "Inbox" && selectedEmail) {
@@ -69,6 +71,7 @@ const EmailList = ({ activeCategory }) => {
         email={selectedEmail}
         onClose={handleCloseModal}
         setEmails={setEmails}
+        setCurrentPage={setCurrentPage}
       />
     );
   } else if (activeCategory === "Drafts" && selectedEmail) {
@@ -77,6 +80,7 @@ const EmailList = ({ activeCategory }) => {
         email={selectedEmail}
         onClose={handleCloseModal}
         setEmails={setEmails}
+        setCurrentPage={setCurrentPage}
       />
     );
   } else if (activeCategory === "Trash" && selectedEmail) {
@@ -85,6 +89,7 @@ const EmailList = ({ activeCategory }) => {
         email={selectedEmail}
         onClose={handleCloseModal}
         setEmails={setEmails}
+        setCurrentPage={setCurrentPage}
       />
     );
   } else if (activeCategory === "Starred" && selectedEmail) {
@@ -94,6 +99,7 @@ const EmailList = ({ activeCategory }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         activeCategory={activeCategory}
+        setCurrentPage={setCurrentPage}
       />
     );
   }

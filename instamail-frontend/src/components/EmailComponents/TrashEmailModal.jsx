@@ -1,22 +1,30 @@
 import React from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import MailsService from "../../services/MailsService";
-const TrashEmailModal = ({ email, onClose }) => {
+const TrashEmailModal = ({ email, onClose, setCurrentPage }) => {
   const { setEmails } = useAppContext();
+  const { fetchEmails } = useAppContext();
 
-  const handleDelete = () => {
-    MailsService.deletePermanently(email.id);
+  const refreshEmails = async () => {
+    await fetchEmails("Trash", 0, 6, true);
+    setCurrentPage(1);
+  };
+
+  const handleDelete = async () => {
+    await MailsService.deletePermanently(email.id);
     setEmails((prevEmails) =>
       prevEmails.filter((prevEmail) => prevEmail.id !== email.id)
     );
+    refreshEmails();
     onClose();
   };
 
-  const handleRestore = () => {
-    MailsService.toggleDeletion(email.id);
+  const handleRestore = async () => {
+    await MailsService.toggleDeletion(email.id);
     setEmails((prevEmails) =>
       prevEmails.filter((prevEmail) => prevEmail.id !== email.id)
     );
+    refreshEmails();
     onClose();
   };
 

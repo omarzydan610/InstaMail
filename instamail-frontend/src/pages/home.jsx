@@ -4,7 +4,6 @@ import Sidebar from "../components/HomePageComponents/Sidebar/Sidebar";
 import HomePageBody from "../components/HomePageComponents/HomePageBody";
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
-import AddFolderModal from "../components/userFolders/AddFolderModal"; // Import the AddFolderModal
 import { deleteFolder } from "../services/folderService";
 
 const Home = () => {
@@ -13,11 +12,9 @@ const Home = () => {
   const [activeCategory, setActiveCategory] = useState("Inbox");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [isContactsModalOpen, setIsContactsModalOpen] = useState(false);
-  const [isAddFolderModalOpen, setIsAddFolderModalOpen] = useState(false); // State for Add Folder Modal
-  const [folderName, setFolderName] = useState("");
+
   const openContactsModal = () => setIsContactsModalOpen(true);
   
-  console.log(folderName);
 
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
@@ -33,17 +30,10 @@ const Home = () => {
     }
   }, [token, navigate]);
 
+    
+  const [isAddFolderModalOpen, setIsAddFolderModalOpen] = useState(false); // State for Add Folder Modal
   const handleAddFolderClick = () => {
     setIsAddFolderModalOpen(true); // Open Add Folder Modal
-  };
-
-  const closeAddFolderModal = () => {
-    setIsAddFolderModalOpen(false); // Close Add Folder Modal
-  };
-
-  const handleSaveFolder = (name) => {
-    setFolderName(name);
-    closeAddFolderModal();
   };
 
   const handleDeleteFolder = async (folderName) => {
@@ -88,14 +78,12 @@ const Home = () => {
           isContactsModalOpen={isContactsModalOpen}
           setIsContactsModalOpen={setIsContactsModalOpen}
           onDeleteFolder={handleDeleteFolder}
+          setIsAddFolderModalOpen={setIsAddFolderModalOpen}
+          isAddFolderModalOpen={isAddFolderModalOpen}
         />
       </div>
 
-      <AddFolderModal
-        isOpen={isAddFolderModalOpen}
-        onClose={closeAddFolderModal}
-        onSave={handleSaveFolder}
-      />
+      
     </div>
   );
 };
