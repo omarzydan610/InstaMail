@@ -4,7 +4,7 @@ import Sidebar from "../components/HomePageComponents/Sidebar/Sidebar";
 import HomePageBody from "../components/HomePageComponents/HomePageBody";
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
-import { deleteFolder } from "../services/folderService";
+import FolderService from "../services/folderService";
 
 const Home = () => {
   const { token } = useAppContext();
@@ -36,29 +36,29 @@ const Home = () => {
     setIsAddFolderModalOpen(true); // Open Add Folder Modal
   };
 
-  const handleDeleteFolder = async (folderName) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete the folder "${folderName}"?`
-    );
+  // const handleDeleteFolder = async (folderName) => {
+  //   const confirmDelete = window.confirm(
+  //     `Are you sure you want to delete the folder "${folderName}"?`
+  //   );
 
-    if (confirmDelete) {
-      try {
-        await deleteFolder(folderName);
+  //   if (confirmDelete) {
+  //     try {
+  //       await deleteFolder(folderName);
 
-        // Reset to Inbox if the deleted folder was active
-        if (activeCategory === folderName) {
-          setActiveCategory("Inbox");
-        }
+  //       // Reset to Inbox if the deleted folder was active
+  //       if (activeCategory === folderName) {
+  //         setActiveCategory("Inbox");
+  //       }
 
-        // Refresh folders list
-        // You might want to add a function to fetch and update folders
-        // await refreshFolders();
-      } catch (error) {
-        console.error("Failed to delete folder:", error);
-        alert("Failed to delete folder. Please try again.");
-      }
-    }
-  };
+  //       // Refresh folders list
+  //       // You might want to add a function to fetch and update folders
+  //       // await refreshFolders();
+  //     } catch (error) {
+  //       console.error("Failed to delete folder:", error);
+  //       alert("Failed to delete folder. Please try again.");
+  //     }
+  //   }
+  // };
 
   return (
     <div className="h-screen flex flex-col">
@@ -77,7 +77,7 @@ const Home = () => {
           activeCategory={activeCategory}
           isContactsModalOpen={isContactsModalOpen}
           setIsContactsModalOpen={setIsContactsModalOpen}
-          onDeleteFolder={handleDeleteFolder}
+          // onDeleteFolder={handleDeleteFolder}
           setIsAddFolderModalOpen={setIsAddFolderModalOpen}
           isAddFolderModalOpen={isAddFolderModalOpen}
         />

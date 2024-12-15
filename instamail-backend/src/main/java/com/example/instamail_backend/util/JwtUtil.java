@@ -26,9 +26,11 @@ public class JwtUtil {
 
     // Extract user (subject) from the token
     public Long extractId(String token) {
+        System.out.println("klrofkj");
         String IdString = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody()
                 .getSubject();
         Long Id = Long.parseLong(IdString);
+        System.out.println(",skdnvkjbrewkufvb");
         return (Id);
     }
 

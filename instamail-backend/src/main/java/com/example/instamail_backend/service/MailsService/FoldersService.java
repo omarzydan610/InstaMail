@@ -39,6 +39,7 @@ public class FoldersService {
     }
     public Folders createFolder(String token, Map<String, String> request) {
         Long userId = jwtUtil.extractId(token);
+        System.out.println(userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Folders folder = new Folders(request.get("name"), user.getEmail(), userId);
         return foldersRepository.save(folder);

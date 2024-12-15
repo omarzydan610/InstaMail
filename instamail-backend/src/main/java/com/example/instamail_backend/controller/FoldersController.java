@@ -24,9 +24,13 @@ public class FoldersController {
 
     @PostMapping("/create-folder")
     public String createFolder(@RequestHeader("Authorization") String token, @RequestBody Map<String, String> request) {
+        System.out.println(request.get("name"));
+        System.out.println(token);
         foldersService.createFolder(token, request);
+        
         return "success";
     }
+
     @DeleteMapping("/delete-folder/{folderId}")
     public String deleteFolder(@RequestHeader("Authorization") String token, @PathVariable Long folderId) {
         foldersService.deleteFolder(token, folderId);

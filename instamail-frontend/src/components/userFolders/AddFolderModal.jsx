@@ -1,14 +1,22 @@
 import React, { useState } from "react";
+import FolderService from "../../services/folderService";
 
 const AddFolderModal = ({ isOpen, onClose, onSave }) => {
   const [folderName, setFolderName] = useState("");
 
   if (!isOpen) return null;
 
-  const handleSave = () => {
-    onSave(folderName);
-    setFolderName("");
+  const handleSave = async () => {
+    try {
+      const response = await FolderService.createFolder(folderName);
+      console.log('Folder created successfully:', response);
+      setFolderName("");
+    } catch (error) {
+      console.error('Error creating folder:', error);
+      alert('There was an error creating the folder. Please try again.');
+    }
   };
+  
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
