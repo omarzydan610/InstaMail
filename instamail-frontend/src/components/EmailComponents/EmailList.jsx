@@ -1,17 +1,16 @@
-import React, { useState, useEffect,} from "react";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import NormalEmailModal from "./NormalEmailModal";
 import DraftedEmailModal from "./DraftedEmailModal";
 import TrashEmailModal from "./TrashEmailModal";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import MailsService from "../../services/MailsService";
 
-const EmailList = ({ activeCategory }) => {
+const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
   const { emails, setEmails, fetchEmails } = useAppContext();
-  const [currentPage, setCurrentPage] = useState(1);
-  const emailsPerPage = 5;
 
-  // Add new state variables for pagination
+  const emailsPerPage = 5;
   const IndexOfLastEmail = currentPage * emailsPerPage;
   const IndexOfFirstEmail = IndexOfLastEmail - emailsPerPage;
   const [currentEmails, setCurrentEmails] = useState(
@@ -25,9 +24,19 @@ const EmailList = ({ activeCategory }) => {
   }, [emails, currentPage]);
   useEffect(() => {
     setCurrentPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory]);
 
-  const handleEmailClick = (email) => {
+  const handleEmailClick = async (email) => {
+    if (activeCategory === "Inbox" && !email.isRead) {
+      console.log(email.isRead);
+      setEmails((prevEmails) =>
+        prevEmails.map((prevEmail) =>
+          prevEmail.id === email.id ? { ...prevEmail, isRead: true } : prevEmail
+        )
+      );
+      await MailsService.markAsRead(email.id);
+    }
     setSelectedEmail(email);
   };
 
@@ -61,6 +70,7 @@ const EmailList = ({ activeCategory }) => {
         email={selectedEmail}
         onClose={handleCloseModal}
         setEmails={setEmails}
+        setCurrentPage={setCurrentPage}
       />
     );
   } else if (activeCategory === "Inbox" && selectedEmail) {
@@ -69,6 +79,7 @@ const EmailList = ({ activeCategory }) => {
         email={selectedEmail}
         onClose={handleCloseModal}
         setEmails={setEmails}
+        setCurrentPage={setCurrentPage}
       />
     );
   } else if (activeCategory === "Drafts" && selectedEmail) {
@@ -77,6 +88,7 @@ const EmailList = ({ activeCategory }) => {
         email={selectedEmail}
         onClose={handleCloseModal}
         setEmails={setEmails}
+        setCurrentPage={setCurrentPage}
       />
     );
   } else if (activeCategory === "Trash" && selectedEmail) {
@@ -85,6 +97,7 @@ const EmailList = ({ activeCategory }) => {
         email={selectedEmail}
         onClose={handleCloseModal}
         setEmails={setEmails}
+        setCurrentPage={setCurrentPage}
       />
     );
   } else if (activeCategory === "Starred" && selectedEmail) {
@@ -94,6 +107,7 @@ const EmailList = ({ activeCategory }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         activeCategory={activeCategory}
+        setCurrentPage={setCurrentPage}
       />
     );
   }
@@ -109,15 +123,22 @@ const EmailList = ({ activeCategory }) => {
               className="email-item border-b p-4 hover:bg-gray-100 cursor-pointer"
               onClick={() => handleEmailClick(email)}
             >
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-start">
                 {activeCategory === "Inbox" ? (
                   <>
                     <h6 className="text-lg font-semibold text-green-600">
                       {email.senderEmail}
                     </h6>
-                    <span className="text-sm text-gray-500">
-                      {formatDate(email.createdAt)}
-                    </span>
+                    {email.isRead ? (
+                      <span className="text-sm text-gray-500">
+                        {formatDate(email.createdAt)}
+                      </span>
+                    ) : (
+                      <span className="text-sm text-green-500 font-bold flex items-center gap-1 flex-col">
+                        <span>New</span>
+                        {formatDate(email.createdAt)}
+                      </span>
+                    )}
                   </>
                 ) : (
                   (activeCategory === "Sent" ||

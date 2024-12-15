@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import ComposeEmail from "../ComposeEmailComponents/ComposeEmail";
 import { useAppContext } from "../../contexts/AppContext";
-const FloatingButton = () => {
+const FloatingButton = ({ activeCategory, setCurrentPage }) => {
   const [isComposeVisible, setComposeVisible] = useState(false);
 
   const [contactsList, setContactsList] = useState([]);
-  const { fetchContacts, fetchContactEmails } = useAppContext();
+  const { fetchContacts, fetchContactEmails, fetchEmails } = useAppContext();
   const handleButtonClick = async () => {
     const contacts = await fetchContacts();
     setContactsList([]);
@@ -24,7 +24,9 @@ const FloatingButton = () => {
     setContactsList(contactsWithEmails);
     setComposeVisible(true);
   };
-  const closeComposeEmail = () => {
+  const closeComposeEmail = async () => {
+    await fetchEmails(String(activeCategory), 0, 6, true);
+    setCurrentPage(1);
     setComposeVisible(false);
   };
 
@@ -40,7 +42,11 @@ const FloatingButton = () => {
       </div>
 
       {isComposeVisible && (
-        <ComposeEmail onClose={closeComposeEmail} contacts={contactsList} />
+        <ComposeEmail
+          onClose={closeComposeEmail}
+          contacts={contactsList}
+          activeCategory={activeCategory}
+        />
       )}
     </div>
   );

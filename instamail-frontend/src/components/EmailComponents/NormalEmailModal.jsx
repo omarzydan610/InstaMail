@@ -2,14 +2,21 @@ import React, { useState } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import MailsService from "../../services/MailsService";
 
-const NormalEmailModal = ({ email, onClose, setEmails, activeCategory }) => {
+const NormalEmailModal = ({
+  email,
+  onClose,
+  setEmails,
+  activeCategory,
+  setCurrentPage,
+}) => {
   const { userEmail, fetchEmails } = useAppContext();
 
-  const handleDelete = () => {
-    MailsService.toggleDeletion(email.id);
+  const handleDelete = async () => {
+    await MailsService.toggleDeletion(email.id);
     setEmails((prevEmails) =>
       prevEmails.filter((prevEmail) => prevEmail.id !== email.id)
     );
+    setCurrentPage(1);
     onClose();
   };
   const [isStarred, setIsStarred] = useState(
@@ -39,9 +46,9 @@ const NormalEmailModal = ({ email, onClose, setEmails, activeCategory }) => {
           : prevEmail
       )
     );
-    console.log(activeCategory);
     if (activeCategory === "Starred") {
-      fetchEmails("Starred", 0, 6, true);
+      await fetchEmails("Starred", 0, 6, true);
+      setCurrentPage(1);
     }
   };
 
