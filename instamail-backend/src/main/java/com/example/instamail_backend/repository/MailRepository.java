@@ -22,14 +22,6 @@ public interface MailRepository extends JpaRepository<Mail, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Mail m SET m.senderPriority = :priority WHERE m.id = :mailId AND m.senderEmail = :senderEmail")
-    public void updateMailPrioritySender(@Param("mailId") long mailId, @Param("priority") int priority, @Param("senderEmail") String senderEmail);
-    @Modifying
-    @Transactional
-    @Query("UPDATE Mail m SET m.receiverPriority = :priority WHERE m.id = :mailId AND m.receiverEmail = :receiverEmail")
-    public void updateMailPriorityReceiver(@Param("mailId") long mailId, @Param("priority") int priority, @Param("receiverEmail") String receiverEmail);
-    @Modifying
-    @Transactional
     @Query("UPDATE Mail m SET m.senderFolderId = :folderId WHERE m.id = :mailId AND m.senderEmail = :senderEmail")
     public void updateMailFolderIdSender(@Param("mailId") long mailId, @Param("folderId") Long folderId, @Param("senderEmail") String senderEmail);
     @Modifying

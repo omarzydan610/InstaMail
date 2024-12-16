@@ -92,7 +92,8 @@ public class MailController {
     }
 
     @DeleteMapping("/delete-permanently/{mailId}")
-    public ResponseEntity<?> deletePermanently(@RequestHeader("Authorization") String token, @PathVariable long mailId) {
+    public ResponseEntity<?> deletePermanently(@RequestHeader("Authorization") String token,
+            @PathVariable long mailId) {
         return ResponseEntity.ok(addUpdateMailService.deleteMailPermanently(mailId, token));
     }
 
@@ -106,23 +107,16 @@ public class MailController {
         return ResponseEntity.ok(addUpdateMailService.markAsRead(mailId, token));
     }
 
-    @PutMapping("/{mailId}/priority")
-    public String updateMailPriority(@RequestHeader("Authorization") String token, @PathVariable long mailId,
-            @RequestBody int priority) {
-        // TODO: process PUT request
-        addUpdateMailService.updateMailPrioritySenderorReceiver(mailId, priority, token);
+    @PutMapping("/change-folder/{mailId}")
+    public String updateMailFolderId(@RequestHeader("Authorization") String token, @PathVariable long mailId,
+            @RequestBody Map<String, Long> request) {
+        addUpdateMailService.updateMailFolderId(mailId, request.get("folderId"), token);
         return "success";
-
     }
+
     // @GetMapping("/get-attachments/{mailId}")
     // public ResponseEntity<?> getAttachments(@PathVariable long mailId){
     // return ResponseEntity.ok(getMailServer.getAttachments(mailId));
     // }
-    @PutMapping("/change-folder/{mailId}")
-    public String updateMailFolderId(@RequestHeader("Authorization") String token, @PathVariable long mailId, @RequestBody Map<String, Long> request) {
-        //TODO: process PUT request
-        addUpdateMailService.updateMailFolderId(mailId, request.get("folderId"), token);
-        return "success";
-    }
 
 }

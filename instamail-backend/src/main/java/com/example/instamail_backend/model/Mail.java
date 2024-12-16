@@ -30,8 +30,7 @@ public class Mail {
     private Boolean isRead;
     private Boolean isDraft;
 
-    private Integer senderPriority;
-    private Integer receiverPriority;
+    private Integer priority;
 
     private Boolean isSenderStarred;
     private Boolean isReceiverStarred;
@@ -49,13 +48,12 @@ public class Mail {
 
     }
 
-    public Mail(String receiverEmail, String subject, String content) {
+    public Mail(String receiverEmail, String subject, String content, Integer priority) {
         this.senderEmail = null;
         this.receiverEmail = receiverEmail;
         this.subject = subject;
         this.content = content;
-        this.senderPriority = 0;
-        this.receiverPriority = 0;
+        this.priority = priority;
         this.senderFolderId = 0L;
         this.receiverFolderId = 0L;
         this.isSenderStarred = false;
