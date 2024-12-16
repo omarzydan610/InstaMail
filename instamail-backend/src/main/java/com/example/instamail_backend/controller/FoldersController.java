@@ -50,4 +50,8 @@ public class FoldersController {
         foldersService.renameFolder(token, folderId, folderName);
         return "success";
     }
+    @GetMapping("/get-folder-name/{folderId}")
+    public String getFolderName(@RequestHeader("Authorization") String token, @PathVariable Long folderId) {
+        return foldersService.getFolderName(token, folderId);
+    }
 }

@@ -70,6 +70,15 @@ class FolderService {
     });
     return response.data;
   }
+
+  static async getFolderName(folderId) {
+    const token = localStorage.getItem("authToken");
+    const response = await api.get(`/get-folder-name/${folderId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log("response", response);
+    return response.data;
+  }
 }
 
 export default FolderService;

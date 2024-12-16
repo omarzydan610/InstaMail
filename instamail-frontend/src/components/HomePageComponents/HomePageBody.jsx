@@ -74,6 +74,7 @@ const HomePageBody = ({
   const handleRenameConfirm = async (newName) => {
     await FolderService.renameFolder(activeCategory.id, newName);
     activeCategory.name = newName;
+    console.log(newName);
     setIsRenameModalOpen(false);
   };
 
