@@ -35,12 +35,12 @@ class FolderService {
     return response.data;
   }
 
-  static async getMailsByFolderId(folderId, start, size) {
+  static async getMailsByFolderId(folderId, start, size, sortStrategy) {
     console.log(folderId);
     const token = localStorage.getItem("authToken");
     const response = await api.get(`/get-folders-mails/${folderId}`, {
       headers: { Authorization: `Bearer ${token}` },
-      params: { start: start, size: size },
+      params: { start: start, size: size, sortStrategy: sortStrategy },
     });
     console.log(response.data);
     return response.data;

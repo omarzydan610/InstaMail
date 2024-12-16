@@ -5,11 +5,11 @@ import DraftedEmailModal from "./DraftedEmailModal";
 import TrashEmailModal from "./TrashEmailModal";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import MailsService from "../../services/MailsService";
-import FolderService from "../../services/folderService";
 
 const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
-  const { emails, setEmails, fetchEmails } = useAppContext();
+  const { emails, setEmails, fetchEmails, fetchEmailsForFolder } =
+    useAppContext();
 
   const emailsPerPage = 5;
   const IndexOfLastEmail = currentPage * emailsPerPage;
@@ -22,7 +22,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   useEffect(() => {
     setCurrentEmails(emails.slice(IndexOfFirstEmail, IndexOfLastEmail));
     setTotalPages(Math.ceil(emails.length / emailsPerPage));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emails, currentPage]);
 
   useEffect(() => {
@@ -31,21 +31,8 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
       fetchEmailsForFolder(activeCategory.id, 0, 6, true);
     }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory]);
-
-  const fetchEmailsForFolder = async (categoryId, start, size, clear) => {
-    const emails = await FolderService.getMailsByFolderId(
-      categoryId,
-      start,
-      size
-    );
-    if (clear) {
-      setEmails(emails);
-    } else {
-      setEmails((prevEmails) => [...prevEmails, ...emails]);
-    }
-  };
 
   const handleEmailClick = async (email) => {
     if (activeCategory === "Inbox" && !email.isRead) {
@@ -202,7 +189,16 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
                   )
                 )}
               </div>
-              <p className="text-gray-700 mt-1">{email.subject}</p>
+              <div className="flex justify-between items-center">
+                <p className="text-gray-700 mt-1">{email.senderEmail}</p>
+                {activeCategory !== "Inbox" &&
+                  activeCategory !== "Sent" &&
+                  activeCategory !== "Drafts" && (
+                    <span className="text-sm text-gray-500">
+                      {formatDate(email.createdAt)}
+                    </span>
+                  )}
+              </div>
             </div>
           ))
         ) : (

@@ -1,4 +1,4 @@
-package com.example.instamail_backend.DesginPattern;
+package com.example.instamail_backend.DesginPattern.Filter;
 
 import java.util.ArrayList;
 import java.util.List;
