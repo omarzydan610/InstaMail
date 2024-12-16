@@ -7,6 +7,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.instamail_backend.DesginPattern.Strategy.MailSorter;
+import com.example.instamail_backend.DesginPattern.Strategy.SortByDateAsc;
+import com.example.instamail_backend.DesginPattern.Strategy.SortByDateDecs;
+import com.example.instamail_backend.DesginPattern.Strategy.SortByPriority;
+import com.example.instamail_backend.DesginPattern.Strategy.SortBySubjectAsc;
+import com.example.instamail_backend.DesginPattern.Strategy.SortBySubjectDesc;
 import com.example.instamail_backend.model.Folders;
 import com.example.instamail_backend.model.Mail;
 import com.example.instamail_backend.model.User;
@@ -37,7 +43,7 @@ public class FoldersService {
         return foldersRepository.findByUserId(userId);
     }
 
-    public List<Mail> getMailsByFolderId(String token, Long folderId, int start, int size) {
+    public List<Mail> getMailsByFolderId(String token, Long folderId, int start, int size, int sortStrategy) {
         Long userId;
         try {
             userId = userService.getIdByToken(token);
@@ -48,6 +54,26 @@ public class FoldersService {
         List<Mail> mails = mailsRepository.findByFolderIdSender(folderId, user.getEmail());
         List<Mail> mails2 = mailsRepository.findByFolderIdReceiver(folderId, user.getEmail());
         mails.addAll(mails2);
+
+        MailSorter mailSorter = new MailSorter();
+        switch (sortStrategy) {
+            case 1:
+                mailSorter.setSortStrategy(new SortByDateAsc());
+                break;
+            case 2:
+                mailSorter.setSortStrategy(new SortByDateDecs());
+                break;
+            case 3:
+                mailSorter.setSortStrategy(new SortBySubjectAsc());
+                break;
+            case 4:
+                mailSorter.setSortStrategy(new SortBySubjectDesc());
+                break;
+            case 5:
+                mailSorter.setSortStrategy(new SortByPriority());
+                break;
+        }
+        mails = mailSorter.sort(mails);
         if (mails.size() == 0 || start >= mails.size()) {
             return new ArrayList<>();
         }

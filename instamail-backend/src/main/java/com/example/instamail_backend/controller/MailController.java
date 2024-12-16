@@ -52,33 +52,38 @@ public class MailController {
 
     @GetMapping("/get-mails/inbox")
     public ResponseEntity<?> getReceivedMails(@RequestHeader("Authorization") String token,
-            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "1") int sortStrategy) {
         System.out.println("inbox");
-        return ResponseEntity.ok(getMailService.getMails(token, "inbox", start, size));
+        return ResponseEntity.ok(getMailService.getMails(token, "inbox", start, size, sortStrategy));
     }
 
     @GetMapping("/get-mails/sent")
     public ResponseEntity<?> getSentMails(@RequestHeader("Authorization") String token,
-            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
-        return ResponseEntity.ok(getMailService.getMails(token, "sent", start, size));
+            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "1") int sortStrategy) {
+        return ResponseEntity.ok(getMailService.getMails(token, "sent", start, size, sortStrategy));
     }
 
     @GetMapping("/get-mails/deleted")
     public ResponseEntity<?> getDeletedMails(@RequestHeader("Authorization") String token,
-            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
-        return ResponseEntity.ok(getMailService.getMails(token, "deleted", start, size));
+            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "1") int sortStrategy) {
+        return ResponseEntity.ok(getMailService.getMails(token, "deleted", start, size, sortStrategy));
     }
 
     @GetMapping("/get-mails/drafted")
     public ResponseEntity<?> getDraftedMails(@RequestHeader("Authorization") String token,
-            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
-        return ResponseEntity.ok(getMailService.getMails(token, "drafted", start, size));
+            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "1") int sortStrategy) {
+        return ResponseEntity.ok(getMailService.getMails(token, "drafted", start, size, sortStrategy));
     }
 
     @GetMapping("/get-mails/starred")
     public ResponseEntity<?> getStarredMails(@RequestHeader("Authorization") String token,
-            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
-        return ResponseEntity.ok(getMailService.getMails(token, "starred", start, size));
+            @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "1") int sortStrategy) {
+        return ResponseEntity.ok(getMailService.getMails(token, "starred", start, size, sortStrategy));
     }
 
     @PutMapping("/toggle-star/{mailId}")

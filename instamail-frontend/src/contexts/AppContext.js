@@ -18,6 +18,14 @@ export const AppProvider = ({ children }) => {
   const [isFetalError, setIsFetalError] = useState(false);
   const [selectedContactEmails, setSelectedContactEmails] = useState(null);
   const [folders, setFolders] = useState([]);
+  const sortingTechniques = {
+    1: "Date Asc",
+    2: "Date Desc",
+    3: "Subject Asc",
+    4: "Subject Desc",
+    5: "Priority",
+  };
+  const [sortStrategy, setSortStrategy] = useState(1);
 
   const fetchContacts = async () => {
     try {
@@ -41,13 +49,11 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-
   const fetchContactEmails = async (contact) => {
     try {
       const contactData = await ContactService.getEmails(contact.contactId);
       const contactEmails = contactData.map((item) => item.email);
       console.log("contactEmails", contactEmails);
-      setSelectedContactEmails(contactEmails);
       return contactEmails;
     } catch (error) {
       console.error("Failed to fetch contact emails:", error);
@@ -55,6 +61,21 @@ export const AppProvider = ({ children }) => {
     }
   };
   const [emails, setEmails] = useState([]);
+
+  const fetchEmailsForFolder = async (categoryId, start, size, clear) => {
+    console.log("sortStrategy", sortStrategy);
+    const emails = await FolderService.getMailsByFolderId(
+      categoryId,
+      start,
+      size,
+      sortStrategy
+    );
+    if (clear) {
+      setEmails(emails);
+    } else {
+      setEmails((prevEmails) => [...prevEmails, ...emails]);
+    }
+  };
 
   useEffect(() => {
     if (username) {
@@ -64,6 +85,7 @@ export const AppProvider = ({ children }) => {
   }, [username]);
 
   const fetchEmails = async (type, start, size, clear) => {
+    console.log("sortStrategy", sortStrategy);
     type = type.toLowerCase();
     switch (type) {
       case "inbox":
@@ -83,7 +105,7 @@ export const AppProvider = ({ children }) => {
         break;
     }
     console.log("fetchEmails", type, start, size, clear);
-    const emails = await MailsService.getMails(type, start, size);
+    const emails = await MailsService.getMails(type, start, size, sortStrategy);
     console.log("emails", emails);
     if (clear) {
       setEmails([]);
@@ -120,6 +142,10 @@ export const AppProvider = ({ children }) => {
     folders,
     setFolders,
     fetchFolders,
+    sortStrategy,
+    setSortStrategy,
+    sortingTechniques,
+    fetchEmailsForFolder,
   };
 
   return (
