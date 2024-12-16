@@ -52,8 +52,25 @@ const TrashEmailModal = ({ email, onClose, setCurrentPage }) => {
         </button>
 
         {/* Trash Badge */}
-        <div className="inline-block px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium mb-4">
-          Deleted Email
+        <div className="flex gap-2 mb-4">
+          <div className="inline-block px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">
+            Deleted Email
+          </div>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium ${
+              email.priority === 3
+                ? "bg-red-200 text-red-800"
+                : email.priority === 2
+                ? "bg-yellow-200 text-yellow-800"
+                : "bg-blue-200 text-blue-800"
+            }`}
+          >
+            {email.priority === 3
+              ? "Important"
+              : email.priority === 2
+              ? "Normal"
+              : "Spam"}
+          </span>
         </div>
 
         {/* Email Content */}

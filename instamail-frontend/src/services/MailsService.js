@@ -4,10 +4,22 @@ class MailsService {
   static async addMail(mail, draft) {
     const receiver = mail.Recipients[0];
     const remainingReceivers = mail.Recipients.slice(1);
+    console.log("mail.priority", mail.priority);
+
+    var priority = 0;
+    if (mail.priority === "important") {
+      priority = 3;
+    } else if (mail.priority === "normal") {
+      priority = 2;
+    } else if (mail.priority === "spam") {
+      priority = 1;
+    }
+
     const mailToSend = {
       subject: mail.subject,
       content: mail.body,
       receiverEmail: receiver,
+      priority: priority,
     };
     const requestData = {
       mail: mailToSend,

@@ -20,6 +20,7 @@ const NormalEmailModal = ({
   const [selectedFolder, setSelectedFolder] = useState(""); // Track the selected folder
   const [showFolderModal, setShowFolderModal] = useState(false); // Control the folder modal visibility
   const [currentFolderName, setCurrentFolderName] = useState("");
+  const [selectedFolderName, setSelectedFolderName] = useState(""); // Track the selected folder
 
   const getFolderName = async () => {
     const folderId =
@@ -34,6 +35,7 @@ const NormalEmailModal = ({
     try {
       const folderName = await FolderService.getFolderName(folderId);
       setCurrentFolderName(folderName);
+      setSelectedFolderName(folderName);
     } catch (error) {
       console.error("Error fetching folder name:", error);
       setCurrentFolderName("Unknown folder");
@@ -43,9 +45,6 @@ const NormalEmailModal = ({
   useEffect(() => {
     getFolderName();
   }, []);
-
-  const [selectedFolderName, setSelectedFolderName] =
-    useState(currentFolderName); // Track the selected folder
 
   // Handle Star Toggle
   const handleStarToggle = async () => {
@@ -151,9 +150,26 @@ const NormalEmailModal = ({
         <div className="space-y-6">
           <div className="space-y-4">
             <div className="pb-4 border-b dark:border-gray-700 flex justify-between items-center">
-              <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-                {email.subject}
-              </h2>
+              <div className="flex items-center gap-4 justify-between">
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
+                  {email.subject}
+                </h2>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    email.priority === 3
+                      ? "bg-red-200 text-red-800"
+                      : email.priority === 2
+                      ? "bg-yellow-200 text-yellow-800"
+                      : "bg-blue-200 text-blue-800"
+                  }`}
+                >
+                  {email.priority === 3
+                    ? "Important"
+                    : email.priority === 2
+                    ? "Normal"
+                    : "Spam"}
+                </span>
+              </div>
               {typeof activeCategory !== "object" && (
                 <>
                   <div className="px-8 py-2 bg-gray-100 dark:bg-gray-700 rounded-full text-base font-semibold flex items-center gap-2">

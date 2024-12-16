@@ -1,4 +1,4 @@
-import React from "react";
+import React ,{useState} from "react";
 import { FaSave, FaPaperPlane, FaTimes, FaUserFriends } from "react-icons/fa";
 import ActionButton from "./Button";
 import AttachmentsSection from "./AttachmentsComponents/AttachmentsSection";
@@ -35,8 +35,9 @@ const EmailForm = ({
       setError("Please enter a valid email address");
     }
   };
-  const [subject, setSubject] = React.useState("");
-  const [body, setBody] = React.useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] =useState("");
+  const [priority, setPriority] = useState("normal");
 
   const removeRecipient = (index) => {
     setRecipients((prev) => prev.filter((_, i) => i !== index));
@@ -64,6 +65,7 @@ const EmailForm = ({
       Recipients: recipients,
       subject: subject,
       body: body,
+      priority: priority,
     };
 
     // Validation checks
@@ -91,6 +93,7 @@ const EmailForm = ({
       Recipients: recipients,
       subject: subject,
       body: body,
+      priority: priority,
     };
 
     // Validation checks
@@ -189,20 +192,38 @@ const EmailForm = ({
           {children}
         </div>
 
-        <div className="mb-2">
-          <label htmlFor="subject" className="block text-xs font-medium">
-            Subject
-          </label>
-          <input
-            id="subject"
-            type="text"
-            required
-            className={inputStyles}
-            placeholder="Subject"
-            onChange={(e) => {
-              setSubject(e.target.value);
-            }}
-          />
+        <div className="mb-2 flex gap-2">
+          <div className="flex-grow">
+            <label htmlFor="subject" className="block text-xs font-medium">
+              Subject
+            </label>
+            <input
+              id="subject"
+              type="text"
+              required
+              className={inputStyles}
+              placeholder="Subject"
+              onChange={(e) => {
+                setSubject(e.target.value);
+              }}
+            />
+          </div>
+          
+          <div className="w-1/4">
+            <label htmlFor="priority" className="block text-xs font-medium">
+              Priority
+            </label>
+            <select
+              id="priority"
+              className={`${inputStyles} w-full`}
+              onChange={(e) => setPriority(e.target.value)}
+              defaultValue="normal"
+            >
+              <option value="important">Important</option>
+              <option value="normal">Normal</option>
+              <option value="spam">Spam</option>
+            </select>
+          </div>
         </div>
 
         <div className="mb-4">
