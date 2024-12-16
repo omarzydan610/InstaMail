@@ -15,7 +15,7 @@ const ContactsList = ({ contacts, onSelectContact }) => {
         {contacts.map((contact) => (
           <li
             key={contact.contactId}
-            className="p-4 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer"
+            className="p-4 bg-gray-200 hover:bg-gray-300 rounded cursor-pointer"
             onClick={() => onSelectContact(contact)}
           >
             {contact.contactName}

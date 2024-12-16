@@ -174,4 +174,12 @@ public class AddUpdateMailService {
         mailRepository.updateMailPriorityReceiver(mailId, priority, user.getEmail());
     }
 
+    public void updateMailFolderId(long mailId, Long folderId, String token) {
+        long userId = userService.getIdByToken(token);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        mailRepository.updateMailFolderIdSender(mailId, folderId, user.getEmail());
+        mailRepository.updateMailFolderIdReceiver(mailId, folderId, user.getEmail());
+    }
+    
+
 }

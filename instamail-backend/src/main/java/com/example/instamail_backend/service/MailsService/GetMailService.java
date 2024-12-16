@@ -32,13 +32,6 @@ public class GetMailService {
         long userId = userService.getIdByToken(token);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         List<Mail> mails = mailRepository.findBySenderEmailOrReceiverEmail(user.getEmail(), user.getEmail());
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println(mails.size());
         if (type.equals("inbox")) {
             InboxCriteria inboxCriteria = new InboxCriteria(user.getEmail());
             mails = inboxCriteria.meetCriteria(mails);

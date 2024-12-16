@@ -1,14 +1,24 @@
-import React from 'react';
+import React from "react";
 import { FaFolder } from "react-icons/fa";
-import { STYLES } from './constants';
+import { STYLES } from "./constants";
 
-const FolderList = ({ folders, activeCategory, onCategoryClick, onAddFolderClick }) => (
+const FolderList = ({
+  folders,
+  activeCategory,
+  onCategoryClick,
+  onAddFolderClick,
+}) => (
   <ul className="ml-6">
     {folders.map((folder) => (
       <li
         key={folder.id}
-        className={`${STYLES.folderItem} ${activeCategory === folder.name ? STYLES.activeCategory : ""}`}
-        onClick={() => onCategoryClick(folder.name)}
+        className={`${STYLES.folderItem} ${
+          typeof activeCategory === "object" &&
+          activeCategory.name === folder.name
+            ? STYLES.activeCategory
+            : ""
+        }`}
+        onClick={() => onCategoryClick(folder)}
       >
         <FaFolder />
         <span className="pl-2">{folder.name}</span>
@@ -20,4 +30,4 @@ const FolderList = ({ folders, activeCategory, onCategoryClick, onAddFolderClick
   </ul>
 );
 
-export default FolderList; 
+export default FolderList;

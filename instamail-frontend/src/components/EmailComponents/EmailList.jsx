@@ -5,6 +5,7 @@ import DraftedEmailModal from "./DraftedEmailModal";
 import TrashEmailModal from "./TrashEmailModal";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import MailsService from "../../services/MailsService";
+import FolderService from "../../services/folderService";
 
 const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
@@ -17,19 +18,37 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     emails.slice(IndexOfFirstEmail, IndexOfLastEmail)
   );
   const [totalPages, setTotalPages] = useState(0);
+
   useEffect(() => {
     setCurrentEmails(emails.slice(IndexOfFirstEmail, IndexOfLastEmail));
     setTotalPages(Math.ceil(emails.length / emailsPerPage));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emails, currentPage]);
+
   useEffect(() => {
     setCurrentPage(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (activeCategory.id) {
+      fetchEmailsForFolder(activeCategory.id, 0, 6, true);
+    }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory]);
+
+  const fetchEmailsForFolder = async (categoryId, start, size, clear) => {
+    const emails = await FolderService.getMailsByFolderId(
+      categoryId,
+      start,
+      size
+    );
+    if (clear) {
+      setEmails(emails);
+    } else {
+      setEmails((prevEmails) => [...prevEmails, ...emails]);
+    }
+  };
 
   const handleEmailClick = async (email) => {
     if (activeCategory === "Inbox" && !email.isRead) {
-      console.log(email.isRead);
       setEmails((prevEmails) =>
         prevEmails.map((prevEmail) =>
           prevEmail.id === email.id ? { ...prevEmail, isRead: true } : prevEmail
@@ -43,14 +62,28 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const handleCloseModal = () => {
     setSelectedEmail(null);
   };
-  const nextPage = () => {
-    console.log("currentPage", currentPage);
+
+  const nextPage = async () => {
+    console.log("emailsss", emails);
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     if (emails.length > 5 * currentPage + 1) {
-      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
       return;
     }
-    fetchEmails(activeCategory, currentPage * 5 + 1, emailsPerPage, false);
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    if (activeCategory.id) {
+      await fetchEmailsForFolder(
+        activeCategory.id,
+        currentPage * 5 + 1,
+        emailsPerPage,
+        false
+      );
+    } else {
+      await fetchEmails(
+        activeCategory,
+        currentPage * 5 + 1,
+        emailsPerPage,
+        false
+      );
+    }
   };
 
   const formatDate = (dateString) => {
@@ -71,6 +104,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Inbox" && selectedEmail) {
@@ -80,6 +114,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Drafts" && selectedEmail) {
@@ -89,6 +124,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Trash" && selectedEmail) {
@@ -98,6 +134,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Starred" && selectedEmail) {
@@ -108,6 +145,17 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         setEmails={setEmails}
         activeCategory={activeCategory}
         setCurrentPage={setCurrentPage}
+      />
+    );
+  } else if (activeCategory.id && selectedEmail) {
+    emailModal = (
+      <NormalEmailModal
+        email={selectedEmail}
+        onClose={handleCloseModal}
+        setEmails={setEmails}
+        setCurrentPage={setCurrentPage}
+        fetchEmailsForFolder={fetchEmailsForFolder}
+        activeCategory={activeCategory}
       />
     );
   }

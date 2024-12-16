@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import ContactService from "../services/ContactsService";
 import MailsService from "../services/MailsService";
+import FolderService from "../services/folderService";
 // Create the context
 const AppContext = createContext();
 
@@ -16,6 +17,8 @@ export const AppProvider = ({ children }) => {
   const [contacts, setContacts] = useState([]);
   const [isFetalError, setIsFetalError] = useState(false);
   const [selectedContactEmails, setSelectedContactEmails] = useState(null);
+  const [folders, setFolders] = useState([]);
+
   const fetchContacts = async () => {
     try {
       const data = await ContactService.getContacts();
@@ -26,6 +29,18 @@ export const AppProvider = ({ children }) => {
       setIsFetalError(true);
     }
   };
+
+  const fetchFolders = async () => {
+    try {
+      const data = await FolderService.getFolders();
+      setFolders(data);
+      return data;
+    } catch (error) {
+      console.error("Failed to fetch folders:", error);
+      setIsFetalError(true);
+    }
+  };
+
 
   const fetchContactEmails = async (contact) => {
     try {
@@ -44,6 +59,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     if (username) {
       fetchEmails("inbox", 0, 6, true);
+      fetchFolders();
     }
   }, [username]);
 
@@ -101,6 +117,9 @@ export const AppProvider = ({ children }) => {
     setSelectedContactEmails,
     fetchContactEmails,
     fetchEmails,
+    folders,
+    setFolders,
+    fetchFolders,
   };
 
   return (
