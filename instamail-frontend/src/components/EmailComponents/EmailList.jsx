@@ -27,15 +27,21 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   useEffect(() => {
     setCurrentPage(1);
     if (activeCategory.id) {
-      fetchEmailsForCategory(activeCategory.id);
-      
+      fetchEmailsForFolder(activeCategory.id, 0, 6, true);
     }
   }, [activeCategory]);
 
-  const fetchEmailsForCategory = async (categoryId) => {
-    console.log("nice");
-    const emails = await FolderService.getMailsByFolderId(categoryId);
-    setEmails(emails);
+  const fetchEmailsForFolder = async (categoryId, start, size, clear) => {
+    const emails = await FolderService.getMailsByFolderId(
+      categoryId,
+      start,
+      size
+    );
+    if (clear) {
+      setEmails(emails);
+    } else {
+      setEmails((prevEmails) => [...prevEmails, ...emails]);
+    }
   };
 
   const handleEmailClick = async (email) => {
@@ -54,13 +60,27 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     setSelectedEmail(null);
   };
 
-  const nextPage = () => {
+  const nextPage = async () => {
+    console.log("emailsss", emails);
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     if (emails.length > 5 * currentPage + 1) {
-      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
       return;
     }
-    fetchEmails(activeCategory, currentPage * 5 + 1, emailsPerPage, false);
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    if (activeCategory.id) {
+      await fetchEmailsForFolder(
+        activeCategory.id,
+        currentPage * 5 + 1,
+        emailsPerPage,
+        false
+      );
+    } else {
+      await fetchEmails(
+        activeCategory,
+        currentPage * 5 + 1,
+        emailsPerPage,
+        false
+      );
+    }
   };
 
   const formatDate = (dateString) => {

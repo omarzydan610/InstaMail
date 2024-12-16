@@ -1,5 +1,6 @@
 package com.example.instamail_backend.service.MailsService;
 
+import java.util.ArrayList;
 import java.util.List;  
 import java.util.Map;
 
@@ -32,13 +33,18 @@ public class FoldersService {
         Long userId = userService.getIdByToken(token);
         return foldersRepository.findByUserId(userId);
     }
-    public List<Mail> getMailsByFolderId(String token, Long folderId) {
+    public List<Mail> getMailsByFolderId(String token, Long folderId,int start, int size) {
         Long userId = userService.getIdByToken(token);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         List<Mail> mails = mailsRepository.findByFolderIdSender(folderId, user.getEmail());
         List<Mail> mails2 = mailsRepository.findByFolderIdReceiver(folderId, user.getEmail());
         mails.addAll(mails2);
-        return mails;
+        if (mails.size() == 0 || start >= mails.size()) {
+            return new ArrayList<>();
+        }
+        System.out.println("start:" + start);
+        System.out.println("size:" + Math.min(start + size, mails.size()));
+        return mails.subList(start, Math.min(start + size, mails.size()));
     }
     public Folders createFolder(String token, Map<String, String> request) {
         Long userId = userService.getIdByToken(token);
