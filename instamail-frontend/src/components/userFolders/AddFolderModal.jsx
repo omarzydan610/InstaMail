@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import FolderService from "../../services/folderService";
+import { useAppContext } from "../../contexts/AppContext";
 
 const AddFolderModal = ({ isOpen, onClose, onSave }) => {
   const [folderName, setFolderName] = useState("");
+  const { fetchFolders } = useAppContext();
 
   if (!isOpen) return null;
 
@@ -11,10 +13,12 @@ const AddFolderModal = ({ isOpen, onClose, onSave }) => {
       const response = await FolderService.createFolder(folderName);
       console.log('Folder created successfully:', response);
       setFolderName("");
+      onClose();
     } catch (error) {
       console.error('Error creating folder:', error);
       alert('There was an error creating the folder. Please try again.');
     }
+    fetchFolders();
   };
   
 

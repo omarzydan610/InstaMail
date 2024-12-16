@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.instamail_backend.model.Folders;
@@ -37,16 +38,20 @@ public class FoldersController {
         return "success";
     }
     @GetMapping("/get-folders-mails/{folderId}")
-    public List<Mail> getMailsByFolderId(@RequestHeader("Authorization") String token, @PathVariable Long folderId) {
-        return foldersService.getMailsByFolderId(token, folderId);
+    public List<Mail> getMailsByFolderId(@RequestHeader("Authorization") String token, @PathVariable Long folderId, @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size) {
+        return foldersService.getMailsByFolderId(token, folderId, start, size);
     }
     @GetMapping("/get-folders")
     public List<Folders> getFolders(@RequestHeader("Authorization") String token) {
         return foldersService.getFoldersByUserId(token);
     }
-    @PutMapping("/update-folder-name/{folderId}")
-    public String updateFolder(@RequestHeader("Authorization") String token, @PathVariable Long folderId, @RequestBody String folderName) {
-        foldersService.updateFolder(token, folderId, folderName);
+    @PutMapping("/rename-folder/{folderId}")
+    public String renameFolder(@RequestHeader("Authorization") String token, @PathVariable Long folderId, @RequestBody String folderName) {
+        foldersService.renameFolder(token, folderId, folderName);
         return "success";
+    }
+    @GetMapping("/get-folder-name/{folderId}")
+    public String getFolderName(@RequestHeader("Authorization") String token, @PathVariable Long folderId) {
+        return foldersService.getFolderName(token, folderId);
     }
 }

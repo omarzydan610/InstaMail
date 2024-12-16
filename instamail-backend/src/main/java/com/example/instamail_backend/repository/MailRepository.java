@@ -14,10 +14,10 @@ public interface MailRepository extends JpaRepository<Mail, Long> {
 
     public List<Mail> findBySenderEmailOrReceiverEmail(String senderEmail, String receiverEmail);
 
-    @Query("SELECT m FROM Mail m WHERE m.senderFolderId = :folderId AND m.senderEmail = :senderEmail")
+    @Query("SELECT m FROM Mail m WHERE m.senderFolderId = :folderId AND m.senderEmail = :senderEmail AND m.isSenderDeleted = 0")
     public List<Mail> findByFolderIdSender(@Param("folderId") Long folderId, @Param("senderEmail") String senderEmail);
 
-    @Query("SELECT m FROM Mail m WHERE m.receiverFolderId = :folderId AND m.receiverEmail = :receiverEmail")
+    @Query("SELECT m FROM Mail m WHERE m.receiverFolderId = :folderId AND m.receiverEmail = :receiverEmail AND m.isReceiverDeleted = 0")
     public List<Mail> findByFolderIdReceiver(@Param("folderId") Long folderId, @Param("receiverEmail") String receiverEmail);
 
     @Modifying
