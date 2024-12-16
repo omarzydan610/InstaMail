@@ -9,6 +9,7 @@ const NormalEmailModal = ({
   setEmails,
   activeCategory,
   setCurrentPage,
+  fetchEmailsForFolder,
 }) => {
   const { userEmail, fetchEmails, folders } = useAppContext();
   const [isStarred, setIsStarred] = useState(
@@ -52,13 +53,14 @@ const NormalEmailModal = ({
   const handleMoveToFolder = async () => {
     if (selectedFolder) {
       console.log(selectedFolder);
-      await FolderService.moveMailToFolder( email.id, selectedFolder);
-      setEmails((prevEmails) =>
-        prevEmails.filter((prevEmail) => prevEmail.id !== email.id)
-      );
-      setCurrentPage(1);
+      await FolderService.moveMailToFolder(email.id, selectedFolder);
+      console.log("activeCategory", typeof activeCategory);
+      if (typeof activeCategory === "object") {
+        await fetchEmailsForFolder(activeCategory.id, 0, 6, true);
+        setCurrentPage(1);
+      }
       onClose();
-      setShowFolderModal(false); // Close the folder modal
+      setShowFolderModal(false);
     } else {
       alert("Please select a folder to move the email to.");
     }
@@ -185,7 +187,6 @@ const NormalEmailModal = ({
           >
             put in Folder
           </button>
-
         </div>
       </div>
 
@@ -193,7 +194,9 @@ const NormalEmailModal = ({
       {showFolderModal && (
         <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn">
           <div className="bg-white p-6 rounded-lg shadow-xl w-80">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Select Folder</h3>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+              Select Folder
+            </h3>
             <select
               value={selectedFolder}
               onChange={(e) => setSelectedFolder(e.target.value)}

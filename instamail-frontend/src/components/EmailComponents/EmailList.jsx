@@ -101,6 +101,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Inbox" && selectedEmail) {
@@ -110,6 +111,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Drafts" && selectedEmail) {
@@ -119,6 +121,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Trash" && selectedEmail) {
@@ -128,6 +131,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Starred" && selectedEmail) {
@@ -147,6 +151,8 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        fetchEmailsForFolder={fetchEmailsForFolder}
+        activeCategory={activeCategory}
       />
     );
   }
