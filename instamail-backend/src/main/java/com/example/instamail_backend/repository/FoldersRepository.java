@@ -6,14 +6,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.instamail_backend.model.Folders;
 
 public interface FoldersRepository extends JpaRepository<Folders, Long> {
     List<Folders> findByEmail(String email);
+
     List<Folders> findByUserId(Long userId);
+
     @Modifying
+    @Transactional
     @Query("UPDATE Folders f SET f.name = :folderName WHERE f.id = :folderId")
     void updateFolderName(@Param("folderId") Long folderId, @Param("folderName") String folderName);
+
     List<Folders> findByEmailAndUserId(String email, Long userId);
 }

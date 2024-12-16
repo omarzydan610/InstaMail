@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AppProvider, useAppContext } from "../../contexts/AppContext";
+import { useAppContext } from "../../contexts/AppContext";
 import NormalEmailModal from "./NormalEmailModal";
 import DraftedEmailModal from "./DraftedEmailModal";
 import TrashEmailModal from "./TrashEmailModal";
@@ -22,6 +22,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   useEffect(() => {
     setCurrentEmails(emails.slice(IndexOfFirstEmail, IndexOfLastEmail));
     setTotalPages(Math.ceil(emails.length / emailsPerPage));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emails, currentPage]);
 
   useEffect(() => {
@@ -29,6 +30,8 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     if (activeCategory.id) {
       fetchEmailsForFolder(activeCategory.id, 0, 6, true);
     }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory]);
 
   const fetchEmailsForFolder = async (categoryId, start, size, clear) => {

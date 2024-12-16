@@ -62,6 +62,14 @@ class FolderService {
     });
     return response.data;
   }
+
+  static async renameFolder(folderId, newName) {
+    const token = localStorage.getItem("authToken");
+    const response = await api.put(`/rename-folder/${folderId}`, newName, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  }
 }
 
 export default FolderService;

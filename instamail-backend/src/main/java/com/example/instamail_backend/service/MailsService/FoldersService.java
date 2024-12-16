@@ -55,14 +55,12 @@ public class FoldersService {
     }
     public void deleteFolder(String token, Long folderId) {
         Long userId = userService.getIdByToken(token);
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         foldersRepository.deleteById(folderId);
     }
-    public void updateFolder(String token,Long folderId, String folderName) {
+    public void renameFolder(String token,Long folderId, String folderName) {
         Long userId = userService.getIdByToken(token);
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         foldersRepository.updateFolderName(folderId, folderName);
-    }
-
-   
+    }   
 }
