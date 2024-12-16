@@ -35,11 +35,12 @@ class FolderService {
     return response.data;
   }
 
-  static async getMailsByFolderId(folderId) {
+  static async getMailsByFolderId(folderId, start, size, sortStrategy) {
     console.log(folderId);
     const token = localStorage.getItem("authToken");
     const response = await api.get(`/get-folders-mails/${folderId}`, {
       headers: { Authorization: `Bearer ${token}` },
+      params: { start: start, size: size, sortStrategy: sortStrategy },
     });
     console.log(response.data);
     return response.data;
@@ -59,6 +60,23 @@ class FolderService {
     const response = await api.post(`/folders/${folderId}/mails`, newName, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    return response.data;
+  }
+
+  static async renameFolder(folderId, newName) {
+    const token = localStorage.getItem("authToken");
+    const response = await api.put(`/rename-folder/${folderId}`, newName, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  }
+
+  static async getFolderName(folderId) {
+    const token = localStorage.getItem("authToken");
+    const response = await api.get(`/get-folder-name/${folderId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log("response", response);
     return response.data;
   }
 }

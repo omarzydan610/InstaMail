@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { AppProvider, useAppContext } from "../../contexts/AppContext";
+import { useAppContext } from "../../contexts/AppContext";
 import NormalEmailModal from "./NormalEmailModal";
 import DraftedEmailModal from "./DraftedEmailModal";
 import TrashEmailModal from "./TrashEmailModal";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import MailsService from "../../services/MailsService";
-import FolderService from "../../services/folderService";
 
 const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
-  const { emails, setEmails, fetchEmails } = useAppContext();
+  const { emails, setEmails, fetchEmails, fetchEmailsForFolder } =
+    useAppContext();
 
   const emailsPerPage = 5;
   const IndexOfLastEmail = currentPage * emailsPerPage;
@@ -22,21 +22,17 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   useEffect(() => {
     setCurrentEmails(emails.slice(IndexOfFirstEmail, IndexOfLastEmail));
     setTotalPages(Math.ceil(emails.length / emailsPerPage));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emails, currentPage]);
 
   useEffect(() => {
     setCurrentPage(1);
     if (activeCategory.id) {
-      fetchEmailsForCategory(activeCategory.id);
-      
+      fetchEmailsForFolder(activeCategory.id, 0, 6, true);
     }
-  }, [activeCategory]);
 
-  const fetchEmailsForCategory = async (categoryId) => {
-    console.log("nice");
-    const emails = await FolderService.getMailsByFolderId(categoryId);
-    setEmails(emails);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeCategory]);
 
   const handleEmailClick = async (email) => {
     if (activeCategory === "Inbox" && !email.isRead) {
@@ -54,13 +50,27 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     setSelectedEmail(null);
   };
 
-  const nextPage = () => {
+  const nextPage = async () => {
+    console.log("emailsss", emails);
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     if (emails.length > 5 * currentPage + 1) {
-      setCurrentPage((prev) => Math.min(prev + 1, totalPages));
       return;
     }
-    fetchEmails(activeCategory, currentPage * 5 + 1, emailsPerPage, false);
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    if (activeCategory.id) {
+      await fetchEmailsForFolder(
+        activeCategory.id,
+        currentPage * 5 + 1,
+        emailsPerPage,
+        false
+      );
+    } else {
+      await fetchEmails(
+        activeCategory,
+        currentPage * 5 + 1,
+        emailsPerPage,
+        false
+      );
+    }
   };
 
   const formatDate = (dateString) => {
@@ -81,6 +91,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Inbox" && selectedEmail) {
@@ -90,6 +101,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Drafts" && selectedEmail) {
@@ -99,6 +111,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Trash" && selectedEmail) {
@@ -108,6 +121,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        activeCategory={activeCategory}
       />
     );
   } else if (activeCategory === "Starred" && selectedEmail) {
@@ -127,6 +141,8 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
+        fetchEmailsForFolder={fetchEmailsForFolder}
+        activeCategory={activeCategory}
       />
     );
   }
@@ -173,7 +189,16 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
                   )
                 )}
               </div>
-              <p className="text-gray-700 mt-1">{email.subject}</p>
+              <div className="flex justify-between items-center">
+                <p className="text-gray-700 mt-1">{email.senderEmail}</p>
+                {activeCategory !== "Inbox" &&
+                  activeCategory !== "Sent" &&
+                  activeCategory !== "Drafts" && (
+                    <span className="text-sm text-gray-500">
+                      {formatDate(email.createdAt)}
+                    </span>
+                  )}
+              </div>
             </div>
           ))
         ) : (

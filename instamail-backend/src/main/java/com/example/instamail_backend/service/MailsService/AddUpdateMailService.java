@@ -31,7 +31,7 @@ public class AddUpdateMailService {
 
         // Create a new Mail object and set its properties
         Mail mail = new Mail((String) mailMap.get("receiverEmail"), (String) mailMap.get("subject"),
-                (String) mailMap.get("content"));
+                (String) mailMap.get("content"), (Integer) mailMap.get("priority"));
 
         @SuppressWarnings("unchecked")
         List<String> remainingReceivers = (List<String>) requestData.get("remainingReceivers");
@@ -59,7 +59,7 @@ public class AddUpdateMailService {
 
         // Create a new Mail object and set its properties
         Mail mail = new Mail((String) mailMap.get("receiverEmail"), (String) mailMap.get("subject"),
-                (String) mailMap.get("content"));
+                (String) mailMap.get("content"), (Integer) mailMap.get("priority"));
 
         @SuppressWarnings("unchecked")
         List<String> remainingReceivers = (List<String>) requestData.get("remainingReceivers");
@@ -170,13 +170,6 @@ public class AddUpdateMailService {
         mail.setIsRead(true);
         mailRepository.save(mail);
         return true;
-    }
-
-    public void updateMailPrioritySenderorReceiver(long mailId, int priority, String token) {
-        long userId = userService.getIdByToken(token);
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        mailRepository.updateMailPrioritySender(mailId, priority, user.getEmail());
-        mailRepository.updateMailPriorityReceiver(mailId, priority, user.getEmail());
     }
 
     public void updateMailFolderId(long mailId, Long folderId, String token) {
