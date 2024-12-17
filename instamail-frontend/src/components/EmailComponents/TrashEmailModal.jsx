@@ -1,7 +1,9 @@
 import React from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import MailsService from "../../services/MailsService";
-const TrashEmailModal = ({ email, onClose, setCurrentPage }) => {
+import AttachmentService from "../../services/attachementsService";
+
+const TrashEmailModal = ({ email, attachmentsOfMail, onClose, setCurrentPage }) => {
   const { setEmails } = useAppContext();
   const { fetchEmails } = useAppContext();
 
@@ -28,9 +30,29 @@ const TrashEmailModal = ({ email, onClose, setCurrentPage }) => {
     onClose();
   };
 
+  const handleDownload = async (attachmentId) => {
+    try {
+      const response = await AttachmentService.downloadAttachment(attachmentId);
+      const blob = new Blob([response.data], { type: response.headers["content-type"] });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", response.headers["content-language"]); // Use filename from headers
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      console.log(`Downloading attachment with ID: ${attachmentId}`);
+    } catch (error) {
+      console.error("Error downloading attachment:", error);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn">
-      <div className="bg-white/95 dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-3xl h-[85vh] overflow-hidden relative border border-gray-200 dark:border-gray-700 animate-slideUp">
+      <div className="bg-white/95 dark:bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-3xl h-[85vh] overflow-hidden relative border border-gray-200 dark:border-gray-700 animate-slideUp flex flex-col">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -73,43 +95,76 @@ const TrashEmailModal = ({ email, onClose, setCurrentPage }) => {
           </span>
         </div>
 
-        {/* Email Content */}
-        <div className="space-y-6">
-          <div className="space-y-4">
-            <div className="pb-4 border-b dark:border-gray-700">
-              <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-                {email.subject}
-              </h2>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <div className="pb-4 border-b dark:border-gray-700">
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
+                  {email.subject}
+                </h2>
+              </div>
+
+              <div className="flex flex-col gap-2 text-sm text-gray-600 dark:text-gray-300">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">From:</span>
+                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
+                    {email.senderEmail}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">To:</span>
+                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
+                    {email.receiverEmail}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <div className="flex flex-col gap-2 text-sm text-gray-600 dark:text-gray-300">
-              <div className="flex items-center gap-2">
-                <span className="font-medium">From:</span>
-                <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
-                  {email.senderEmail}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-medium">To:</span>
-                <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
-                  {email.receiverEmail}
-                </span>
-              </div>
+            <div className="email-body overflow-y-auto max-h-[50vh] pr-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+              <p className="whitespace-pre-wrap">{email.content}</p>
             </div>
           </div>
 
-          <div className="email-body overflow-y-auto max-h-[50vh] pr-4 text-gray-700 dark:text-gray-300 leading-relaxed">
-            <p className="whitespace-pre-wrap">{email.content}</p>
+          {/* Attachments Section */}
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+              Attachments:
+            </h3>
+            <div className="space-y-2">
+              {attachmentsOfMail && attachmentsOfMail.length > 0 ? (
+                attachmentsOfMail.map((attachment) => (
+                  <div
+                    key={attachment.id}
+                    className="flex justify-between items-center py-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg"
+                  >
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      {attachment.name}
+                    </span>
+                    <div className="flex gap-4">
+                      <button
+                        onClick={() => handleDownload(attachment.id)}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                      >
+                        Download
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500 dark:text-gray-400">No attachments</p>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Warning Message */}
-        <div className="absolute bottom-24 left-6 right-6 py-3 px-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm rounded-lg">
+        <div className="py-3 px-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm rounded-lg mt-4">
           <p>Warning: Permanently deleting this email cannot be undone.</p>
         </div>
 
         {/* Action Buttons */}
-        <div className="absolute bottom-6 left-6 flex gap-4">
+        <div className="flex gap-4 mt-6 mb-4">
           <button
             onClick={handleDelete}
             className="group flex items-center gap-2 py-3 px-6 bg-red-500/90 text-white rounded-xl hover:bg-red-600 transition-all duration-300 hover:shadow-lg"
