@@ -21,6 +21,11 @@ public class Attachment { // Correct class name
 
     private long mailId;
 
+
+
+    public Attachment() {
+    }
+
     public Attachment(String name,String path, long mailId) {
         this.name = name;
         this.path = path;
