@@ -2,6 +2,8 @@ package com.example.instamail_backend.model;
 
 import java.time.LocalDateTime;
 
+import com.example.instamail_backend.DesginPattern.Prototype.Prototype;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +16,7 @@ import lombok.Setter;
 @Table(name = "mails")
 @Getter
 @Setter
-public class Mail {
+public class Mail implements Prototype {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -66,5 +68,10 @@ public class Mail {
         this.deletedAtSender = null;
         this.deletedAtReceiver = null;
     }
+    
 
+    @Override
+    public Prototype clone(String receiverEmail,long mailId) {
+        return new Mail(receiverEmail, this.subject, this.content, this.priority);
+    }
 }
