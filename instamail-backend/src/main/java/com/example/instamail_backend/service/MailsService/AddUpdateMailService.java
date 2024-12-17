@@ -52,7 +52,7 @@ public class AddUpdateMailService {
         return savedMail.getId();
     }
 
-    public boolean draftMail(String token, Map<String, Object> requestData) {
+    public long draftMail(String token, Map<String, Object> requestData) {
 
         // Create a new Mail object and set its properties
         Mail mail = new Mail((String) requestData.get("receiverEmail"), (String) requestData.get("subject"),
@@ -67,8 +67,10 @@ public class AddUpdateMailService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mail.setSenderEmail(user.getEmail());
         mail.setIsDraft(true);
-        mailRepository.save(mail);
-        return true;
+        Mail savedMail = mailRepository.save(mail);
+        System.out.println("savedMail");
+        System.out.println(savedMail);
+        return savedMail.getId();
     }
 
     public boolean toggleStarMail(long mailId, String token) {
@@ -188,7 +190,7 @@ public class AddUpdateMailService {
         return true;
     }
 
-    public boolean sendDraft(String token, Map<String, Object> requestData) {
+    public long sendDraft(String token, Map<String, Object> requestData) {
         Long userId;
         try {
             userId = userService.getIdByToken(token);
@@ -202,8 +204,10 @@ public class AddUpdateMailService {
         mail.setContent((String) requestData.get("body"));
         mail.setPriority((Integer) requestData.get("priority"));
         mail.setIsDraft(false);
-        mailRepository.save(mail);
-        return true;
+        Mail savedMail = mailRepository.save(mail);
+        System.out.println("savedMail");
+        System.out.println(savedMail);
+        return savedMail.getId();
     }
 
 }

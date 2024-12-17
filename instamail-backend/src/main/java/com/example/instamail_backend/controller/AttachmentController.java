@@ -26,7 +26,7 @@ import com.example.instamail_backend.service.MailsService.AttachmentService;
 public class AttachmentController {
     @Autowired
     private AttachmentService attachmentService;
-     
+    
     @PostMapping("/upload-attachment/{mailId}")
     public ResponseEntity<String> uploadAttachment(@RequestHeader("Authorization") String token, @PathVariable Long mailId, @RequestParam("files") List<MultipartFile> files) {
         try {   
@@ -36,6 +36,7 @@ public class AttachmentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
    @GetMapping("/download-attachment/{attachmentId}")
     public ResponseEntity<InputStreamResource> downloadAttachment(
             @RequestHeader("Authorization") String token, 
@@ -51,7 +52,7 @@ public class AttachmentController {
 
         // Set headers
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, name);
+        headers.add(HttpHeaders.CONTENT_LANGUAGE, name );
         headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.length()));
 
         // Return file as InputStreamResource
