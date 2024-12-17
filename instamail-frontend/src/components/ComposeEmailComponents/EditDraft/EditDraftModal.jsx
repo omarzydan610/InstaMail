@@ -1,7 +1,7 @@
 import React from "react";
 import EditDraftForm from "./EditDraftForm";
 
-const EditDraft = ({ onClose, email, body, subject, priority, emailId }) => {
+const EditDraft = ({ onClose, email, body, subject, priority, emailId, attachmentsOfMail }) => {
   const inputStyles =
     "w-full px-4 py-3 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-500";
 
@@ -26,6 +26,7 @@ const EditDraft = ({ onClose, email, body, subject, priority, emailId }) => {
           defaultBody={body}
           defaultSubject={subject}
           defaultPriority={priority}
+          attachmentsOfMail={attachmentsOfMail}
         />
       </div>
     </div>

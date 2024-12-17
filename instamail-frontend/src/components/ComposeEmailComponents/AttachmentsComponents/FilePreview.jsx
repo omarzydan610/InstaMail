@@ -6,7 +6,7 @@ const FilePreview = ({ file, index, handleRemoveAttachment }) => {
   const [preview, setPreview] = React.useState(null);
 
   React.useEffect(() => {
-    if (file.type.startsWith("image/")) {
+    if (file && file.type && file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
@@ -17,6 +17,19 @@ const FilePreview = ({ file, index, handleRemoveAttachment }) => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [file, preview]);
+
+  // Log file object for debugging
+  console.log("File object:", file);
+
+  // If no file or no valid file type, show error
+  if (!file) {
+    return <p className="text-red-500">No file provided</p>;
+  }
+
+  if (!file.type) {
+    // Handle missing file type case
+    return <p className="text-red-500">File type is missing, cannot preview</p>;
+  }
 
   return (
     <div className="w-[48%] flex items-center p-2 bg-gray-50 rounded-lg">

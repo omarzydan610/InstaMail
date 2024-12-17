@@ -3,8 +3,12 @@ import { FaSave, FaPaperPlane, FaTimes } from "react-icons/fa";
 import ActionButton from "../Button";
 import AttachmentsSection from "../AttachmentsComponents/AttachmentsSection";
 import MailsService from "../../../services/MailsService";
+import AttachmentService from "../../../services/attachementsService";
+import { useEffect } from "react";
+
 const EditDraftForm = ({
   inputStyles,
+  attachmentsOfMail,
   onClose,
   emailId,
   defaultEmail,
@@ -13,6 +17,60 @@ const EditDraftForm = ({
   defaultPriority,
 }) => {
   const [attachments, setAttachments] = React.useState([]);
+  
+
+  const fetchAttachments = async () => {
+    if (attachmentsOfMail && attachmentsOfMail.length > 0) {
+      try {
+        // Fetch all attachments concurrently
+        const fetchedAttachments = await Promise.all(
+          attachmentsOfMail.map(async (attachment) => {
+            try {
+              // Download the attachment using your service
+              const response = await AttachmentService.downloadAttachment(attachment.id);
+  
+              // Check if content-type is available in the response headers
+              const contentType = response.headers["content-type"];
+              if (!contentType) {
+                console.error(`No content-type for attachment: ${attachment.name}`);
+                return null; // Return null if content-type is missing
+              }
+  
+              const blob = new Blob([response.data], { type: contentType });
+  
+              // Ensure the file type is set correctly when creating the File object
+              const file = new File([blob], attachment.name, { type: contentType });
+  
+              // Return the attachment data
+              return {
+                file,
+                name: attachment.name,
+              };
+            } catch (error) {
+              console.error(`Failed to download attachment ${attachment.id}:`, error);
+              return null; // Return null if download fails, can be filtered later
+            }
+          })
+        );
+  
+        // Filter out any failed downloads (null values)
+        const validAttachments = fetchedAttachments.filter(Boolean);
+        
+        // Update the state with the valid attachments
+        setAttachments(validAttachments);
+      } catch (error) {
+        console.error("Failed to fetch attachments:", error);
+      }
+    }
+  };
+  
+
+
+  useEffect(() => {
+    fetchAttachments();
+  }, [attachmentsOfMail]);
+
+
   const formRef = React.useRef(null);
   const [subject, setSubject] = useState(defaultSubject);
   const [body, setBody] = useState(defaultBody);
@@ -68,6 +126,8 @@ const EditDraftForm = ({
       return handleSend;
     }
   };
+
+  
 
   return (
     <form
