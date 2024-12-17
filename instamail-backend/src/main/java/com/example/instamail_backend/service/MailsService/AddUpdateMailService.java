@@ -159,11 +159,46 @@ public class AddUpdateMailService {
         return true;
     }
 
-    public void updateMailFolderId(long mailId, Long folderId, String token) {
+    public void updateMailFolderId(String token, long mailId, Long folderId) {
         long userId = userService.getIdByToken(token);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mailRepository.updateMailFolderIdSender(mailId, folderId, user.getEmail());
         mailRepository.updateMailFolderIdReceiver(mailId, folderId, user.getEmail());
+    }
+
+    public boolean editDraft(String token, Map<String, Object> requestData) {
+        Long userId;
+        try {
+            userId = userService.getIdByToken(token);
+        } catch (Exception e) {
+            throw new RuntimeException("Wrong or Expired Token");
+        }
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        long mailId = (Integer) requestData.get("id");
+        Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
+        mail.setSubject((String) requestData.get("subject"));
+        mail.setContent((String) requestData.get("body"));
+        mail.setPriority((Integer) requestData.get("priority"));
+        mailRepository.save(mail);
+        return true;
+    }
+
+    public boolean sendDraft(String token, Map<String, Object> requestData) {
+        Long userId;
+        try {
+            userId = userService.getIdByToken(token);
+        } catch (Exception e) {
+            throw new RuntimeException("Wrong or Expired Token");
+        }
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        long mailId = (Integer) requestData.get("id");
+        Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
+        mail.setSubject((String) requestData.get("subject"));
+        mail.setContent((String) requestData.get("body"));
+        mail.setPriority((Integer) requestData.get("priority"));
+        mail.setIsDraft(false);
+        mailRepository.save(mail);
+        return true;
     }
 
 }

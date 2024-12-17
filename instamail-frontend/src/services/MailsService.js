@@ -95,6 +95,36 @@ class MailsService {
     );
     return response.data;
   }
+
+  static async editDraft(mail) {
+    const token = localStorage.getItem("authToken");
+    if (mail.priority === "important") {
+      mail.priority = 3;
+    } else if (mail.priority === "normal") {
+      mail.priority = 2;
+    } else if (mail.priority === "spam") {
+      mail.priority = 1;
+    }
+    const response = await api.put(`/edit-draft`, mail, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  }
+
+  static async sendDraft(mail) {
+    const token = localStorage.getItem("authToken");
+    if (mail.priority === "important") {
+      mail.priority = 3;
+    } else if (mail.priority === "normal") {
+      mail.priority = 2;
+    } else if (mail.priority === "spam") {
+      mail.priority = 1;
+    }
+    const response = await api.put(`/send-draft`, mail, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  }
 }
 
 export default MailsService;

@@ -219,7 +219,7 @@ const EmailForm = ({
             </label>
             <select
               id="priority"
-              className={`${inputStyles} w-full`}
+              className={`${inputStyles} w-full h-12`}
               onChange={(e) => setPriority(e.target.value)}
               defaultValue="normal"
             >
