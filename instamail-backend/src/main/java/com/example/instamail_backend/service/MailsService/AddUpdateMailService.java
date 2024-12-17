@@ -23,8 +23,9 @@ public class AddUpdateMailService {
     @Autowired
     private UserRepository userRepository;
 
-    public boolean sendMail(String token, Map<String, Object> requestData) {
-
+    public long sendMail(String token, Map<String, Object> requestData) {
+        System.out.println("sendMail");
+        System.out.println(requestData);
         @SuppressWarnings("unchecked")
         Map<String, Object> mailMap = (Map<String, Object>) requestData.get("mail");
 
@@ -36,6 +37,8 @@ public class AddUpdateMailService {
         List<String> remainingReceivers = (List<String>) requestData.get("remainingReceivers");
 
         long userId;
+        System.out.println("userId");   
+        System.out.println(token);
         try {
             userId = userService.getIdByToken(token);
         } catch (Exception e) {
@@ -43,8 +46,10 @@ public class AddUpdateMailService {
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mail.setSenderEmail(user.getEmail());
-        mailRepository.save(mail);
-        return true;
+        Mail savedMail = mailRepository.save(mail);
+        System.out.println("savedMail");
+        System.out.println(savedMail);
+        return savedMail.getId();
     }
 
     public boolean draftMail(String token, Map<String, Object> requestData) {
