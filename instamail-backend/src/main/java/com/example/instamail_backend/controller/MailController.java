@@ -115,8 +115,18 @@ public class MailController {
     @PutMapping("/change-folder/{mailId}")
     public String updateMailFolderId(@RequestHeader("Authorization") String token, @PathVariable long mailId,
             @RequestBody Map<String, Long> request) {
-        addUpdateMailService.updateMailFolderId(mailId, request.get("folderId"), token);
+        addUpdateMailService.updateMailFolderId(token,mailId, request.get("folderId"));
         return "success";
+    }
+
+    @PutMapping("/edit-draft")
+    public ResponseEntity<?> editDraft(@RequestHeader("Authorization") String token, @RequestBody Map<String, Object> request) {
+        return ResponseEntity.ok(addUpdateMailService.editDraft(token, request));
+    }
+
+    @PutMapping("/send-draft")
+    public ResponseEntity<?> sendDraft(@RequestHeader("Authorization") String token, @RequestBody Map<String, Object> request) {
+        return ResponseEntity.ok(addUpdateMailService.sendDraft(token, request));
     }
 
     // @GetMapping("/get-attachments/{mailId}")

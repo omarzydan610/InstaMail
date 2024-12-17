@@ -10,6 +10,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
   const { emails, setEmails, fetchEmails, fetchEmailsForFolder } =
     useAppContext();
+  const [isEditDraftVisible, setIsEditDraftVisible] = useState(false);
 
   const emailsPerPage = 5;
   const IndexOfLastEmail = currentPage * emailsPerPage;
@@ -112,6 +113,8 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
         activeCategory={activeCategory}
+        setIsEditDraftVisible={setIsEditDraftVisible}
+        isEditDraftVisible={isEditDraftVisible}
       />
     );
   } else if (activeCategory === "Trash" && selectedEmail) {
@@ -190,7 +193,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
                 )}
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-gray-700 mt-1">{email.senderEmail}</p>
+                <p className="text-gray-700 mt-1">{email.subject}</p>
                 {activeCategory !== "Inbox" &&
                   activeCategory !== "Sent" &&
                   activeCategory !== "Drafts" && (

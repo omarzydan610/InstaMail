@@ -54,15 +54,9 @@ public class AddUpdateMailService {
 
     public boolean draftMail(String token, Map<String, Object> requestData) {
 
-        @SuppressWarnings("unchecked")
-        Map<String, Object> mailMap = (Map<String, Object>) requestData.get("mail");
-
         // Create a new Mail object and set its properties
-        Mail mail = new Mail((String) mailMap.get("receiverEmail"), (String) mailMap.get("subject"),
-                (String) mailMap.get("content"), (Integer) mailMap.get("priority"));
-
-        @SuppressWarnings("unchecked")
-        List<String> remainingReceivers = (List<String>) requestData.get("remainingReceivers");
+        Mail mail = new Mail((String) requestData.get("receiverEmail"), (String) requestData.get("subject"),
+                (String) requestData.get("content"), (Integer) requestData.get("priority"));
 
         long userId;
         try {
@@ -73,9 +67,7 @@ public class AddUpdateMailService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mail.setSenderEmail(user.getEmail());
         mail.setIsDraft(true);
-        long mailId = mailRepository.save(mail).getId();
         mailRepository.save(mail);
-        System.out.println("isDraft: " + mailRepository.findById(mailId).get().getIsDraft());
         return true;
     }
 
@@ -172,12 +164,46 @@ public class AddUpdateMailService {
         return true;
     }
 
-    public void updateMailFolderId(long mailId, Long folderId, String token) {
+    public void updateMailFolderId(String token, long mailId, Long folderId) {
         long userId = userService.getIdByToken(token);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mailRepository.updateMailFolderIdSender(mailId, folderId, user.getEmail());
         mailRepository.updateMailFolderIdReceiver(mailId, folderId, user.getEmail());
     }
-    
+
+    public boolean editDraft(String token, Map<String, Object> requestData) {
+        Long userId;
+        try {
+            userId = userService.getIdByToken(token);
+        } catch (Exception e) {
+            throw new RuntimeException("Wrong or Expired Token");
+        }
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        long mailId = (Integer) requestData.get("id");
+        Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
+        mail.setSubject((String) requestData.get("subject"));
+        mail.setContent((String) requestData.get("body"));
+        mail.setPriority((Integer) requestData.get("priority"));
+        mailRepository.save(mail);
+        return true;
+    }
+
+    public boolean sendDraft(String token, Map<String, Object> requestData) {
+        Long userId;
+        try {
+            userId = userService.getIdByToken(token);
+        } catch (Exception e) {
+            throw new RuntimeException("Wrong or Expired Token");
+        }
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        long mailId = (Integer) requestData.get("id");
+        Mail mail = mailRepository.findById(mailId).orElseThrow(() -> new RuntimeException("Mail not found"));
+        mail.setSubject((String) requestData.get("subject"));
+        mail.setContent((String) requestData.get("body"));
+        mail.setPriority((Integer) requestData.get("priority"));
+        mail.setIsDraft(false);
+        mailRepository.save(mail);
+        return true;
+    }
 
 }
