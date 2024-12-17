@@ -38,7 +38,7 @@ const AttachmentService = {
         return response.data;
     },
     multiRecievers: async (mailId, remainingReceivers) => {
-        const response = await api.post(`/multi-recievers/${mailId}`, remainingReceivers, {
+        const response = await api.post(`/mail-attachments-for-multiple-mails/${mailId}`, remainingReceivers, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("authToken")}`,
             }

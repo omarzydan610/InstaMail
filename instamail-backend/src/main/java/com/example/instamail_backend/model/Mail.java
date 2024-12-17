@@ -69,9 +69,27 @@ public class Mail implements Prototype {
         this.deletedAtReceiver = null;
     }
     
-
+    
+    public Mail(String senderEmail, String receiverEmail, String subject, String content, Integer priority) {
+        this.senderEmail = senderEmail;
+        this.receiverEmail = receiverEmail;
+        this.subject = subject;
+        this.content = content;
+        this.priority = priority;
+        this.senderFolderId = 0L;
+        this.receiverFolderId = 0L;
+        this.isSenderStarred = false;
+        this.isReceiverStarred = false;
+        this.isSenderDeleted = 0;
+        this.isReceiverDeleted = 0;
+        this.isRead = false;
+        this.isDraft = false;
+        this.createdAt = LocalDateTime.now();
+        this.deletedAtSender = null;
+        this.deletedAtReceiver = null;
+    }
     @Override
     public Prototype clone(String receiverEmail,long mailId) {
-        return new Mail(receiverEmail, this.subject, this.content, this.priority);
+        return new Mail(this.senderEmail, receiverEmail, this.subject, this.content, this.priority);
     }
 }
