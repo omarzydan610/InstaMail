@@ -190,7 +190,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
                 )}
               </div>
               <div className="flex justify-between items-center">
-                <p className="text-gray-700 mt-1">{email.senderEmail}</p>
+                <p className="text-gray-700 mt-1">{email.subject}</p>
                 {activeCategory !== "Inbox" &&
                   activeCategory !== "Sent" &&
                   activeCategory !== "Drafts" && (

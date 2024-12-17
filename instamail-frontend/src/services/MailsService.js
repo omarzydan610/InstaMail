@@ -27,7 +27,8 @@ class MailsService {
     const token = localStorage.getItem("authToken");
     let response;
     if (draft) {
-      response = await api.post(`/draft-mail`, requestData, {
+      console.log("reciver", requestData.mail);
+      response = await api.post(`/draft-mail`, requestData.mail, {
         headers: { Authorization: `Bearer ${token}` },
       });
     } else {

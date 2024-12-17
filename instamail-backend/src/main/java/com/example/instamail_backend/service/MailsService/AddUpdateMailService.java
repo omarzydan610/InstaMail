@@ -49,15 +49,9 @@ public class AddUpdateMailService {
 
     public boolean draftMail(String token, Map<String, Object> requestData) {
 
-        @SuppressWarnings("unchecked")
-        Map<String, Object> mailMap = (Map<String, Object>) requestData.get("mail");
-
         // Create a new Mail object and set its properties
-        Mail mail = new Mail((String) mailMap.get("receiverEmail"), (String) mailMap.get("subject"),
-                (String) mailMap.get("content"), (Integer) mailMap.get("priority"));
-
-        @SuppressWarnings("unchecked")
-        List<String> remainingReceivers = (List<String>) requestData.get("remainingReceivers");
+        Mail mail = new Mail((String) requestData.get("receiverEmail"), (String) requestData.get("subject"),
+                (String) requestData.get("content"), (Integer) requestData.get("priority"));
 
         long userId;
         try {
@@ -68,9 +62,7 @@ public class AddUpdateMailService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mail.setSenderEmail(user.getEmail());
         mail.setIsDraft(true);
-        long mailId = mailRepository.save(mail).getId();
         mailRepository.save(mail);
-        System.out.println("isDraft: " + mailRepository.findById(mailId).get().getIsDraft());
         return true;
     }
 
@@ -173,6 +165,5 @@ public class AddUpdateMailService {
         mailRepository.updateMailFolderIdSender(mailId, folderId, user.getEmail());
         mailRepository.updateMailFolderIdReceiver(mailId, folderId, user.getEmail());
     }
-    
 
 }

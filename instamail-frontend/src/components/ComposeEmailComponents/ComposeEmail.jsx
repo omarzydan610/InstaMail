@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useEffect,useState,useRef } from "react";
 import ContactsModal from "./ContactsModal";
 import EmailForm from "./EmailForm";
 
 const ComposeEmail = ({ onClose, contacts }) => {
-  const [showContacts, setShowContacts] = React.useState(false);
-  const [selectedContact, setSelectedContact] = React.useState(null);
-  const [recipients, setRecipients] = React.useState([]);
-  const [error, setError] = React.useState("");
-  const contactsRef = React.useRef(null);
+  const [showContacts, setShowContacts] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [recipients, setRecipients] = useState([]);
+  const [error, setError] = useState("");
+  const contactsRef = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (contactsRef.current && !contactsRef.current.contains(event.target)) {
         setShowContacts(false);
