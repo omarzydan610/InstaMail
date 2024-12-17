@@ -1,4 +1,4 @@
-import React ,{useState} from "react";
+import React, { useState } from "react";
 import { FaSave, FaPaperPlane, FaTimes, FaUserFriends } from "react-icons/fa";
 import ActionButton from "./Button";
 import AttachmentsSection from "./AttachmentsComponents/AttachmentsSection";
@@ -36,7 +36,7 @@ const EmailForm = ({
     }
   };
   const [subject, setSubject] = useState("");
-  const [body, setBody] =useState("");
+  const [body, setBody] = useState("");
   const [priority, setPriority] = useState("normal");
 
   const removeRecipient = (index) => {
@@ -107,6 +107,10 @@ const EmailForm = ({
     }
     if (!body.trim()) {
       setError("Please add email content");
+      return;
+    }
+    if (recipients.length > 1) {
+      setError("Sorry,You can not draft email to multiple recipients");
       return;
     }
 
@@ -208,14 +212,14 @@ const EmailForm = ({
               }}
             />
           </div>
-          
+
           <div className="w-1/4">
             <label htmlFor="priority" className="block text-xs font-medium">
               Priority
             </label>
             <select
               id="priority"
-              className={`${inputStyles} w-full`}
+              className={`${inputStyles} w-full h-12`}
               onChange={(e) => setPriority(e.target.value)}
               defaultValue="normal"
             >
