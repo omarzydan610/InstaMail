@@ -14,7 +14,7 @@ import com.example.instamail_backend.repository.AttachmentRepository;
 
 @Service
 public class AttachmentService {
-    private final String attachmentPath = "/Users/omar_zydan/programming/fullStack/Lab3/InstaMail/instamail-backend/attachements";
+    private final String attachmentPath = "/Users/omar_zydan/programming/fullStack/Lab3/InstaMail/instamail-backend/src/main/java/com/example/instamail_backend/attachements";
 
     File attachmentFile = new File(attachmentPath);
 

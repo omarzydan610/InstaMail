@@ -129,9 +129,4 @@ public class MailController {
         return ResponseEntity.ok(addUpdateMailService.sendDraft(token, request));
     }
 
-    // @GetMapping("/get-attachments/{mailId}")
-    // public ResponseEntity<?> getAttachments(@PathVariable long mailId){
-    // return ResponseEntity.ok(getMailServer.getAttachments(mailId));
-    // }
-
 }

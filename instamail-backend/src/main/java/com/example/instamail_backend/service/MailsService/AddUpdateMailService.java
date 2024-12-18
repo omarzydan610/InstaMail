@@ -24,20 +24,10 @@ public class AddUpdateMailService {
     private UserRepository userRepository;
 
     public long sendMail(String token, Map<String, Object> requestData) {
-        System.out.println("sendMail");
-        System.out.println(requestData);
-        @SuppressWarnings("unchecked")
-        Map<String, Object> mailMap = (Map<String, Object>) requestData.get("mail");
-
-        // Create a new Mail object and set its properties
-        Mail mail = new Mail((String) mailMap.get("receiverEmail"), (String) mailMap.get("subject"),
-                (String) mailMap.get("content"), (Integer) mailMap.get("priority"));
-
-        @SuppressWarnings("unchecked")
-        List<String> remainingReceivers = (List<String>) requestData.get("remainingReceivers");
-
+        Mail mail = new Mail((String) requestData.get("receiverEmail"), (String) requestData.get("subject"),
+                (String) requestData.get("content"), (Integer) requestData.get("priority"));
         long userId;
-        System.out.println("userId");   
+        System.out.println("userId");
         System.out.println(token);
         try {
             userId = userService.getIdByToken(token);
