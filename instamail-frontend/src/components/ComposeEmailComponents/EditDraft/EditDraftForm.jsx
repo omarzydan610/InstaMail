@@ -99,9 +99,11 @@ const EditDraftForm = ({
   };
 
   const handleRemoveAttachment = async (file, index) => {
-    console.log("file", file.file.attachmentId);
+    console.log("file", file.file);
 
-    await AttachmentService.deleteAttachment(file.file.attachmentId);
+    if (file.file) {
+      await AttachmentService.deleteAttachment(file.file.attachmentId);
+    }
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -114,6 +116,7 @@ const EditDraftForm = ({
     };
 
     await MailsService.sendDraft(mail);
+    await AttachmentService.uploadNewAttachment(mail.id, attachments);
     console.log(`Sending email to: ${defaultEmail}`);
     onClose();
   };
@@ -127,6 +130,7 @@ const EditDraftForm = ({
     };
 
     await MailsService.editDraft(mail);
+    await AttachmentService.uploadNewAttachment(mail.id, attachments);
     console.log(`Draft saved for: ${defaultEmail}`);
     onClose();
   };
