@@ -10,6 +10,7 @@ const Sidebar = ({
   onCategoryClick,
   openContactsModal,
   onAddFolderClick,
+  isSearchOpen,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState({});
@@ -60,52 +61,56 @@ const Sidebar = ({
   };
 
   return (
-    <div
-      className={`transition-all duration-300 ${
-        isSidebarCollapsed && !isHovered ? "w-12" : "w-1/6"
-      } bg-gray-100 py-4 flex flex-col justify-between`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <ul>
-        {otherCategories.map((category) => (
-          <React.Fragment key={category.name}>
+    <>
+      {!isSearchOpen && (
+        <div
+          className={`transition-all duration-300 ${
+            isSidebarCollapsed && !isHovered ? "w-12" : "w-1/6"
+          } bg-gray-100 py-4 flex flex-col justify-between`}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <ul>
+            {otherCategories.map((category) => (
+              <React.Fragment key={category.name}>
+                <CategoryItem
+                  category={category}
+                  isActive={isCategoryActive(category.name)}
+                  isCollapsed={isSidebarCollapsed}
+                  isHovered={isHovered}
+                  onClick={() =>
+                    category.name === "Folders"
+                      ? toggleFolder("main")
+                      : handleCategoryClick(category)
+                  }
+                  showFolderToggle={category.name === "Folders"}
+                  isFolderExpanded={expandedFolders["main"]}
+                />
+                {category.name === "Folders" &&
+                  expandedFolders["main"] &&
+                  (!isSidebarCollapsed || isHovered) && (
+                    <FolderList
+                      folders={folders}
+                      activeCategory={activeCategory}
+                      onCategoryClick={onCategoryClick}
+                      onAddFolderClick={onAddFolderClick}
+                    />
+                  )}
+              </React.Fragment>
+            ))}
+          </ul>
+          <ul>
             <CategoryItem
-              category={category}
-              isActive={isCategoryActive(category.name)}
+              category={contactsCategory}
+              isActive={isCategoryActive(contactsCategory.name)}
               isCollapsed={isSidebarCollapsed}
               isHovered={isHovered}
-              onClick={() =>
-                category.name === "Folders"
-                  ? toggleFolder("main")
-                  : handleCategoryClick(category)
-              }
-              showFolderToggle={category.name === "Folders"}
-              isFolderExpanded={expandedFolders["main"]}
+              onClick={() => handleCategoryClick(contactsCategory)}
             />
-            {category.name === "Folders" &&
-              expandedFolders["main"] &&
-              (!isSidebarCollapsed || isHovered) && (
-                <FolderList
-                  folders={folders}
-                  activeCategory={activeCategory}
-                  onCategoryClick={onCategoryClick}
-                  onAddFolderClick={onAddFolderClick}
-                />
-              )}
-          </React.Fragment>
-        ))}
-      </ul>
-      <ul>
-        <CategoryItem
-          category={contactsCategory}
-          isActive={isCategoryActive(contactsCategory.name)}
-          isCollapsed={isSidebarCollapsed}
-          isHovered={isHovered}
-          onClick={() => handleCategoryClick(contactsCategory)}
-        />
-      </ul>
-    </div>
+          </ul>
+        </div>
+      )}
+    </>
   );
 };
 

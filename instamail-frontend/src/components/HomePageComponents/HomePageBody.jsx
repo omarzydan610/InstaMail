@@ -17,6 +17,7 @@ const HomePageBody = ({
   isAddFolderModalOpen,
   setIsAddFolderModalOpen,
   setActiveCategory,
+  isSearchOpen,
 }) => {
   const {
     fetchFolders,
@@ -107,75 +108,79 @@ const HomePageBody = ({
   };
 
   return (
-    <div className="flex-1 p-4">
-      <div className="flex items-center justify-between mb-4 mx-4">
-        <div className="flex items-center gap-2">
-          <h2 className="text-2xl font-semibold">{getCategoryName()}</h2>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={changeSortStrategy}
-              className="p-2 text-gray-600 hover:text-blue-500 rounded-full hover:bg-gray-100 transition-colors duration-200 ease-in-out"
-              title="Change sort order"
-            >
-              <FaSort size={20} />
-            </button>
-            <div>
-              <span>{sortingTechniques[sortStrategy]}</span>
+    <>
+      {!isSearchOpen && (
+        <div className="flex-1 p-4">
+          <div className="flex items-center justify-between mb-4 mx-4">
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-semibold">{getCategoryName()}</h2>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={changeSortStrategy}
+                  className="p-2 text-gray-600 hover:text-blue-500 rounded-full hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                  title="Change sort order"
+                >
+                  <FaSort size={20} />
+                </button>
+                <div>
+                  <span>{sortingTechniques[sortStrategy]}</span>
+                </div>
+              </div>
             </div>
+            {isFolder && (
+              <div className="flex gap-2">
+                <button
+                  onClick={handleRenameClick}
+                  className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded-md transition-colors duration-200 ease-in-out flex items-center gap-2"
+                  title="Rename folder"
+                >
+                  <FaEdit size={16} />
+                  <span>Rename</span>
+                </button>
+                <button
+                  onClick={handleDeleteClick}
+                  className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded-md transition-colors duration-200 ease-in-out flex items-center gap-2"
+                  title="Delete folder"
+                >
+                  <FaTrash size={16} />
+                  <span>Delete Folder</span>
+                </button>
+              </div>
+            )}
           </div>
+          <EmailList
+            activeCategory={activeCategory}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+          <ContactsModal
+            isOpen={isContactsModalOpen}
+            onClose={closeContactsModal}
+          />
+          <AddFolderModal
+            isOpen={isAddFolderModalOpen}
+            onClose={closeAddFolderModal}
+            onSave={handleSaveFolder}
+          />
+          <FloatingButton
+            activeCategory={activeCategory}
+            setCurrentPage={setCurrentPage}
+          />
+          <ErrorMessage />
+          <ConfirmDeleteModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            onConfirm={handleDeleteConfirm}
+            message={`Are you sure you want to delete the folder "${getCategoryName()}"?`}
+          />
+          <RenameFolderModal
+            isOpen={isRenameModalOpen}
+            onClose={() => setIsRenameModalOpen(false)}
+            renameFolder={handleRenameConfirm}
+          />
         </div>
-        {isFolder && (
-          <div className="flex gap-2">
-            <button
-              onClick={handleRenameClick}
-              className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded-md transition-colors duration-200 ease-in-out flex items-center gap-2"
-              title="Rename folder"
-            >
-              <FaEdit size={16} />
-              <span>Rename</span>
-            </button>
-            <button
-              onClick={handleDeleteClick}
-              className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded-md transition-colors duration-200 ease-in-out flex items-center gap-2"
-              title="Delete folder"
-            >
-              <FaTrash size={16} />
-              <span>Delete Folder</span>
-            </button>
-          </div>
-        )}
-      </div>
-      <EmailList
-        activeCategory={activeCategory}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
-      <ContactsModal
-        isOpen={isContactsModalOpen}
-        onClose={closeContactsModal}
-      />
-      <AddFolderModal
-        isOpen={isAddFolderModalOpen}
-        onClose={closeAddFolderModal}
-        onSave={handleSaveFolder}
-      />
-      <FloatingButton
-        activeCategory={activeCategory}
-        setCurrentPage={setCurrentPage}
-      />
-      <ErrorMessage />
-      <ConfirmDeleteModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDeleteConfirm}
-        message={`Are you sure you want to delete the folder "${getCategoryName()}"?`}
-      />
-      <RenameFolderModal
-        isOpen={isRenameModalOpen}
-        onClose={() => setIsRenameModalOpen(false)}
-        renameFolder={handleRenameConfirm}
-      />
-    </div>
+      )}
+    </>
   );
 };
 

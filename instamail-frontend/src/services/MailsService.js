@@ -3,7 +3,6 @@ import api from "./api";
 class MailsService {
   static async addMail(mail, draft) {
     const receiver = mail.Recipients[0];
-    const remainingReceivers = mail.Recipients.slice(1);
 
     var priority = 0;
     if (mail.priority === "important") {
@@ -20,19 +19,15 @@ class MailsService {
       receiverEmail: receiver,
       priority: priority,
     };
-    const requestData = {
-      mail: mailToSend,
-      remainingReceivers: remainingReceivers,
-    };
+
     const token = localStorage.getItem("authToken");
     let response;
     if (draft) {
-      console.log("reciver", requestData.mail);
-      response = await api.post(`/draft-mail`, requestData.mail, {
+      response = await api.post(`/draft-mail`, mailToSend, {
         headers: { Authorization: `Bearer ${token}` },
       });
     } else {
-      response = await api.post(`/send-mail`, requestData, {
+      response = await api.post(`/send-mail`, mailToSend, {
         headers: { Authorization: `Bearer ${token}` },
       });
     }
