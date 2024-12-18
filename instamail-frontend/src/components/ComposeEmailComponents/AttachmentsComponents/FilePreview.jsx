@@ -7,17 +7,17 @@ const FilePreview = ({ file, index, handleRemoveAttachment }) => {
 
   // Add helper function to get mime type from file extension
   const getMimeTypeFromFileName = (fileName) => {
-    const extension = fileName.split('.').pop().toLowerCase();
+    const extension = fileName.split(".").pop().toLowerCase();
     const mimeTypes = {
-      pdf: 'application/pdf',
-      doc: 'application/msword',
-      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      xls: 'application/vnd.ms-excel',
-      xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      txt: 'text/plain',
+      pdf: "application/pdf",
+      doc: "application/msword",
+      docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      xls: "application/vnd.ms-excel",
+      xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      txt: "text/plain",
       // Add more mappings as needed
     };
-    return mimeTypes[extension] || 'application/octet-stream';
+    return mimeTypes[extension] || "application/octet-stream";
   };
 
   React.useEffect(() => {
@@ -70,7 +70,7 @@ const FilePreview = ({ file, index, handleRemoveAttachment }) => {
         onClick={(e) => {
           e.stopPropagation();
           if (preview) URL.revokeObjectURL(preview);
-          handleRemoveAttachment(index);
+          handleRemoveAttachment(file, index);
         }}
         className="ml-2 text-red-500 hover:text-red-700"
       >
