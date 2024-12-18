@@ -149,6 +149,33 @@ export const AppProvider = ({ children }) => {
     fetchEmailsForFolder,
   };
 
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    // Connect to the SSE endpoint
+    const eventSource = new EventSource(
+      "http://localhost:8080/api/sse/connect"
+    );
+
+    // Listen for email-sent events
+    eventSource.addEventListener("email-sent", (event) => {
+      console.log("Email Notification Received:", event.data);
+      setNotifications((prev) => [...prev, event.data]);
+    });
+
+    // Handle errors
+    eventSource.onerror = () => {
+      console.error("SSE connection error");
+      eventSource.close();
+    };
+
+    // Cleanup on component unmount
+    return () => {
+      eventSource.close();
+      console.log("SSE connection closed");
+    };
+  }, []);
+
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
