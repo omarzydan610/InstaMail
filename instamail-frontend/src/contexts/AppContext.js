@@ -115,6 +115,33 @@ export const AppProvider = ({ children }) => {
     return emails;
   };
 
+  const [BackNotify, setBackNotify] = useState(0);
+
+  useEffect(() => {
+    // Connect to the SSE endpoint
+    const eventSource = new EventSource(
+      "http://localhost:8080/api/sse/connect"
+    );
+
+    // Listen for email-sent events
+    eventSource.addEventListener("email-sent", (event) => {
+      console.log("Email Notification Received:", event.data);
+      setBackNotify((prev) => prev + 1);
+    });
+
+    // Handle errors
+    eventSource.onerror = () => {
+      console.error("SSE connection error");
+      eventSource.close();
+    };
+
+    // Cleanup on component unmount
+    return () => {
+      eventSource.close();
+      console.log("SSE connection closed");
+    };
+  }, []);
+
   // Combine the state into a single object
   const contextValue = {
     username,
@@ -147,6 +174,7 @@ export const AppProvider = ({ children }) => {
     setSortStrategy,
     sortingTechniques,
     fetchEmailsForFolder,
+    BackNotify,
   };
 
   return (

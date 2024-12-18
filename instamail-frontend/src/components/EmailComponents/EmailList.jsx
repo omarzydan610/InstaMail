@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, act } from "react";
 import { useAppContext } from "../../contexts/AppContext";
 import NormalEmailModal from "./NormalEmailModal";
 import DraftedEmailModal from "./DraftedEmailModal";
@@ -9,8 +9,14 @@ import AttachmentsService from "../../services/attachementsService";
 
 const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
-  const { emails, setEmails, fetchEmails, fetchEmailsForFolder, userEmail } =
-    useAppContext();
+  const {
+    emails,
+    setEmails,
+    fetchEmails,
+    fetchEmailsForFolder,
+    userEmail,
+    BackNotify,
+  } = useAppContext();
   const [isEditDraftVisible, setIsEditDraftVisible] = useState(false);
   const [attachmentsOfMail, setAttachmentsOfMail] = useState([]);
 
@@ -36,6 +42,16 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory]);
+
+  useEffect(() => {
+    if (activeCategory.id) {
+      fetchEmailsForFolder(activeCategory.id, 0, 6, true);
+      setCurrentPage(1);
+    } else {
+      fetchEmails(activeCategory, 0, 6, true);
+      setCurrentPage(1);
+    }
+  }, [BackNotify]);
 
   const handleEmailClick = async (email) => {
     if (activeCategory === "Inbox" && !email.isRead) {
