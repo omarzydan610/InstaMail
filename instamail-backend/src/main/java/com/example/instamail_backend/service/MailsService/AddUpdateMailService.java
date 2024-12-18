@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.instamail_backend.controller.SSE_Controller;
 import com.example.instamail_backend.model.Mail;
 import com.example.instamail_backend.model.User;
 import com.example.instamail_backend.repository.MailRepository;
@@ -21,6 +22,8 @@ public class AddUpdateMailService {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private SSE_Controller sseController;
 
     public long sendMail(String token, Map<String, Object> requestData) {
         Mail mail = new Mail((String) requestData.get("receiverEmail"), (String) requestData.get("subject"),
@@ -36,6 +39,7 @@ public class AddUpdateMailService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mail.setSenderEmail(user.getEmail());
         Mail savedMail = mailRepository.save(mail);
+        sseController.notifyClients("there is a new mail");
         System.out.println("savedMail");
         System.out.println(savedMail);
         return savedMail.getId();
@@ -195,6 +199,7 @@ public class AddUpdateMailService {
         mail.setIsDraft(false);
         mail.setCreatedAt(LocalDateTime.now());
         Mail savedMail = mailRepository.save(mail);
+        sseController.notifyClients("there is a new mail");
         System.out.println("savedMail");
         System.out.println(savedMail);
         return savedMail.getId();
