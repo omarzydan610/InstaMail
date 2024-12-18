@@ -54,6 +54,7 @@ export const AppProvider = ({ children }) => {
       const contactData = await ContactService.getEmails(contact.contactId);
       const contactEmails = contactData.map((item) => item.email);
       console.log("contactEmails", contactEmails);
+      setSelectedContactEmails(contactEmails);
       return contactEmails;
     } catch (error) {
       console.error("Failed to fetch contact emails:", error);
