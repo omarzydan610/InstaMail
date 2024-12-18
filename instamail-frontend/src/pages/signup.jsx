@@ -3,7 +3,6 @@ import InputField from "../components/InputField";
 import LinkToLogin from "../components/SignupPageComponents/LinkToLogin";
 import AuthContext from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import UserService from "../services/UserService";
 import { useAppContext } from "../contexts/AppContext";
 const Signup = () => {
   const [email, setEmail] = useState("");

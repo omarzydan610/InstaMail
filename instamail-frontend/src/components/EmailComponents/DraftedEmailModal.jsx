@@ -15,8 +15,8 @@ const DraftedEmailModal = ({
 }) => {
   const { fetchEmails } = useAppContext();
 
-  const handleDelete = () => {
-    MailsService.deleteDraft(email.id);
+  const handleDelete = async () => {
+    await MailsService.deleteDraft(email.id);
     setEmails((prevEmails) =>
       prevEmails.filter((prevEmail) => prevEmail.id !== email.id)
     );

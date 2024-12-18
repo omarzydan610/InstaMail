@@ -16,8 +16,7 @@ const EditDraftForm = ({
   defaultSubject,
   defaultPriority,
 }) => {
-  const [attachments, setAttachments] = React.useState([]);
-  
+  const [attachments, setAttachments] = useState([]);
 
   const fetchAttachments = async () => {
     if (attachmentsOfMail && attachmentsOfMail.length > 0) {
@@ -27,35 +26,48 @@ const EditDraftForm = ({
           attachmentsOfMail.map(async (attachment) => {
             try {
               // Download the attachment using your service
-              const response = await AttachmentService.downloadAttachment(attachment.id);
-  
+              const response = await AttachmentService.downloadAttachment(
+                attachment.id
+              );
+              console.log("response", response);
+
               // Check if content-type is available in the response headers
               const contentType = response.headers["content-type"];
               if (!contentType) {
-                console.error(`No content-type for attachment: ${attachment.name}`);
+                console.error(
+                  `No content-type for attachment: ${attachment.name}`
+                );
                 return null; // Return null if content-type is missing
               }
-  
+
               const blob = new Blob([response.data], { type: contentType });
-  
+
               // Ensure the file type is set correctly when creating the File object
-              const file = new File([blob], attachment.name, { type: contentType });
-  
+              const file = new File([blob], attachment.name, {
+                type: contentType,
+              });
+              console.log("file", file);
+              file.attachmentId = attachment.id;
+
               // Return the attachment data
               return {
                 file,
                 name: attachment.name,
+                size: file.size,
               };
             } catch (error) {
-              console.error(`Failed to download attachment ${attachment.id}:`, error);
+              console.error(
+                `Failed to download attachment ${attachment.id}:`,
+                error
+              );
               return null; // Return null if download fails, can be filtered later
             }
           })
         );
-  
+
         // Filter out any failed downloads (null values)
         const validAttachments = fetchedAttachments.filter(Boolean);
-        
+
         // Update the state with the valid attachments
         setAttachments(validAttachments);
       } catch (error) {
@@ -63,13 +75,10 @@ const EditDraftForm = ({
       }
     }
   };
-  
-
 
   useEffect(() => {
     fetchAttachments();
   }, [attachmentsOfMail]);
-
 
   const formRef = React.useRef(null);
   const [subject, setSubject] = useState(defaultSubject);
@@ -89,7 +98,12 @@ const EditDraftForm = ({
     }, 100);
   };
 
-  const handleRemoveAttachment = (index) => {
+  const handleRemoveAttachment = async (file, index) => {
+    console.log("file", file.file);
+
+    if (file.file) {
+      await AttachmentService.deleteAttachment(file.file.attachmentId);
+    }
     setAttachments((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -102,6 +116,7 @@ const EditDraftForm = ({
     };
 
     await MailsService.sendDraft(mail);
+    await AttachmentService.uploadNewAttachment(mail.id, attachments);
     console.log(`Sending email to: ${defaultEmail}`);
     onClose();
   };
@@ -115,6 +130,7 @@ const EditDraftForm = ({
     };
 
     await MailsService.editDraft(mail);
+    await AttachmentService.uploadNewAttachment(mail.id, attachments);
     console.log(`Draft saved for: ${defaultEmail}`);
     onClose();
   };
@@ -126,8 +142,6 @@ const EditDraftForm = ({
       return handleSend;
     }
   };
-
-  
 
   return (
     <form

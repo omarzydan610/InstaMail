@@ -64,4 +64,8 @@ public class AttachmentService {
         return response;
     }
 
+    public void deleteAttachment(Long attachmentId) {
+        attachmentRepository.deleteById(attachmentId);
+    }
+
 }

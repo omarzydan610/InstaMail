@@ -193,6 +193,7 @@ public class AddUpdateMailService {
         mail.setContent((String) requestData.get("body"));
         mail.setPriority((Integer) requestData.get("priority"));
         mail.setIsDraft(false);
+        mail.setCreatedAt(LocalDateTime.now());
         Mail savedMail = mailRepository.save(mail);
         System.out.println("savedMail");
         System.out.println(savedMail);
