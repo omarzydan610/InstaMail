@@ -5,6 +5,21 @@ import FileIcon from "./FileIcon";
 const FilePreview = ({ file, index, handleRemoveAttachment }) => {
   const [preview, setPreview] = React.useState(null);
 
+  // Add helper function to get mime type from file extension
+  const getMimeTypeFromFileName = (fileName) => {
+    const extension = fileName.split('.').pop().toLowerCase();
+    const mimeTypes = {
+      pdf: 'application/pdf',
+      doc: 'application/msword',
+      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      xls: 'application/vnd.ms-excel',
+      xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      txt: 'text/plain',
+      // Add more mappings as needed
+    };
+    return mimeTypes[extension] || 'application/octet-stream';
+  };
+
   React.useEffect(() => {
     if (file && file.type && file.type.startsWith("image/")) {
       const reader = new FileReader();
@@ -26,22 +41,20 @@ const FilePreview = ({ file, index, handleRemoveAttachment }) => {
     return <p className="text-red-500">No file provided</p>;
   }
 
-  if (!file.type) {
-    // Handle missing file type case
-    return <p className="text-red-500">File type is missing, cannot preview</p>;
-  }
+  // Replace the existing type check with this
+  const fileType = file.type || getMimeTypeFromFileName(file.name);
 
   return (
     <div className="w-[48%] flex items-center p-2 bg-gray-50 rounded-lg">
       <div className="w-8 h-8 flex items-center justify-center mr-2">
-        {file.type.startsWith("image/") && preview ? (
+        {fileType.startsWith("image/") && preview ? (
           <img
             src={preview}
             alt={file.name}
             className="w-8 h-8 object-cover rounded"
           />
         ) : (
-          <FileIcon fileType={file.type} />
+          <FileIcon fileType={fileType} />
         )}
       </div>
       <div className="flex-1 min-w-0">

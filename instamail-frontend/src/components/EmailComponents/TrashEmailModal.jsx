@@ -3,7 +3,12 @@ import { useAppContext } from "../../contexts/AppContext";
 import MailsService from "../../services/MailsService";
 import AttachmentService from "../../services/attachementsService";
 
-const TrashEmailModal = ({ email, attachmentsOfMail, onClose, setCurrentPage }) => {
+const TrashEmailModal = ({
+  email,
+  attachmentsOfMail,
+  onClose,
+  setCurrentPage,
+}) => {
   const { setEmails } = useAppContext();
   const { fetchEmails } = useAppContext();
 
@@ -33,7 +38,9 @@ const TrashEmailModal = ({ email, attachmentsOfMail, onClose, setCurrentPage }) 
   const handleDownload = async (attachmentId) => {
     try {
       const response = await AttachmentService.downloadAttachment(attachmentId);
-      const blob = new Blob([response.data], { type: response.headers["content-type"] });
+      const blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -127,35 +134,39 @@ const TrashEmailModal = ({ email, attachmentsOfMail, onClose, setCurrentPage }) 
           </div>
 
           {/* Attachments Section */}
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-              Attachments:
-            </h3>
-            <div className="space-y-2">
-              {attachmentsOfMail && attachmentsOfMail.length > 0 ? (
-                attachmentsOfMail.map((attachment) => (
-                  <div
-                    key={attachment.id}
-                    className="flex justify-between items-center py-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg"
-                  >
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {attachment.name}
-                    </span>
-                    <div className="flex gap-4">
-                      <button
-                        onClick={() => handleDownload(attachment.id)}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                      >
-                        Download
-                      </button>
+          {attachmentsOfMail && attachmentsOfMail.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                Attachments:
+              </h3>
+              <div className="space-y-2">
+                {attachmentsOfMail && attachmentsOfMail.length > 0 ? (
+                  attachmentsOfMail.map((attachment) => (
+                    <div
+                      key={attachment.id}
+                      className="flex justify-between items-center py-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg"
+                    >
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
+                        {attachment.name}
+                      </span>
+                      <div className="flex gap-4">
+                        <button
+                          onClick={() => handleDownload(attachment.id)}
+                          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        >
+                          Download
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-gray-500 dark:text-gray-400">No attachments</p>
-              )}
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    No attachments
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Warning Message */}

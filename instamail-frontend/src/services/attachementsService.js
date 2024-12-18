@@ -1,7 +1,7 @@
 import api from "./api";
 
-const AttachmentService = {
-    uploadAttachment: async (mailId, files) => {
+class AttachmentService {
+    static  uploadAttachment=async(mailId, files)=> {
         if(files.length === 0){
             return;
         }
@@ -17,8 +17,8 @@ const AttachmentService = {
         });
         
         return response.data;
-    },
-    downloadAttachment: async (attachmentId) => {
+    }
+    static downloadAttachment=async(attachmentId)=> {
         const response = await api.get(`/download-attachment/${attachmentId}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("authToken")}`,
@@ -26,8 +26,8 @@ const AttachmentService = {
             responseType: 'blob', 
         });
         return response;
-    },
-    getAttachmentname: async (mailId) => {
+    }
+    static getAttachmentname=async(mailId)=> {
         const response = await api.get(`/get-all-attachments/${mailId}`,
             {
                 headers: {
@@ -36,8 +36,8 @@ const AttachmentService = {
             }
         );
         return response.data;
-    },
-    multiRecievers: async (mailId, remainingReceivers) => {
+    }
+    static multiRecievers=async(mailId, remainingReceivers)=> {
         const response = await api.post(`/mail-attachments-for-multiple-mails/${mailId}`, remainingReceivers, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem("authToken")}`,
