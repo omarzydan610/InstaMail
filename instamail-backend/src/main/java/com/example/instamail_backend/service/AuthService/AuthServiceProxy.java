@@ -11,47 +11,89 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Service
 public class AuthServiceProxy implements AuthServiceInterface {
 
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private HttpServletRequest request;
+
+    // Map to track login attempts by IP address
+    private final Map<String, LoginAttempt> loginAttempts = new ConcurrentHashMap<>();
+
+    // Add a new field to track ban status
+    private final Map<String, Long> bannedUsers = new ConcurrentHashMap<>();
+
+    private static class LoginAttempt {
+        int count;
+        long timestamp;
+
+        LoginAttempt(int count, long timestamp) {
+            this.count = count;
+            this.timestamp = timestamp;
+        }
+    }
+
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        // Pre-processing logic (e.g., logging, validation)
+        String clientIp = request.getRemoteAddr();
+        long currentTime = System.currentTimeMillis();
+
+        // Check if the user is banned
+        if (bannedUsers.containsKey(clientIp) && currentTime < bannedUsers.get(clientIp)) {
+            throw new RuntimeException("You are temporarily banned from logging in. Please try again later.");
+        }
+
+        // Check if the IP address is already in the map
+        loginAttempts.putIfAbsent(clientIp, new LoginAttempt(0, currentTime));
+
+        LoginAttempt attempt = loginAttempts.get(clientIp);
+
+        // Reset count if more than a minute has passed
+        if (currentTime - attempt.timestamp > 60000) {
+            attempt.count = 0;
+            attempt.timestamp = currentTime;
+        }
+
+        // Check if the count exceeds the limit
+        if (attempt.count >= 5) {
+            // Ban the user for 2 minutes
+            bannedUsers.put(clientIp, currentTime + 120000); // 120000 ms = 2 minutes
+            System.out.println("Login attempt limit exceeded for IP: " + clientIp);
+            throw new RuntimeException("Too many login attempts. You are banned for 2 minutes.");
+        }
+
+        // Increment the count and proceed with login
+        attempt.count++;
         System.out.println("Login request received for email: " + loginRequest.getEmail());
 
-        // Delegate to the real service
         LoginResponse response = authService.login(loginRequest);
 
-        // Post-processing logic (e.g., logging, transformation)
         System.out.println("Login successful for email: " + loginRequest.getEmail());
         return response;
     }
 
     @Override
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
-        // Pre-processing logic
         System.out.println("Sign-up request received for email: " + signUpRequest.getEmail());
 
-        // Delegate to the real service
         SignUpResponse response = authService.signUp(signUpRequest);
 
-        // Post-processing logic
         System.out.println("Sign-up successful for email: " + signUpRequest.getEmail());
         return response;
     }
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response) {
-        // Pre-processing logic
         System.out.println("Logout request received");
 
-        // Delegate to the real service
         authService.logout(request, response);
 
-        // Post-processing logic
         System.out.println("Logout successful");
     }
 }
