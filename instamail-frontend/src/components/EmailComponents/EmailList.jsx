@@ -9,7 +9,7 @@ import AttachmentsService from "../../services/attachementsService";
 
 const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
-  const { emails, setEmails, fetchEmails, fetchEmailsForFolder } =
+  const { emails, setEmails, fetchEmails, fetchEmailsForFolder, userEmail } =
     useAppContext();
   const [isEditDraftVisible, setIsEditDraftVisible] = useState(false);
   const [attachmentsOfMail, setAttachmentsOfMail] = useState([]);
@@ -38,7 +38,6 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   }, [activeCategory]);
 
   const handleEmailClick = async (email) => {
-    console.log("youssef");
     if (activeCategory === "Inbox" && !email.isRead) {
       setEmails((prevEmails) =>
         prevEmails.map((prevEmail) =>
@@ -46,7 +45,6 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         )
       );
       await MailsService.markAsRead(email.id);
-      console.log("youssef");
     }
     const attachments = await AttachmentsService.getAttachmentname(email.id);
     setAttachmentsOfMail(attachments);
@@ -89,7 +87,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
       minute: "2-digit",
     });
   };
-  
+
   let emailModal = null;
   if (activeCategory === "Sent" && selectedEmail) {
     emailModal = (
@@ -174,7 +172,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
               onClick={() => handleEmailClick(email)}
             >
               <div className="flex justify-between items-start">
-                {activeCategory === "Inbox" ? (
+                {userEmail !== email.senderEmail ? (
                   <>
                     <h6 className="text-lg font-semibold text-green-600">
                       {email.senderEmail}
@@ -191,28 +189,18 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
                     )}
                   </>
                 ) : (
-                  (activeCategory === "Sent" ||
-                    activeCategory === "Drafts") && (
-                    <>
-                      <h6 className="text-lg font-semibold text-red-600">
-                        {email.receiverEmail}
-                      </h6>
-                      <span className="text-sm text-gray-500">
-                        {formatDate(email.createdAt)}
-                      </span>
-                    </>
-                  )
+                  <>
+                    <h6 className="text-lg font-semibold text-red-600">
+                      {email.receiverEmail}
+                    </h6>
+                    <span className="text-sm text-gray-500">
+                      {formatDate(email.createdAt)}
+                    </span>
+                  </>
                 )}
               </div>
               <div className="flex justify-between items-center">
                 <p className="text-gray-700 mt-1">{email.subject}</p>
-                {activeCategory !== "Inbox" &&
-                  activeCategory !== "Sent" &&
-                  activeCategory !== "Drafts" && (
-                    <span className="text-sm text-gray-500">
-                      {formatDate(email.createdAt)}
-                    </span>
-                  )}
               </div>
             </div>
           ))
@@ -233,9 +221,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
           >
             <FaChevronLeft size={14} />
           </button>
-          <span className="text-sm">
-            Page {currentPage} of {totalPages}
-          </span>
+          <span className="text-sm">Page {currentPage}</span>
           <button
             onClick={nextPage}
             disabled={currentPage === totalPages}

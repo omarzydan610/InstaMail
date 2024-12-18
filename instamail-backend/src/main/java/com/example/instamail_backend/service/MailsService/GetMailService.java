@@ -28,13 +28,12 @@ public class GetMailService {
 
     @Autowired
     private MailRepository mailRepository;
-
     @Autowired
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
 
-    public List<Mail> getMails(String token, String type, int start, int size,int sortStrategy) {
+    public List<Mail> getMails(String token, String type, int start, int size, int sortStrategy) {
         long userId = userService.getIdByToken(token);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         List<Mail> mails = mailRepository.findBySenderEmailOrReceiverEmail(user.getEmail(), user.getEmail());
@@ -56,21 +55,21 @@ public class GetMailService {
         }
         MailSorter mailSorter = new MailSorter();
         switch (sortStrategy) {
-            case 1:
-                mailSorter.setSortStrategy(new SortByDateAsc());
-                break;
-            case 2:
-                mailSorter.setSortStrategy(new SortByDateDecs());
-                break;
-            case 3:
-                mailSorter.setSortStrategy(new SortBySubjectAsc());
-                break;
-            case 4:
-                mailSorter.setSortStrategy(new SortBySubjectDesc());
-                break;
-            case 5:
-                mailSorter.setSortStrategy(new SortByPriority());
-                break;
+        case 1:
+            mailSorter.setSortStrategy(new SortByDateAsc());
+            break;
+        case 2:
+            mailSorter.setSortStrategy(new SortByDateDecs());
+            break;
+        case 3:
+            mailSorter.setSortStrategy(new SortBySubjectAsc());
+            break;
+        case 4:
+            mailSorter.setSortStrategy(new SortBySubjectDesc());
+            break;
+        case 5:
+            mailSorter.setSortStrategy(new SortByPriority());
+            break;
         }
         mails = mailSorter.sort(mails);
         if (mails.size() == 0 || start >= mails.size()) {
