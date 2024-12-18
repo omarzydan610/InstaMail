@@ -14,7 +14,7 @@ import com.example.instamail_backend.repository.AttachmentRepository;
 
 @Service
 public class AttachmentService {
-    private final String attachmentPath = "/Users/omar_zydan/programming/fullStack/Lab3/InstaMail/instamail-backend/src/main/java/com/example/instamail_backend/attachements";
+    private final String attachmentPath = "E:\\Programming 2\\New folder\\InstaMail\\instamail-backend\\src\\main\\java\\com\\example\\instamail_backend\\uploads\\";
 
     File attachmentFile = new File(attachmentPath);
 
@@ -63,5 +63,8 @@ public class AttachmentService {
         response.put("name", attachment.getName());
         return response;
     }
-
+    public void deleteAttachment(Long attachmentId){
+        attachmentRepository.deleteById(attachmentId);
+    }
+    
 }
