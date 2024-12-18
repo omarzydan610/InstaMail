@@ -5,12 +5,14 @@ import DraftedEmailModal from "./DraftedEmailModal";
 import TrashEmailModal from "./TrashEmailModal";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import MailsService from "../../services/MailsService";
+import AttachmentsService from "../../services/attachementsService";
 
 const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   const [selectedEmail, setSelectedEmail] = useState(null);
   const { emails, setEmails, fetchEmails, fetchEmailsForFolder } =
     useAppContext();
   const [isEditDraftVisible, setIsEditDraftVisible] = useState(false);
+  const [attachmentsOfMail, setAttachmentsOfMail] = useState([]);
 
   const emailsPerPage = 5;
   const IndexOfLastEmail = currentPage * emailsPerPage;
@@ -36,6 +38,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   }, [activeCategory]);
 
   const handleEmailClick = async (email) => {
+    console.log("youssef");
     if (activeCategory === "Inbox" && !email.isRead) {
       setEmails((prevEmails) =>
         prevEmails.map((prevEmail) =>
@@ -43,7 +46,10 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
         )
       );
       await MailsService.markAsRead(email.id);
+      console.log("youssef");
     }
+    const attachments = await AttachmentsService.getAttachmentname(email.id);
+    setAttachmentsOfMail(attachments);
     setSelectedEmail(email);
   };
 
@@ -83,12 +89,13 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
       minute: "2-digit",
     });
   };
-
+  
   let emailModal = null;
   if (activeCategory === "Sent" && selectedEmail) {
     emailModal = (
       <NormalEmailModal
         email={selectedEmail}
+        attachmentsOfMail={attachmentsOfMail}
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
@@ -99,6 +106,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     emailModal = (
       <NormalEmailModal
         email={selectedEmail}
+        attachmentsOfMail={attachmentsOfMail}
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
@@ -109,6 +117,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     emailModal = (
       <DraftedEmailModal
         email={selectedEmail}
+        attachmentsOfMail={attachmentsOfMail}
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
@@ -121,6 +130,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     emailModal = (
       <TrashEmailModal
         email={selectedEmail}
+        attachmentsOfMail={attachmentsOfMail}
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}
@@ -131,6 +141,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     emailModal = (
       <NormalEmailModal
         email={selectedEmail}
+        attachmentsOfMail={attachmentsOfMail}
         onClose={handleCloseModal}
         setEmails={setEmails}
         activeCategory={activeCategory}
@@ -141,6 +152,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
     emailModal = (
       <NormalEmailModal
         email={selectedEmail}
+        attachmentsOfMail={attachmentsOfMail}
         onClose={handleCloseModal}
         setEmails={setEmails}
         setCurrentPage={setCurrentPage}

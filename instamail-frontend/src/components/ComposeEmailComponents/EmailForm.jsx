@@ -3,6 +3,7 @@ import { FaSave, FaPaperPlane, FaTimes, FaUserFriends } from "react-icons/fa";
 import ActionButton from "./Button";
 import AttachmentsSection from "./AttachmentsComponents/AttachmentsSection";
 import MailsService from "../../services/MailsService";
+import AttachmentsService from "../../services/attachementsService";
 const EmailForm = ({
   inputStyles,
   showContacts,
@@ -18,6 +19,7 @@ const EmailForm = ({
   const [currentEmail, setCurrentEmail] = React.useState("");
   const [attachments, setAttachments] = React.useState([]);
   const formRef = React.useRef(null);
+  let mailId ;
   const handleAddRecipient = (e) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,6 +45,7 @@ const EmailForm = ({
     setRecipients((prev) => prev.filter((_, i) => i !== index));
   };
 
+  
   const handleFileChange = (event) => {
     const newFiles = Array.from(event.target.files);
 
@@ -61,6 +64,7 @@ const EmailForm = ({
   };
 
   const handleSend = async () => {
+
     const mail = {
       Recipients: recipients,
       subject: subject,
@@ -82,7 +86,11 @@ const EmailForm = ({
       return;
     }
 
-    await MailsService.addMail(mail, false);
+    mailId = await MailsService.addMail(mail, false);
+    console.log(mailId);  
+    console.log(attachments);
+    await AttachmentsService.uploadAttachment(mailId, attachments);
+    await AttachmentsService.multiRecievers(mailId, mail.Recipients.slice(1) )
     setError("");
     console.log(`Sending email to: ${recipients.join(", ")}`);
     onClose();
@@ -114,7 +122,11 @@ const EmailForm = ({
       return;
     }
 
-    await MailsService.addMail(mail, true);
+    mailId = await MailsService.addMail(mail, true);
+    console.log(mailId);
+    console.log(attachments);
+    await AttachmentsService.uploadAttachment(mailId, attachments);
+    await AttachmentsService.multiRecievers(mailId, mail.Recipients.slice(1) )
     setError("");
     console.log(`Draft saved for: ${recipients.join(", ")}`);
     onClose();
