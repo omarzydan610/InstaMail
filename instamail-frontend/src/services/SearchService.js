@@ -1,9 +1,10 @@
-import axios from "axios";
+import api from "./api";
 
 class SearchService {
-  static searchMails(searchTerm) {
+  static async searchMails(searchTerm) {
+    console.log(searchTerm);
     const token = localStorage.getItem("authToken");
-    const response = axios.get(`/search/${searchTerm}`, {
+    const response = await api.get(`/search/${searchTerm}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;

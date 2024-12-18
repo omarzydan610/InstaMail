@@ -4,7 +4,7 @@ import Sidebar from "../components/HomePageComponents/Sidebar/Sidebar";
 import HomePageBody from "../components/HomePageComponents/HomePageBody";
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
-import SearchModal from "../components/SearchModal";
+import SearchModal from "../components/SearchComponents/SearchModal";
 
 const Home = () => {
   const { token } = useAppContext();
