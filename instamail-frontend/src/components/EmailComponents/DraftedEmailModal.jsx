@@ -36,11 +36,16 @@ const DraftedEmailModal = ({
   // Handle attachment download
   const handleDownload = async (attachmentId, attachmentName) => {
     const response = await AttachmentService.downloadAttachment(attachmentId);
-    const blob = new Blob([response.data], { type: response.headers['content-type'] });
+    const blob = new Blob([response.data], {
+      type: response.headers["content-type"],
+    });
     const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.setAttribute('download', attachmentName || response.headers['content-language']); // Use filename if provided
+    link.setAttribute(
+      "download",
+      attachmentName || response.headers["content-language"]
+    ); // Use filename if provided
     document.body.appendChild(link);
     link.click();
 
@@ -121,33 +126,39 @@ const DraftedEmailModal = ({
           </div>
 
           {/* Attachments Section */}
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-              Attachments:
-            </h3>
-            <div className="space-y-2">
-              {attachmentsOfMail && attachmentsOfMail.length > 0 ? (
-                attachmentsOfMail.map((attachment) => (
-                  <div
-                    key={attachment.id}
-                    className="flex justify-between items-center py-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg"
-                  >
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {attachment.name}
-                    </span>
-                    <button
-                      onClick={() => handleDownload(attachment.id, attachment.name)}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          {attachmentsOfMail && attachmentsOfMail.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                Attachments:
+              </h3>
+              <div className="space-y-2">
+                {attachmentsOfMail && attachmentsOfMail.length > 0 ? (
+                  attachmentsOfMail.map((attachment) => (
+                    <div
+                      key={attachment.id}
+                      className="flex justify-between items-center py-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg"
                     >
-                      Download
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-gray-500 dark:text-gray-400">No attachments</p>
-              )}
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
+                        {attachment.name}
+                      </span>
+                      <button
+                        onClick={() =>
+                          handleDownload(attachment.id, attachment.name)
+                        }
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                      >
+                        Download
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    No attachments
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Action Buttons */}
           <div className="absolute bottom-6 left-6 flex gap-4">

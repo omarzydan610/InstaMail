@@ -96,6 +96,7 @@ const HomePageBody = ({
       } else {
         await fetchEmails(activeCategory, 0, 6, true);
       }
+      setCurrentPage(1);
     };
     changeSort();
   }, [sortStrategy]);

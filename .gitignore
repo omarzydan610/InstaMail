@@ -13,6 +13,7 @@ pnpm-debug.log*
 target/
 .mvn/
 !/.mvn/wrapper/maven-wrapper.jar
+instamail-backend/src/main/java/com/example/instamail_backend/attachements
 *.log
 *.env
 
