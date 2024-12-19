@@ -106,28 +106,41 @@ export const AppProvider = ({ children }) => {
         break;
     }
     console.log("fetchEmails", type, start, size, clear);
-    const emails = await MailsService.getMails(type, start, size, sortStrategy);
+    let emails;
+    try {
+      setTimeout(10);
+      emails = await MailsService.getMails(type, start, size, sortStrategy);
+    } catch (e) {
+      console.log("fetcherror", e);
+    }
     console.log("emails", emails);
     if (clear) {
       setEmails([]);
     }
-    setEmails((prevEmails) => [...prevEmails, ...emails]);
+    try {
+      setEmails((prevEmails) => [...prevEmails, ...emails]);
+    } catch (e) {
+      console.log(e);
+    }
     return emails;
   };
 
   const [BackNotify, setBackNotify] = useState(0);
 
+  // Connect to the SSE endpoint
+
   useEffect(() => {
-    // Connect to the SSE endpoint
     const eventSource = new EventSource(
       "http://localhost:8080/api/sse/connect"
     );
-
-    // Listen for email-sent events
-    eventSource.addEventListener("email-sent", (event) => {
-      console.log("Email Notification Received:", event.data);
-      setBackNotify((prev) => prev + 1);
-    });
+    try {
+      eventSource.addEventListener("email-sent", (event) => {
+        console.log("Email Notification Received:", event.data);
+        setBackNotify((prev) => prev + 1);
+      });
+    } catch (e) {
+      console.log("sse error:", e);
+    }
 
     // Handle errors
     eventSource.onerror = () => {

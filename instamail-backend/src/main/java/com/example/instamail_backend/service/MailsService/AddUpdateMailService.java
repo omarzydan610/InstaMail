@@ -37,7 +37,9 @@ public class AddUpdateMailService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         mail.setSenderEmail(user.getEmail());
         Mail savedMail = mailRepository.save(mail);
-        sseController.notifyClients("there is a new mail");
+        synchronized (sseController) {
+            sseController.notifyClients("there is a new mail");
+        }
         return savedMail.getId();
     }
 
@@ -193,7 +195,9 @@ public class AddUpdateMailService {
         mail.setIsDraft(false);
         mail.setCreatedAt(LocalDateTime.now());
         Mail savedMail = mailRepository.save(mail);
-        sseController.notifyClients("there is a new mail");
+        synchronized (sseController) {
+            sseController.notifyClients("there is a new mail");
+        }
         return savedMail.getId();
     }
 

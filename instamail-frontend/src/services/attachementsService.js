@@ -61,11 +61,17 @@ class AttachmentService {
       return;
     }
     const formData = new FormData();
+    let count = 0;
     files.forEach((file) => {
       if (!file.file) {
+        count++;
         formData.append("files", file);
       }
     });
+    if (count === 0) {
+      return;
+    }
+
     const response = await api.post(`/upload-attachment/${mailId}`, formData, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
