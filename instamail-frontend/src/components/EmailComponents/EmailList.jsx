@@ -44,10 +44,7 @@ const EmailList = ({ activeCategory, currentPage, setCurrentPage }) => {
   }, [activeCategory]);
 
   useEffect(() => {
-    if (activeCategory.id) {
-      fetchEmailsForFolder(activeCategory.id, 0, 6, true);
-      setCurrentPage(1);
-    } else {
+    if (!activeCategory.id && activeCategory === "Inbox") {
       fetchEmails(activeCategory, 0, 6, true);
       setCurrentPage(1);
     }
