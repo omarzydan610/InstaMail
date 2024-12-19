@@ -2,6 +2,8 @@
 
 InstaMail is a web-based email application designed to offer a modern, user-friendly platform for managing email communications. It combines advanced functionalities, intuitive design, and robust security features, making it ideal for efficient and secure email handling.
 
+![1734636805090](assets/Screenshot.png)
+
 This is Our Fourth Assignment in Design Patterns Course (CSED27 Alexandria University)
 
 ## `🌟`Project Objectives
