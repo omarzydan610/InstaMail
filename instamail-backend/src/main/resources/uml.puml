@@ -1,4 +1,4 @@
-@startuml
+@startuml uml
 skinparam class {
     BackgroundColor<<entity>> #B3E5FC
     BackgroundColor<<service>> #C8E6C9

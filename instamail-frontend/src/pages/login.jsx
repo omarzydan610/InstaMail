@@ -14,6 +14,10 @@ const Login = () => {
     useAppContext();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (email && !email.endsWith("@instamail.com")) {
+      setError("Email must end with '@instamail.com'");
+      return;
+    }
     const response = await AuthContext.login(
       email,
       password,
