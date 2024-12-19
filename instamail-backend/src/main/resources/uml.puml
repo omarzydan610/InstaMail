@@ -1,0 +1,304 @@
+@startuml
+skinparam class {
+    BackgroundColor<<entity>> #B3E5FC
+    BackgroundColor<<service>> #C8E6C9
+    BackgroundColor<<controller>> #FFCC80
+    BackgroundColor<<interface>> #D1C4E9
+    BackgroundColor<<repository>> #E0E0E0
+    BackgroundColor<<other>> #FFF9C4
+    ArrowColor Black
+    BorderColor Black
+}
+
+left to right direction
+' Models
+class User <<entity>> {
+    - Id: Long
+    - firstName: String
+    - lastName: String
+    - username: String
+    - email: String
+    - phoneNumber: String
+    - password: String
+}
+class Mail <<entity>> {
+    - id: Long
+    - senderEmail: String
+    - receiverEmail: String
+    - subject: String
+    - content: String
+    - createdAt: LocalDateTime
+    - isRead: Boolean
+    - isDraft: Boolean
+    - priority: Integer
+    - isSenderStarred: Boolean
+    - isReceiverStarred: Boolean
+    - isSenderDeleted: Integer
+    - isReceiverDeleted: Integer
+    - senderFolderId: Long
+    - receiverFolderId: Long
+    - deletedAtSender: LocalDateTime
+    - deletedAtReceiver: LocalDateTime
+    + clone(receiverEmail: String, mailId: Long): Prototype
+}
+class Folders <<entity>> {
+    - id: Long
+    - name: String
+    - isDeleted: Integer
+    - createdAt: LocalDateTime
+    - deletedAt: LocalDateTime
+    - userId: Long
+    - email: String
+}
+class Contact <<entity>> {
+    - Id: Long
+    - contactId: Long
+    - email: String
+}
+class ContactEmail <<entity>> {
+    - Id: Long
+    - contactId: Long
+    - email: String
+}
+
+' Interfaces
+interface AuthServiceInterface <<interface>> {
+    + login(request: LoginRequest): LoginResponse
+    + signUp(request: SignUpRequest): SignUpResponse
+    + logout(request: HttpServletRequest, response: HttpServletResponse): void
+}
+
+' Services
+class AuthServiceProxy <<service>> {
+    + login(request: LoginRequest): LoginResponse
+    + signUp(request: SignUpRequest): SignUpResponse
+    + logout(request: HttpServletRequest, response: HttpServletResponse): void
+}
+class AuthService <<service>> {
+    + login(request: LoginRequest): LoginResponse
+    + signUp(request: SignUpRequest): SignUpResponse
+    + logout(request: HttpServletRequest, response: HttpServletResponse): void
+}
+class UserService <<service>> {
+    + getIdByToken(token: String): Long
+    + getUserByToken(token: String): User
+}
+class FoldersService <<service>> {
+    + getFoldersByUserId(token: String): List<Folders>
+    + createFolder(token: String, request: Map<String, String>): Folders
+}
+class GetMailService <<service>> {
+    + getMails(token: String, type: String, start: int, size: int, sortStrategy: int): List<Mail>
+}
+class ContactsService <<service>> {
+    + addContact(token: String, contact: Map<String, String>): void
+    + getContacts(token: String): List<Contact>
+}
+class AttachmentService <<service>> {
+    + saveAttachment(multipartFiles: List<MultipartFile>, mailId: Long): void
+}
+
+' Repositories
+class JwtUtil {
+    - SECRET: String
+    - SECRET_KEY: SecretKey
+    + generateToken(Id: Long): String
+    + extractId(token: String): Long
+    + isTokenValid(token: String): boolean
+}
+
+class AttachmentRepository <<repository>>{
+    + findByMailId(mailId: Long): List<Attachment>
+    + deleteByMailId(mailId: Long): void
+}
+
+class ContactEmailRepository <<repository>>{
+    + findByContactId(contactId: Long): List<ContactEmail>
+    + deleteByContactId(contactId: Long): void
+}
+
+class ContactRepository <<repository>>{
+    + existsByUserIdAndContactName(userId: Long, contactName: String): boolean
+    + findByUserId(userId: Long): List<Contact>
+}
+
+class FoldersRepository <<repository>>{
+    + findByEmail(email: String): List<Folders>
+    + findByUserId(userId: Long): List<Folders>
+    + updateFolderName(folderId: Long, folderName: String): void
+    + findByEmailAndUserId(email: String, userId: Long): List<Folders>
+}
+
+class MailRepository <<repository>> {
+    + findBySenderEmailOrReceiverEmail(senderEmail: String, receiverEmail: String): List<Mail>
+    + findByFolderIdSender(folderId: Long, senderEmail: String): List<Mail>
+    + findByFolderIdReceiver(folderId: Long, receiverEmail: String): List<Mail>
+    + updateMailFolderIdSender(mailId: long, folderId: Long, senderEmail: String): void
+    + updateMailFolderIdReceiver(mailId: long, folderId: Long, receiverEmail: String): void
+}
+
+class UserRepository <<repository>>{
+    + findByEmail(email: String): Optional<User>
+    + existsByEmail(email: String): boolean
+    + existsByUsername(username: String): boolean
+    + existsByPhoneNumber(phoneNumber: String): boolean
+}
+
+' Controllers
+class UserController <<controller>>{
+    + getUserFromToken(token: String): ResponseEntity
+}
+class SearchController <<controller>> {
+    + searchMails(token: String, searchTerm: String): ResponseEntity
+}
+class MailController <<controller>> {
+    + sendMail(token: String, requestData: Map): ResponseEntity
+    + draftMail(token: String, requestData: Map): ResponseEntity
+    + getReceivedMails(token: String, start: int, size: int, sortStrategy: int): ResponseEntity
+    + getSentMails(token: String, start: int, size: int, sortStrategy: int): ResponseEntity
+    + toggleStar(mailId: long): ResponseEntity
+    + deletePermanently(mailId: long): ResponseEntity
+    + markAsRead(mailId: long): ResponseEntity
+}
+class FoldersController <<controller>> {
+    + createFolder(token: String, request: Map): String
+    + deleteFolder(token: String, folderId: Long): String
+    + getFolders(token: String): List<Folders>
+}
+class ContactsController <<controller>> {
+    + addContact(token: String, contact: Map): ResponseEntity
+    + getContacts(token: String): ResponseEntity
+}
+class AuthController <<controller>> {
+    + login(loginRequest: LoginRequest): ResponseEntity
+    + signUp(signUpRequest: SignUpRequest): ResponseEntity
+    + logout(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity
+}
+class AttachmentController <<controller>> {
+    + uploadAttachment(token: String, mailId: Long, files: List): ResponseEntity
+    + downloadAttachment(token: String, attachmentId: Long): ResponseEntity
+}
+
+' Other Classes
+class SortStrategy <<other>> {
+    + sort(mails: List<Mail>): List<Mail>
+}
+class Criteria <<other>> {
+    + meetCriteria(mails: List<Mail>): List<Mail>
+}
+
+class MailSorter {
+    - sortStrategy: SortStrategy
+    + sort(mails: List<Mail>): List<Mail>
+    + setSortStrategy(sortStrategy: SortStrategy): void
+}
+
+class AddUpdateMailService <<service>> {
+    - mailRepository: MailRepository
+    - userService: UserService
+    - userRepository: UserRepository
+    - sseController: SSE_Controller
+    + sendMail(token: String, requestData: Map<String, Object>): long
+    + draftMail(token: String, requestData: Map<String, Object>): long
+    + toggleStarMail(mailId: long, token: String): boolean
+    + toggleDeletion(mailId: long, token: String): boolean
+    + deleteMailPermanently(mailId: long, token: String): boolean
+    + deleteDraft(mailId: long, token: String): boolean
+    + markAsRead(mailId: long, token: String): Boolean
+    + updateMailFolderId(token: String, mailId: long, folderId: Long): void
+    + editDraft(token: String, requestData: Map<String, Object>): boolean
+    + sendDraft(token: String, requestData: Map<String, Object>): long
+}
+
+class SearchService <<service>> {
+    - mailRepository: MailRepository
+    - userService: UserService
+    - userRepository: UserRepository
+    + searchMails(token: String, searchTerm: String): Map<String, List<Mail>>
+}
+
+class Attachment <<modle>> implements Prototype {
+    - id: Long
+    - name: String
+    - path: String
+    - mailId: long
+    + Attachment()
+    + Attachment(name: String, path: String, mailId: long)
+    + clone(receiverEmail: String, mailId: long): Prototype
+}
+
+User -down-> Mail : owns >
+User -down-> Folders : owns >
+User -down-> Contact : owns >
+Contact -right-> ContactEmail : has >
+User -right-> AuthService : uses >
+User -right-> UserService : uses >
+User -right-> FoldersService : uses >
+User -right-> GetMailService : uses >
+User -right-> ContactsService : uses >
+User -right-> JwtUtil : uses >
+Mail -right-> Attachment : contains >
+
+AuthService -up-> LoginRequest : uses >
+AuthService -up-> SignUpRequest : uses >
+AuthService -up-> LoginResponse : uses >
+AuthService -up-> SignUpResponse : uses >
+
+LoginResponse -up-> User : uses >
+SignUpResponse -up-> User : uses >
+
+User -down-> AttachmentRepository : uses >
+User -down-> ContactEmailRepository : uses >
+User -down-> ContactRepository : uses >
+User -down-> FoldersRepository : uses >
+User -down-> MailRepository : uses >
+User -down-> UserRepository : uses >
+GetMailService -right-> MailSorter : uses >
+GetMailService "1" -- "*" Criteria : uses >
+
+UserController --> UserService : uses
+SearchController --> SearchService : uses
+MailController --> GetMailService : uses
+MailController --> AddUpdateMailService : uses
+FoldersController --> FoldersService : uses
+ContactsController --> ContactsService : uses
+AuthController --> AuthServiceProxy : uses
+AttachmentController --> AttachmentService : uses
+AddUpdateMailService "1" -- "1" MailRepository : uses >
+AddUpdateMailService "1" -- "1" UserService : uses >
+AddUpdateMailService "1" -- "1" UserRepository : uses >
+SearchService "1" -- "1" MailRepository : uses >
+SearchService "1" -- "1" UserService : uses >
+SearchService "1" -- "1" UserRepository : uses >
+Attachment "1" -- "1" Prototype : implements >
+
+interface Prototype {
+    + clone(receiverEmail: String, mailId: long): Prototype
+}
+
+class LoginRequest {
+    - email: String
+    - password: String
+}
+
+class SignUpRequest {
+    - email: String
+    - password: String
+    - firstName: String
+    - lastName: String
+    - username: String
+    - phoneNumber: String
+}
+
+class LoginResponse {
+    - token: String
+    - user: User
+    + LoginResponse(token: String, user: User)
+}
+
+class SignUpResponse {
+    - token: String
+    - user: User
+    + SignUpResponse(token: String, user: User)
+}
+@enduml

@@ -1,4 +1,4 @@
-package com.example.instamail_backend.service.MailsService;
+package com.example.instamail_backend.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,6 @@ import com.example.instamail_backend.model.User;
 import com.example.instamail_backend.repository.FoldersRepository;
 import com.example.instamail_backend.repository.MailRepository;
 import com.example.instamail_backend.repository.UserRepository;
-import com.example.instamail_backend.service.UserService;
 
 @Service
 public class FoldersService {

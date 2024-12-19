@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.instamail_backend.service.MailsService.SearchService;
+import com.example.instamail_backend.service.SearchService;
 
 @RestController
 public class SearchController {

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.instamail_backend.model.Folders;
 import com.example.instamail_backend.model.Mail;
-import com.example.instamail_backend.service.MailsService.FoldersService;
+import com.example.instamail_backend.service.FoldersService;
 
 @RestController
 public class FoldersController {
