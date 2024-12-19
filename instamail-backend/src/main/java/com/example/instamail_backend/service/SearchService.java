@@ -1,4 +1,4 @@
-package com.example.instamail_backend.service.MailsService;
+package com.example.instamail_backend.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.example.instamail_backend.model.Mail;
 import com.example.instamail_backend.repository.MailRepository;
 import com.example.instamail_backend.repository.UserRepository;
-import com.example.instamail_backend.service.UserService;
 import com.example.instamail_backend.model.User;
 
 @Service
@@ -46,7 +45,6 @@ public class SearchService {
         result.put("body", byBody);
         result.put("sender", bySender);
         result.put("receiver", byReceiver);
-        System.out.println(result);
         return result;
     }
 }

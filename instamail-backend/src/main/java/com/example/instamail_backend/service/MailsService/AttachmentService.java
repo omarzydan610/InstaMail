@@ -37,7 +37,6 @@ public class AttachmentService {
                 multipartFile.transferTo(newFile);
                 String path = newFile.getAbsolutePath();
                 System.out.println(path);
-                System.out.println(newFile.getAbsolutePath());
 
                 Attachment attachment1 = new Attachment(orignatfileName, newFile.getAbsolutePath(), mailId);
                 attachmentRepository.save(attachment1);
@@ -50,7 +49,6 @@ public class AttachmentService {
 
     public List<Attachment> getAttachmentsByMailId(Long mailId) {
         List<Attachment> attachments = attachmentRepository.findByMailId(mailId);
-        System.out.println(attachments);
         return attachments;
     }
 

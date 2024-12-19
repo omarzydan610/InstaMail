@@ -25,18 +25,15 @@ public class ContactsService {
     private ContactEmailRepository contactEmailRepository;
 
     public void addContact(String token, Map<String, String> contact) {
-        System.out.println(contact);
         long userId = userService.getIdByToken(token);
         String contactName = contact.get("name");
         Contact newContact = new Contact(userId, contactName);
         try {
             contactRepository.save(newContact);
         } catch (Exception e) {
-            System.out.println(e);
             throw new RuntimeException("Contact already exists");
         }
         Long contactId = newContact.getContactId();
-        System.out.println(contactId);
         List<String> emails = new ArrayList<String>();
         for (Map.Entry<String, String> entry : contact.entrySet()) {
             if (entry.getKey().startsWith("email")) {
@@ -47,8 +44,7 @@ public class ContactsService {
             ContactEmail newEmail = new ContactEmail(contactId, email);
             contactEmailRepository.save(newEmail);
         }
-        System.out.println(contactName);
-        System.out.println(emails);
+
     }
 
     public List<Contact> getContacts(String token) {
@@ -58,7 +54,6 @@ public class ContactsService {
             contacts.sort((c1, c2) -> c1.getContactId().compareTo(c2.getContactId()));
             return contacts;
         } catch (Exception e) {
-            System.err.println("Error fetching contacts: ");
             throw new RuntimeException("Failed to fetch contacts");
         }
     }
@@ -70,7 +65,7 @@ public class ContactsService {
             contactEmails.sort((e1, e2) -> e1.getId().compareTo(e2.getId()));
             return contactEmails;
         } catch (Exception e) {
-            System.err.println("Error fetching contact emails: ");
+
             throw new RuntimeException("Failed to fetch contact emails");
         }
     }
@@ -81,7 +76,7 @@ public class ContactsService {
             contactEmailRepository.deleteByContactId(contactId);
             contactRepository.deleteById(contactId);
         } catch (Exception e) {
-            System.err.println("Error deleting contact: " + e.getMessage());
+
             throw new RuntimeException("Failed to delete contact");
         }
     }
@@ -94,21 +89,21 @@ public class ContactsService {
                     .orElseThrow(() -> new RuntimeException("Contact not found"));
             updatedContact.setContactName(contact.get("name"));
             contactRepository.save(updatedContact);
-            
+
             List<String> emails = new ArrayList<String>();
             for (Map.Entry<String, String> entry : contact.entrySet()) {
                 if (entry.getKey().startsWith("email")) {
                     emails.add(entry.getValue());
                 }
             }
-            
+
             contactEmailRepository.deleteByContactId(contactId);
             for (String email : emails) {
                 ContactEmail newEmail = new ContactEmail(contactId, email);
                 contactEmailRepository.save(newEmail);
             }
         } catch (Exception e) {
-            System.err.println("Error updating contact: " + e.getMessage());
+
             throw new RuntimeException("Failed to update contact");
         }
     }

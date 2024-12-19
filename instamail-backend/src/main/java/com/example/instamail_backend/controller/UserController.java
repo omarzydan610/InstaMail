@@ -17,13 +17,10 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<?> getUserFromToken(@RequestHeader("Authorization") String token) {
-        System.out.println("userrequest");
-        System.out.println(userService);
         try {
             User user = userService.getUserByToken(token);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
-            System.out.println(e);
             return ResponseEntity.status(401).body("Invalid or expired token");
         }
     }

@@ -7,8 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.instamail_backend.model.Attachment;
 public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
     List<Attachment> findByMailId(Long mailId);
-    void deleteByMailId(Long mailId);
-   
-    // @Query("SELECT a FROM Attachment a WHERE a.mailId = :mailId")
-    // List<Attachment> findByMailId(@Param("mailId") long mailId);    
+    void deleteByMailId(Long mailId);    
 }

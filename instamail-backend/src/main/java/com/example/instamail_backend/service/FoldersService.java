@@ -1,4 +1,4 @@
-package com.example.instamail_backend.service.MailsService;
+package com.example.instamail_backend.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,6 @@ import com.example.instamail_backend.model.User;
 import com.example.instamail_backend.repository.FoldersRepository;
 import com.example.instamail_backend.repository.MailRepository;
 import com.example.instamail_backend.repository.UserRepository;
-import com.example.instamail_backend.service.UserService;
 
 @Service
 public class FoldersService {
@@ -77,8 +76,6 @@ public class FoldersService {
         if (mails.size() == 0 || start >= mails.size()) {
             return new ArrayList<>();
         }
-        System.out.println("start:" + start);
-        System.out.println("size:" + Math.min(start + size, mails.size()));
         return mails.subList(start, Math.min(start + size, mails.size()));
     }
 

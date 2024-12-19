@@ -16,10 +16,15 @@ const Signup = () => {
   // Error state to handle validation messages
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setusername, setuserEmail, setphoneNumber,setToken } = useAppContext();
+  const { setusername, setuserEmail, setphoneNumber, setToken } =
+    useAppContext();
 
   // Validation for password match
   const validateForm = () => {
+    if (email && !email.endsWith("@instamail.com")) {
+      setError("Email must end with '@instamail.com'");
+      return false;
+    }
     if (password !== confirmPassword) {
       setError("Error:Passwords do not match");
       return false;

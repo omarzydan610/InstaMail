@@ -26,7 +26,6 @@ public class AuthController {
             LoginResponse response = authServiceProxy.login(loginRequest); // Proxy method
             return ResponseEntity.ok(response);
         } catch (RuntimeException ex) {
-            System.out.println(ex);
             return ResponseEntity.status(401).body(ex.getMessage()); // Unauthorized
         }
     }

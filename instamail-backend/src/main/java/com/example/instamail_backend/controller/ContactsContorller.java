@@ -24,8 +24,6 @@ public class ContactsContorller {
     @PostMapping("/add-contact")
     public ResponseEntity<?> addContact(@RequestHeader("Authorization") String token,
             @RequestBody Map<String, String> contact) {
-        System.out.println("hi");
-        System.out.println(contact);
         try {
             contactsService.addContact(token, contact);
             return ResponseEntity.ok("Contact added");

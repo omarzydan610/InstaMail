@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.instamail_backend.model.Folders;
 import com.example.instamail_backend.model.Mail;
-import com.example.instamail_backend.service.MailsService.FoldersService;
+import com.example.instamail_backend.service.FoldersService;
 
 @RestController
 public class FoldersController {
@@ -26,8 +26,6 @@ public class FoldersController {
 
     @PostMapping("/create-folder")
     public String createFolder(@RequestHeader("Authorization") String token, @RequestBody Map<String, String> request) {
-        System.out.println(request.get("name"));
-        System.out.println(token);
         foldersService.createFolder(token, request);
 
         return "success";
