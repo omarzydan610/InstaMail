@@ -29,8 +29,6 @@ public class AddUpdateMailService {
         Mail mail = new Mail((String) requestData.get("receiverEmail"), (String) requestData.get("subject"),
                 (String) requestData.get("content"), (Integer) requestData.get("priority"));
         long userId;
-        System.out.println("userId");
-        System.out.println(token);
         try {
             userId = userService.getIdByToken(token);
         } catch (Exception e) {
@@ -40,8 +38,6 @@ public class AddUpdateMailService {
         mail.setSenderEmail(user.getEmail());
         Mail savedMail = mailRepository.save(mail);
         sseController.notifyClients("there is a new mail");
-        System.out.println("savedMail");
-        System.out.println(savedMail);
         return savedMail.getId();
     }
 
@@ -61,8 +57,6 @@ public class AddUpdateMailService {
         mail.setSenderEmail(user.getEmail());
         mail.setIsDraft(true);
         Mail savedMail = mailRepository.save(mail);
-        System.out.println("savedMail");
-        System.out.println(savedMail);
         return savedMail.getId();
     }
 
@@ -200,8 +194,6 @@ public class AddUpdateMailService {
         mail.setCreatedAt(LocalDateTime.now());
         Mail savedMail = mailRepository.save(mail);
         sseController.notifyClients("there is a new mail");
-        System.out.println("savedMail");
-        System.out.println(savedMail);
         return savedMail.getId();
     }
 

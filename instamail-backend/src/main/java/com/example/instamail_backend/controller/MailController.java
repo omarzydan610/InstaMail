@@ -40,10 +40,6 @@ public class MailController {
     public ResponseEntity<?> draftMail(@RequestHeader("Authorization") String token,
             @RequestBody Map<String, Object> requestData) {
         try {
-            System.out.println("draftMail");
-            System.out.println();
-            System.out.println();
-            System.out.println();
             return ResponseEntity.ok(addUpdateMailService.draftMail(token, requestData));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -54,7 +50,6 @@ public class MailController {
     public ResponseEntity<?> getReceivedMails(@RequestHeader("Authorization") String token,
             @RequestParam(defaultValue = "0") int start, @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "1") int sortStrategy) {
-        System.out.println("inbox");
         return ResponseEntity.ok(getMailService.getMails(token, "inbox", start, size, sortStrategy));
     }
 

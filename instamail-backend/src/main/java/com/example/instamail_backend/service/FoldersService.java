@@ -76,8 +76,6 @@ public class FoldersService {
         if (mails.size() == 0 || start >= mails.size()) {
             return new ArrayList<>();
         }
-        System.out.println("start:" + start);
-        System.out.println("size:" + Math.min(start + size, mails.size()));
         return mails.subList(start, Math.min(start + size, mails.size()));
     }
 

@@ -45,7 +45,6 @@ public class SearchService {
         result.put("body", byBody);
         result.put("sender", bySender);
         result.put("receiver", byReceiver);
-        System.out.println(result);
         return result;
     }
 }

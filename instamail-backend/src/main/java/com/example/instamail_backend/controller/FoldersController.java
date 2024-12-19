@@ -26,8 +26,6 @@ public class FoldersController {
 
     @PostMapping("/create-folder")
     public String createFolder(@RequestHeader("Authorization") String token, @RequestBody Map<String, String> request) {
-        System.out.println(request.get("name"));
-        System.out.println(token);
         foldersService.createFolder(token, request);
 
         return "success";

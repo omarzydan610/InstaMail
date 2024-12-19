@@ -36,23 +36,10 @@ public class SSE_Controller {
         }
     
         public void notifyClients(String message) {
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("Sending message: " + message);
-            System.out.println("emitters: " + emitters);
             synchronized (emitters) {
                 List<SseEmitter> deadEmitters = new ArrayList<>();
                 for (SseEmitter emitter : emitters) {
                     try {
-                        System.out.println("");
-                        System.out.println("");
-                        System.out.println("");
-                        System.out.println("");
-                        System.out.println("");
-                        System.out.println("Sending message: " + message);
                         emitter.send(SseEmitter.event().name("email-sent").data(message));
                     } catch (IOException e) {
                         deadEmitters.add(emitter);

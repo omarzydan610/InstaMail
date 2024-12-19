@@ -75,19 +75,9 @@ public class GetMailService {
         if (mails.size() == 0 || start >= mails.size()) {
             return new ArrayList<>();
         }
-        System.out.println("start:" + start);
-        System.out.println("size:" + Math.min(start + size, mails.size()));
+
         return mails.subList(start, Math.min(start + size, mails.size()));
     }
 
-    // public List<Attachment> getAttachments(long mailId){
-    // List<Object[]> result = mailRepository.findByAttachmentMailId(mailId);
-    // Mail mail = (Mail) result.get(0)[0];
-    // List<Attachment> attachments = new ArrayList<>();
-    // for(int i = 1; i < result.size(); i++){
-    // attachments.add((Attachment) result.get(i)[1]);
-    // }
-    // return attachments;
-    // }
 
 }
